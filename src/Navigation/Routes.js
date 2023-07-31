@@ -6,6 +6,11 @@ export default {
     */
   LOG_IN_SCREEN: 'Login',
   LOGIN_ACCOUNT: 'Loginaccount',
+  ORDER_DETAILS_MAP: 'OrderDetailsMap',
+  VERIFICATION_SELFIE: 'VerificationSelfie',
+  VERIFICATION_THANKS: 'VerificationThanks',
+  THANKS_DELIVERING: 'ThanksDelivering',
+  HOME_SCREEN: 'Home',
 
   /*
         BOTTOM TAB BAR

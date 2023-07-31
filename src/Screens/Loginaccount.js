@@ -14,6 +14,7 @@ import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import {accounttext, logowithlogin} from '../utils/Const';
 import Button from '../Components/Button';
+import Routes from '../Navigation/Routes';
 // import Routes from '../Navigation/Routes';
 
 export default function Loginaccount({navigation}) {
@@ -52,7 +53,7 @@ export default function Loginaccount({navigation}) {
             <View style={{marginVertical: heightPixel(50)}}>
               <Button
                 title={'Login'}
-                // onPress={() => navigation.navigate(Routes.LOGIN_ACCOUNT)}
+                onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
               />
             </View>
           </View>

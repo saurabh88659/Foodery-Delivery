@@ -15,6 +15,7 @@ const Button = props => {
         onPress={props.onPress}
         style={{
           paddingHorizontal: widthPixel(100),
+          // backgroundColor: 'red',
         }}>
         <Text
           style={{
@@ -38,6 +39,5 @@ const Styles = StyleSheet.create({
     paddingVertical: 17,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
   },
 });
