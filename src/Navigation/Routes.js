@@ -11,6 +11,7 @@ export default {
   VERIFICATION_THANKS: 'VerificationThanks',
   THANKS_DELIVERING: 'ThanksDelivering',
   HOME_SCREEN: 'Home',
+  VIEW_DETAILS: 'ViewDetails',
 
   /*
         BOTTOM TAB BAR

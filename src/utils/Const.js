@@ -7,6 +7,7 @@ const google = require('../Assets/google.png');
 const facebook = require('../Assets/facebook.png');
 const thankyou = require('../Assets/Lottie_json/animation_lkqojitq.json');
 const thankyoudelivering = require('../Assets/Lottie_json/animation_lkqqe6zp.json');
+const manlogo = require('../Assets/man.png');
 
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
@@ -58,4 +59,5 @@ export {
   thankyoudelivering,
   MaterialCommunityIcon,
   FontAwesome,
+  manlogo,
 };

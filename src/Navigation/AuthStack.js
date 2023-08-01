@@ -8,6 +8,7 @@ import VerificationSelfie from '../Screens/VerificationSelfie';
 import VerificationThanks from '../Screens/VerificationThanks';
 import ThanksDelivering from '../Screens/ThanksDelivering';
 import Home from '../Screens/Home';
+import ViewDetails from '../Screens/ViewDetails';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
@@ -47,6 +48,11 @@ function AuthStack() {
       <Stack.Screen
         name={Routes.HOME_SCREEN}
         component={Home}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.VIEW_DETAILS}
+        component={ViewDetails}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

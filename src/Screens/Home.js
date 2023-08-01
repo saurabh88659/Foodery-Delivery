@@ -1,5 +1,5 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, Text, SafeAreaView, StyleSheet, Animated} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
@@ -125,6 +125,7 @@ const Styles = StyleSheet.create({
     width: widthPixel(50),
     borderRadius: 50 / 2,
     borderWidth: 1,
+    borderColor: COLORS.PINK,
   },
   TEXTJUSTISTYL: {
     color: COLORS.BLACK,
