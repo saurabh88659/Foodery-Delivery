@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, StyleSheet, Animated} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -33,7 +33,7 @@ export default function Home() {
           />
         </View>
       </LinearGradient>
-      <View style={{}}>
+      <View>
         <Text style={Styles.CATSTYLTEXT}>Categories</Text>
         <View style={Styles.CARDSTYLES}>
           <View style={Styles.JUSTISTYLES}></View>

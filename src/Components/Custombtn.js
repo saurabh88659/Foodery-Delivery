@@ -5,7 +5,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import Colors from '../../Utils/Color';
+import {COLORS} from '../utils/Colors';
 
 const Custombtn = props => {
   return (
@@ -16,7 +16,7 @@ const Custombtn = props => {
       style={{
         width: responsiveWidth(90),
         height: responsiveHeight(5),
-        backgroundColor: Colors.DARK_GREEN,
+        backgroundColor: COLORS.GREEN,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 5,

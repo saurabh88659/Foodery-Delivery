@@ -5,8 +5,9 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import Colors from '../Utils/Color';
+
 import DocumentPicker from 'react-native-document-picker';
+import {COLORS} from '../utils/Colors';
 
 export default function Certification() {
   const [selectedFile, setSelectedFile] = React.useState(null);
@@ -46,7 +47,7 @@ export default function Certification() {
       {/* -----------------------------Upload fssai licence-------------------- */}
       <Text
         style={{
-          color: Colors.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 12,
           textAlign: 'left',
@@ -83,7 +84,7 @@ export default function Certification() {
           }}>
           <Text
             style={{
-              color: Colors.BLACK,
+              color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
               textAlign: 'left',
@@ -118,7 +119,7 @@ export default function Certification() {
 
       <Text
         style={{
-          color: Colors.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 12,
           textAlign: 'left',
@@ -155,7 +156,7 @@ export default function Certification() {
           }}>
           <Text
             style={{
-              color: Colors.BLACK,
+              color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
               textAlign: 'left',
@@ -189,7 +190,7 @@ export default function Certification() {
       {/* -----------------------------Upload FPO Mark Certificate-------------------- */}
       <Text
         style={{
-          color: Colors.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 12,
           textAlign: 'left',
@@ -226,7 +227,7 @@ export default function Certification() {
           }}>
           <Text
             style={{
-              color: Colors.BLACK,
+              color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
               textAlign: 'left',
@@ -260,7 +261,7 @@ export default function Certification() {
       {/* -----------------------------Upload FSSC 22000 Certificate-------------------- */}
       <Text
         style={{
-          color: Colors.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 12,
           textAlign: 'left',
@@ -297,7 +298,7 @@ export default function Certification() {
           }}>
           <Text
             style={{
-              color: Colors.BLACK,
+              color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
               textAlign: 'left',
@@ -331,7 +332,7 @@ export default function Certification() {
       {/* -----------------------------Upload AG Mark Certificate-------------------- */}
       <Text
         style={{
-          color: Colors.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 12,
           textAlign: 'left',
@@ -367,7 +368,7 @@ export default function Certification() {
           }}>
           <Text
             style={{
-              color: Colors.BLACK,
+              color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
               textAlign: 'left',

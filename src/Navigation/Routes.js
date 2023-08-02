@@ -12,6 +12,7 @@ export default {
   THANKS_DELIVERING: 'ThanksDelivering',
   HOME_SCREEN: 'Home',
   VIEW_DETAILS: 'ViewDetails',
+  REGISTRATION_SCREEN: 'Registration',
 
   /*
         BOTTOM TAB BAR

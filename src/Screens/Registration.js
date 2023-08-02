@@ -16,25 +16,24 @@ import {
 } from 'react-native';
 
 import React, {useState} from 'react';
-import Colors from '../Utils/Color';
 
 import {format} from 'date-fns';
 
 import {Dropdown} from 'react-native-element-dropdown';
 import StepIndicator from 'react-native-step-indicator';
-import CustomButton from '../component/CustomButton/CustomButton';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import {he} from 'date-fns/locale';
-import PersonalDetails from '../component/PersonalDetails';
-import Verification from '../component/Verification';
-import Bankdetails from '../component/Bankdetails';
-import Certification from '../component/Certification';
-import Custombtn from '../component/CustomButton/Custombtn';
-import Header from '../component/Header';
+import PersonalDetails from '../Components/Personal';
+import Verification from '../Components/Verification';
+import Bankdetails from '../Components/BankDetails';
+import Certification from '../Components/Certification';
+import Custombtn from '../Components/Custombtn';
+import {COLORS} from '../utils/Colors';
+import MyHeader from '../Components/MyHeader';
 const {height, width} = Dimensions.get('window');
 //var query = require('india-pincode-search');
 
@@ -165,12 +164,12 @@ export default function Registration({navigation}) {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StatusBar backgroundColor="#29C17E" />
-      <Header
+      {/* <MyHeader
         bgColor={Colors.DARK_GREEN}
         color={Colors.WHITE}
         Title="Registration"
         onPress={() => navigation.goBack()}
-      />
+      /> */}
 
       <Text
         style={{
@@ -372,7 +371,7 @@ export default function Registration({navigation}) {
                 style={{
                   width: responsiveWidth(10),
                   height: responsiveHeight(5),
-                  backgroundColor: Colors.DARK_GREEN,
+                  backgroundColor: COLORS.GREEN,
                 }}>
                 <Text>Okay</Text>
               </TouchableOpacity>
@@ -453,7 +452,7 @@ const Styles = StyleSheet.create({
   },
   button: {
     // paddingHorizontal: 10,
-    backgroundColor: Colors.DARK_GREEN,
+    backgroundColor: COLORS.GREEN,
     width: responsiveWidth(80),
     height: responsiveHeight(5),
     borderRadius: 7,
@@ -462,7 +461,7 @@ const Styles = StyleSheet.create({
     marginTop: responsiveHeight(5),
   },
   buttonText: {
-    color: Colors.WHITE,
+    color: COLORS.WHITE,
     fontWeight: 'bold',
     fontSize: responsiveFontSize(2),
   },
