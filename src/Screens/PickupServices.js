@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, ScrollView} from 'react-native';
 import React from 'react';
 import {COLORS} from '../utils/Colors';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
@@ -6,12 +6,16 @@ import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 export default function PickupServices() {
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      <View style={Styles.MAINBOX}>
-        <View style={Styles.QBOX}>
-          <Text style={Styles.TEXTONE}>Pickup Details</Text>
-          <Text style={Styles.TEXTONE}>#893798729827</Text>
-        </View>
-        <View
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}>
+        <View style={Styles.MAINBOX}>
+          <View style={Styles.QBOX}>
+            <Text style={Styles.TEXTONE}>Pickup Details</Text>
+            <Text style={Styles.TEXTONE}>#893798729827</Text>
+          </View>
+
+          {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -118,8 +122,116 @@ export default function PickupServices() {
               </Text>
             </View>
           </View>
+        </View> */}
+
+          <View>
+            <Text
+              style={[
+                Styles.TEXTONE,
+                {fontSize: 16, alignSelf: 'center', marginTop: 10},
+              ]}>
+              Pickup Details
+            </Text>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>User name:</Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {fontSize: 13, paddingLeft: 10, fontWeight: 400},
+                ]}>
+                json dev
+              </Text>
+            </View>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>Contact No:</Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {fontSize: 13, paddingLeft: 10, fontWeight: 400},
+                ]}>
+                +91 88739382890
+              </Text>
+            </View>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>
+                Pickup Address:
+              </Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {
+                    fontSize: 13,
+                    paddingLeft: 10,
+                    fontWeight: 400,
+                    width: widthPixel(200),
+                  },
+                ]}>
+                Plot no. A, 40, Block A, Industrial Area, Sector 62, Noida,
+                Uttar Pradesh 201301
+              </Text>
+            </View>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>
+                Payment Status:
+              </Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {fontSize: 13, paddingLeft: 10, fontWeight: 400},
+                ]}>
+                Prepaid
+              </Text>
+            </View>
+            <Text
+              style={[
+                Styles.TEXTONE,
+                {fontSize: 16, alignSelf: 'center', marginTop: 10},
+              ]}>
+              Receiver's Deatils
+            </Text>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>
+                Receiver's name:
+              </Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {fontSize: 13, paddingLeft: 10, fontWeight: 400},
+                ]}>
+                json dev
+              </Text>
+            </View>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>Contact No:</Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {fontSize: 13, paddingLeft: 10, fontWeight: 400},
+                ]}>
+                +91 88739382890
+              </Text>
+            </View>
+            <View style={Styles.ROWSTYL}>
+              <Text style={[Styles.TEXTONE, {fontSize: 14}]}>
+                Drop Address:
+              </Text>
+              <Text
+                style={[
+                  Styles.TEXTONE,
+                  {
+                    fontSize: 13,
+                    paddingLeft: 10,
+                    fontWeight: 400,
+                    width: widthPixel(200),
+                  },
+                ]}>
+                Plot no. A, 40, Block A, Industrial Area, Sector 62, Noida,
+                Uttar Pradesh 201301
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -152,5 +264,11 @@ const Styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     top: heightPixel(10),
+  },
+  ROWSTYL: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    marginHorizontal: 20,
   },
 });

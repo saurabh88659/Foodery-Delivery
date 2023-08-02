@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {COLORS} from '../utils/Colors';
-import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
+import {fontPixel, widthPixel} from '../Components/Dimensions';
 import {manlogo} from '../utils/Const';
 import Routes from '../Navigation/Routes';
 
@@ -142,11 +142,12 @@ const Styles = StyleSheet.create({
   },
   VIEWBTN: {
     backgroundColor: COLORS.PINK,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 5,
+    marginRight: widthPixel(10),
   },
-  VIEWTEXT: {color: COLORS.WHITE, fontWeight: '500'},
+  VIEWTEXT: {color: COLORS.WHITE, fontWeight: '500', fontSize: 11},
 });
