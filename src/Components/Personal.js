@@ -130,17 +130,8 @@ export default function Personal() {
     }
   };
 
-  // const fetchLocationInfo2 = () => {
-  //   const CollectData = query.search(`${pincode2}`);
-
-  //   if (CollectData[0] == null) {
-  //     ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
-  //   } else {
-  //     setCityValue2(CollectData[0].city);
-  //   }
-  // };
   return (
-    <View>
+    <SafeAreaView>
       {/* ..................First Name and Last Name.................... */}
 
       <View
@@ -155,7 +146,7 @@ export default function Personal() {
         </Text>
         <Text
           style={{
-            color: COLORS.black,
+            color: COLORS.BLACK,
             right: width / 4.7,
             fontWeight: 'bold',
           }}>
@@ -178,15 +169,12 @@ export default function Personal() {
           onChangeText={text => {
             setfirstname(text);
           }}
-          // onChangeText={text => {
-          //   _validateMobileNumber(text);
-          // }}
           placeholderTextColor={COLORS.darkGray}
           style={{
             borderWidth: 1,
-            borderColor: COLORS.lightGray,
+            borderColor: COLORS.GRAY,
             paddingHorizontal: 15,
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.WHITE,
             borderRadius: 4,
             width: '45%',
             height: '90%',
@@ -232,7 +220,6 @@ export default function Personal() {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-
               marginHorizontal: 15,
               alignItems: 'center',
               top: 8,
@@ -398,7 +385,7 @@ export default function Personal() {
       {/* ..........................................State......................................... */}
 
       <View style={{marginHorizontal: 20, marginTop: 15}}>
-        <Text style={{color: COLORS.black, fontWeight: 'bold'}}>State</Text>
+        <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>State</Text>
 
         <Dropdown
           style={[Styles.dropdown, isFocus && {borderColor: 'blue'}]}
@@ -440,10 +427,10 @@ export default function Personal() {
           marginHorizontal: 20,
           marginTop: 10,
         }}>
-        <Text style={{color: COLORS.black, fontWeight: 'bold'}}>City</Text>
+        <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>City</Text>
         <Text
           style={{
-            color: COLORS.black,
+            color: COLORS.BLACK,
             right: width / 4.7,
             fontWeight: 'bold',
           }}>
@@ -475,11 +462,11 @@ export default function Personal() {
             borderWidth: 1,
             borderColor: COLORS.lightGray,
             paddingHorizontal: 15,
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.WHITE,
             borderRadius: 4,
             width: '45%',
             height: '90%',
-            color: COLORS.black,
+            color: COLORS.BLACK,
           }}
         />
 
@@ -497,14 +484,14 @@ export default function Personal() {
             borderColor: COLORS.lightGray,
             borderRadius: 4,
             paddingHorizontal: 15,
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.WHITE,
             width: '45%',
             height: '90%',
-            color: COLORS.black,
+            color: COLORS.BLACK,
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

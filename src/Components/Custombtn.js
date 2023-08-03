@@ -16,7 +16,7 @@ const Custombtn = props => {
       style={{
         width: responsiveWidth(90),
         height: responsiveHeight(5),
-        backgroundColor: COLORS.GREEN,
+        backgroundColor: COLORS.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 5,

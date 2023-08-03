@@ -12,21 +12,20 @@ import {
   ToastAndroid,
   StyleSheet,
   Modal,
-  Button,
 } from 'react-native';
 
 import React, {useState} from 'react';
 
 import {format} from 'date-fns';
 
-import {Dropdown} from 'react-native-element-dropdown';
+// import {Dropdown} from 'react-native-element-dropdown';
 import StepIndicator from 'react-native-step-indicator';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import {he} from 'date-fns/locale';
+// import {he} from 'date-fns/locale';
 import PersonalDetails from '../Components/Personal';
 import Verification from '../Components/Verification';
 import Bankdetails from '../Components/BankDetails';
@@ -34,7 +33,9 @@ import Certification from '../Components/Certification';
 import Custombtn from '../Components/Custombtn';
 import {COLORS} from '../utils/Colors';
 import MyHeader from '../Components/MyHeader';
-const {height, width} = Dimensions.get('window');
+import Routes from '../Navigation/Routes';
+// import Button from '../Components/Button';
+// const {height, width} = Dimensions.get('window');
 //var query = require('india-pincode-search');
 
 const labels = [
@@ -163,13 +164,11 @@ export default function Registration({navigation}) {
   };
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar backgroundColor="#29C17E" />
-      {/* <MyHeader
-        bgColor={Colors.DARK_GREEN}
-        color={Colors.WHITE}
-        Title="Registration"
+      <StatusBar backgroundColor="#E70B89" />
+      <MyHeader
+        title={'Registration Details'}
         onPress={() => navigation.goBack()}
-      /> */}
+      />
 
       <Text
         style={{
@@ -198,7 +197,6 @@ export default function Registration({navigation}) {
 
               <View
                 style={{
-                  //backgroundColor: 'purple',
                   paddingVertical: 12,
                   alignSelf: 'center',
                 }}>
@@ -270,60 +268,20 @@ export default function Registration({navigation}) {
         )}
         {currentStep === 3 && (
           <>
-            <ScrollView
-            // contentContainerStyle={{
-            //   // marginHorizontal: width / 13,
-            //   backgroundColor: Colors.GRAY,
-            //   borderRadius: 4,
-            //   paddingBottom: 10,
-            // }}
-            >
+            <ScrollView>
               <Bankdetails />
-
-              {/* <View style={{marginVertical: 7}}>
-                  <CustomButton
-                    Title={'Submit'}
-                    // ONCLICK={toggleVerifyModal}
-                    // ONCLICK={() => {
-                    //   Linking.openURL(loanDetails?.getAll[5]?.addUrl);
-                    //   // URL WILL BE HERE
-                    // }}
-                    ONCLICK={() => {
-                      if (
-                        !bankAccount ||
-                        bankAccount.length < 5 ||
-                        bankAccount.length > 18
-                      ) {
-                        alert('Enter Valid Bank Account Number');
-                        return;
-                      }
-                      if (!accountHolder) {
-                        alert('Enter Bank Account Holder Name');
-                        return;
-                      }
-                      if (!ifscCode || ifscCode.length !== 11) {
-                        alert('Enter Valid IFSC Code');
-                        return;
-                      }
-                      if (!bankName) {
-                        alert('Enter your Bank Name');
-                        return;
-                      }
-                      // toggleVerifyModal();
-                    }}
-                  />
-                </View> */}
               <View
                 style={{
-                  //backgroundColor: 'purple',
                   paddingVertical: 12,
                   alignSelf: 'center',
                 }}>
                 {currentStep < stepCount - 1 ? (
                   <Custombtn title={'Next'} onPress={handleNextStep} />
                 ) : (
-                  <TouchableOpacity style={Styles.button} onPress={toggleModal}>
-                    <Text style={Styles.buttonText}>SUBMIT</Text>
+                  <TouchableOpacity
+                    style={Styles.button}
+                    onPress={() => navigation.navigate(Routes.BOTTOM_TAB_BAR)}>
+                    <Text style={Styles.buttonText}>SUBMIT </Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -358,14 +316,6 @@ export default function Registration({navigation}) {
                 </Text>
               </View>
 
-              {/* <Button
-                  title="Okay"
-                  onPress={toggleModal}
-                  style={{
-                    marginTop: responsiveHeight(10),
-                    width: responsiveWidth(10),
-                  }}
-                /> */}
               <TouchableOpacity
                 onPress={toggleModal}
                 style={{
@@ -387,23 +337,23 @@ const stepIndicatorStyles = {
   currentStepIndicatorSize: 35,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 3,
-  stepStrokeCurrentColor: '#29C17E',
+  stepStrokeCurrentColor: COLORS.PINK,
   stepStrokeWidth: 3,
-  stepStrokeFinishedColor: '#29C17E',
+  stepStrokeFinishedColor: COLORS.PINK,
   stepStrokeUnFinishedColor: '#aaaaaa',
-  separatorFinishedColor: '#29C17E',
+  separatorFinishedColor: COLORS.PINK,
   separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: '#29C17E',
+  stepIndicatorFinishedColor: COLORS.PINK,
   stepIndicatorUnFinishedColor: '#ffffff',
   stepIndicatorCurrentColor: '#ffffff',
   stepIndicatorLabelFontSize: 12,
   currentStepIndicatorLabelFontSize: 12,
-  stepIndicatorLabelCurrentColor: '#29C17E',
+  stepIndicatorLabelCurrentColor: COLORS.PINK,
   stepIndicatorLabelFinishedColor: '#ffffff',
   stepIndicatorLabelUnFinishedColor: '#aaaaaa',
-  labelColor: '#29C17E',
+  labelColor: COLORS.PINK,
   labelSize: 12,
-  currentStepLabelColor: '#29C17E',
+  currentStepLabelColor: COLORS.PINK,
 
   // Customize the step indicator styles here (same as the previous example)
 };
@@ -452,7 +402,7 @@ const Styles = StyleSheet.create({
   },
   button: {
     // paddingHorizontal: 10,
-    backgroundColor: COLORS.GREEN,
+    backgroundColor: COLORS.PINK,
     width: responsiveWidth(80),
     height: responsiveHeight(5),
     borderRadius: 7,

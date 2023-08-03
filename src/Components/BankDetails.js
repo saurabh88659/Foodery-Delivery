@@ -25,7 +25,8 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import CustomRadioButton from './CustomRadioButton';
+import CustomRadioButton from './CustomRadioButton ';
+
 import ImagePicker from 'react-native-image-crop-picker';
 import {COLORS} from '../utils/Colors';
 // {onPress, selected, children}
@@ -112,7 +113,7 @@ export default function Bankdetails() {
 
       <Text
         style={{
-          color: COLOR.BLACK,
+          color: COLORS.BLACK,
           fontWeight: '500',
           fontSize: 14,
           paddingHorizontal: 10,
@@ -197,7 +198,7 @@ export default function Bankdetails() {
           />
           <TouchableOpacity
             style={{
-              backgroundColor: COLORS.GREEN,
+              backgroundColor: COLORS.PINK,
               width: responsiveWidth(20),
               height: responsiveHeight(4),
               borderRadius: 5,

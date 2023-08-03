@@ -10,6 +10,8 @@ import ThanksDelivering from '../Screens/ThanksDelivering';
 import Home from '../Screens/Home';
 import ViewDetails from '../Screens/ViewDetails';
 import Registration from '../Screens/Registration';
+import Otp from '../Screens/Otp';
+import BottomTabBar from './BottomTabBar';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
@@ -59,6 +61,16 @@ function AuthStack() {
       <Stack.Screen
         name={Routes.REGISTRATION_SCREEN}
         component={Registration}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.OTP_SCREEN}
+        component={Otp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.BOTTOM_TAB_BAR}
+        component={BottomTabBar}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

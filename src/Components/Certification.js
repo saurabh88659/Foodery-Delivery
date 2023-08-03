@@ -3,7 +3,6 @@ import React from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
 import DocumentPicker from 'react-native-document-picker';
@@ -42,6 +41,7 @@ export default function Certification() {
       console.log('Uploading:', selectedFile.uri);
     }
   };
+
   return (
     <View>
       {/* -----------------------------Upload fssai licence-------------------- */}
@@ -72,7 +72,6 @@ export default function Certification() {
         <TouchableOpacity
           onPress={pickDocument}
           style={{
-            //backgroundColor: 'pink',
             width: responsiveWidth(25),
             height: responsiveHeight(5),
             alignSelf: 'center',

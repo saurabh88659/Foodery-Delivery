@@ -60,7 +60,7 @@ export default function Login({navigation}) {
             ) : null}
             <Button
               title={'Log In'}
-              onPress={() => navigation.navigate(Routes.LOGIN_ACCOUNT)}
+              onPress={() => navigation.navigate(Routes.OTP_SCREEN)}
             />
             <Text style={Styles.WITHSTY}>or login with</Text>
             <View style={Styles.FGBOX}>

@@ -1,31 +1,14 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-  Stylesheet,
-  StyleSheet,
-  Image,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React, {useState} from 'react';
 import DocumentPicker from 'react-native-document-picker';
-
-//import {format} from 'date-fns';
-//import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon from 'react-native-vector-icons/Entypo';
-
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import CustomRadioButton from './CustomRadioButton';
 import ImagePicker from 'react-native-image-crop-picker';
 import {COLORS} from '../utils/Colors';
-// {onPress, selected, children}
 
 export default function Verification() {
   const [selectedOption, setSelectedOption] = useState(false);
@@ -45,7 +28,6 @@ export default function Verification() {
       setSelectedFile(result);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        // User cancelled the document picker
       } else {
         console.log('Error selecting document:', err);
       }
@@ -53,9 +35,7 @@ export default function Verification() {
   };
 
   const handleUpload = () => {
-    // Implement your file upload logic here
     if (selectedFile) {
-      // Perform the upload process, e.g., send the file to your server or cloud storage
       console.log('Uploading:', selectedFile.uri);
     }
   };
@@ -72,7 +52,6 @@ export default function Verification() {
       .then(image => {
         console.log(image);
         setSelectedImage(image.path);
-        //setSelectedImage1(image.path);
       })
       .catch(error => {
         console.log('Error selecting image: ', error);
@@ -86,7 +65,6 @@ export default function Verification() {
     })
       .then(image => {
         console.log(image);
-        //setSelectedImage(image.path);
         setSelectedImage1(image.path);
       })
       .catch(error => {
@@ -102,7 +80,6 @@ export default function Verification() {
     })
       .then(image => {
         console.log(image);
-        //setSelectedImage(image.path);
         setSelectedImage3(image.path);
       })
       .catch(error => {
@@ -124,6 +101,7 @@ export default function Verification() {
         console.log('Error taking image: ', error);
       });
   };
+
   return (
     <View>
       <Text
@@ -172,16 +150,13 @@ export default function Verification() {
           <Text
             style={{
               color: 'black',
-
               textAlign: 'center',
               fontWeight: 'bold',
               fontSize: responsiveFontSize(1.5),
-              //marginLeft: 12,
             }}>
             Upload Front Image
           </Text>
         </View>
-
         <View>
           {selectedImage1 ? (
             <Image
@@ -208,11 +183,9 @@ export default function Verification() {
           <Text
             style={{
               color: 'black',
-
               textAlign: 'center',
               fontWeight: 'bold',
               fontSize: responsiveFontSize(1.5),
-              //marginLeft: 12,
             }}>
             Upload Front Image
           </Text>
@@ -241,11 +214,9 @@ export default function Verification() {
           Upload Selfie
         </Text>
       </View>
-
       <View
         style={{
           flexDirection: 'row',
-          //backgroundColor: 'teal',
           width: responsiveWidth(95),
           height: responsiveHeight(20),
           alignSelf: 'center',
@@ -302,7 +273,8 @@ export default function Verification() {
           )}
         </View>
       </View>
-      <Text
+
+      {/* <Text
         style={{
           color: 'black',
           marginTop: 12,
@@ -312,8 +284,8 @@ export default function Verification() {
           marginLeft: 12,
         }}>
         Is the Store rented?
-      </Text>
-      <View style={styles.container}>
+      </Text> */}
+      {/* <View style={styles.container}>
         <CustomRadioButton
           label="Yes"
           selected={selectedOption === 'Yes'}
@@ -328,12 +300,11 @@ export default function Verification() {
             handleRadioButtonPress('No'), setShouldShowNo(!shouldShowNo);
           }}
         />
-      </View>
-      {shouldShow ? (
+      </View> */}
+      {/* {shouldShow ? (
         <>
           <View
             style={{
-              //backgroundColor: 'teal',
               width: responsiveWidth(90),
               height: responsiveHeight(17),
               alignSelf: 'center',
@@ -343,7 +314,6 @@ export default function Verification() {
                 color: 'black',
                 marginTop: 3,
                 marginRight: 35,
-                //fontWeight: 'bold',
                 fontSize: responsiveFontSize(1.5),
               }}>
               Upload Rent/Lease Bill
@@ -364,9 +334,6 @@ export default function Verification() {
                     <Text style={styles.selectedFileName} numberOfLines={1}>
                       File Name: {selectedFile.name}
                     </Text>
-                    {/* <Text style={styles.selectedFileSize}>
-                          File Size: {selectedFile.size} bytes
-                        </Text> */}
                   </View>
                 )}
                 <TouchableOpacity style={styles.button} onPress={pickDocument}>
@@ -386,13 +353,12 @@ export default function Verification() {
             </View>
           </View>
         </>
-      ) : null}
+      ) : null} */}
 
-      {shouldShowNo ? (
+      {/* {shouldShowNo ? (
         <>
           <View
             style={{
-              //backgroundColor: 'teal',
               width: responsiveWidth(90),
               height: responsiveHeight(17),
               alignSelf: 'center',
@@ -402,7 +368,6 @@ export default function Verification() {
                 color: 'black',
                 marginTop: 3,
                 marginRight: 35,
-                //fontWeight: 'bold',
                 fontSize: responsiveFontSize(1.5),
               }}>
               Upload Electricity Bill
@@ -410,14 +375,12 @@ export default function Verification() {
             <View
               style={{
                 backgroundColor: 'green',
-                //height: responsiveHeight(),
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <View
                 style={{
                   flexDirection: 'row',
-                  //backgroundColor: 'orange',
                   alignItems: 'center',
                 }}>
                 {selectedFile && (
@@ -444,7 +407,7 @@ export default function Verification() {
             </View>
           </View>
         </>
-      ) : null}
+      ) : null} */}
     </View>
   );
 }

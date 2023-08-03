@@ -24,12 +24,13 @@ export default function Home() {
         colors={[COLORS.PURPLE, COLORS.PINK]}
         style={Styles.linearGradient}>
         <View style={Styles.MAINBOX}>
-          <FontAwesome title="user-circle" size={30} IconColor={COLORS.WHITE} />
+          {/* <FontAwesome title="user-circle" size={30} IconColor={COLORS.WHITE} /> */}
           <Text style={Styles.TEXTHEADER}>Home</Text>
           <MaterialCommunityIcon
             title="bell-ring"
             size={30}
             IconColor={COLORS.WHITE}
+            IconStyle={{alignSelf: 'flex-end', left: widthPixel(140)}}
           />
         </View>
       </LinearGradient>
@@ -90,7 +91,7 @@ const Styles = StyleSheet.create({
   MAINBOX: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: widthPixel(screenWidth),
   },
   TEXTHEADER: {
@@ -99,6 +100,7 @@ const Styles = StyleSheet.create({
     fontSize: fontPixel(20),
     fontWeight: '500',
     letterSpacing: 0.6,
+    alignSelf: 'center',
   },
   CATSTYLTEXT: {
     color: COLORS.BLACK,

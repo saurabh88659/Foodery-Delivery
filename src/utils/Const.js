@@ -1,6 +1,11 @@
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Entypo from 'react-native-vector-icons/Entypo';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const logowithlogin = require('../Assets/LogoInLogin.png');
 const google = require('../Assets/google.png');
@@ -8,6 +13,7 @@ const facebook = require('../Assets/facebook.png');
 const thankyou = require('../Assets/Lottie_json/animation_lkqojitq.json');
 const thankyoudelivering = require('../Assets/Lottie_json/animation_lkqqe6zp.json');
 const manlogo = require('../Assets/man.png');
+const userTab = require('../Assets/user.png');
 
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
@@ -47,6 +53,39 @@ const FontAwesome = ({title, size, IconColor, IconStyle}) => (
   />
 );
 
+const Entypos = ({title, size, IconColor, IconStyle}) => (
+  <Entypo name={title} size={size} color={IconColor} style={IconStyle || {}} />
+);
+
+const EvilIcon = ({title, size, IconColor, IconStyle}) => (
+  <EvilIcons
+    name={title}
+    size={size}
+    color={IconColor}
+    style={IconStyle || {}}
+  />
+);
+const Feathers = ({title, size, IconColor, IconStyle}) => (
+  <Feather name={title} size={size} color={IconColor} style={IconStyle || {}} />
+);
+
+const MaterialIcon = ({title, size, IconColor, IconStyle}) => (
+  <MaterialIcons
+    name={title}
+    size={size}
+    color={IconColor}
+    style={IconStyle || {}}
+  />
+);
+const FontAwesome6s = ({title, size, IconColor, IconStyle}) => (
+  <FontAwesome6
+    name={title}
+    size={size}
+    color={IconColor}
+    style={IconStyle || {}}
+  />
+);
+
 export {
   logowithlogin,
   google,
@@ -60,4 +99,10 @@ export {
   MaterialCommunityIcon,
   FontAwesome,
   manlogo,
+  Entypos,
+  userTab,
+  EvilIcon,
+  Feathers,
+  MaterialIcon,
+  FontAwesome6s,
 };
