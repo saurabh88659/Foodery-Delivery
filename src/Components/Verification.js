@@ -118,7 +118,6 @@ export default function Verification() {
       <View
         style={{
           flexDirection: 'row',
-          //backgroundColor: 'teal',
           width: responsiveWidth(95),
           height: responsiveHeight(22),
           alignSelf: 'center',

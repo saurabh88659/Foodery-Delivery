@@ -22,8 +22,13 @@ export default {
     */
 
   PROFILE_STACK: 'ProfileStack',
+  BOOKING_STACK: 'BookingStack',
   PROFILE_SCREEN: 'Profile',
 
   // PROFILE_STACK
   EDIT_PROFILE: 'EditProfile',
+  ABOUT_US: 'About',
+  PRIVACY_POLICY: 'PrivacyPolicy',
+  TERMS_CONDITIONS: 'TermsConditions',
+  BOOKING: 'Booking',
 };

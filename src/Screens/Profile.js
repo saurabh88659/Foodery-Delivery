@@ -59,7 +59,7 @@ export default function Profile({navigation}) {
           <Text style={Styles.QTEXTONE}>Wallet</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          // onPress={()=>navigation.naviagte(Routes)}
+          onPress={() => navigation.navigate(Routes.BOOKING_STACK)}
           activeOpacity={0.5}
           style={[Styles.QBOXONE, {marginTop: pixelSizeVertical(20)}]}>
           <FontAwesome
@@ -70,12 +70,14 @@ export default function Profile({navigation}) {
           <Text style={Styles.QTEXTONE}>My Booking</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => navigation.navigate(Routes.ABOUT_US)}
           activeOpacity={0.5}
           style={[Styles.QBOXONE, {marginTop: pixelSizeVertical(20)}]}>
           <MaterialIcon title={'error'} size={30} IconColor={COLORS.PINK} />
           <Text style={Styles.QTEXTONE}>Abouts us</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => navigation.navigate(Routes.TERMS_CONDITIONS)}
           activeOpacity={0.5}
           style={[Styles.QBOXONE, {marginTop: pixelSizeVertical(20)}]}>
           <MaterialIcon
@@ -86,6 +88,7 @@ export default function Profile({navigation}) {
           <Text style={Styles.QTEXTONE}>Terms & Conditions</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => navigation.navigate(Routes.PRIVACY_POLICY)}
           activeOpacity={0.5}
           style={[Styles.QBOXONE, {marginTop: pixelSizeVertical(20)}]}>
           <MaterialIcon title={'beenhere'} size={30} IconColor={COLORS.PINK} />

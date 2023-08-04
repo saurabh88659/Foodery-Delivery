@@ -6,6 +6,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Toast from 'react-native-simple-toast';
 
 const logowithlogin = require('../Assets/LogoInLogin.png');
 const google = require('../Assets/google.png');
@@ -14,10 +15,13 @@ const thankyou = require('../Assets/Lottie_json/animation_lkqojitq.json');
 const thankyoudelivering = require('../Assets/Lottie_json/animation_lkqqe6zp.json');
 const manlogo = require('../Assets/man.png');
 const userTab = require('../Assets/user.png');
+const recordbutton = require('../Assets/recordbutton.png');
 
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
 import {Dimensions} from 'react-native';
+
+const BASE_URL = 'http:/192.168.68.119:8000/api/deliveryApp'; //  Server URL  Localhost
 
 const {height, width} = Dimensions.get('window');
 
@@ -86,6 +90,10 @@ const FontAwesome6s = ({title, size, IconColor, IconStyle}) => (
   />
 );
 
+const SimpleToast = ({title, isLong}) => {
+  isLong ? Toast.show(title, Toast.LONG) : Toast.show(title, Toast.SHORT);
+};
+
 export {
   logowithlogin,
   google,
@@ -105,4 +113,7 @@ export {
   Feathers,
   MaterialIcon,
   FontAwesome6s,
+  recordbutton,
+  BASE_URL,
+  SimpleToast,
 };

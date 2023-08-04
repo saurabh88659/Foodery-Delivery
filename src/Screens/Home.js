@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -24,7 +24,6 @@ export default function Home() {
         colors={[COLORS.PURPLE, COLORS.PINK]}
         style={Styles.linearGradient}>
         <View style={Styles.MAINBOX}>
-          {/* <FontAwesome title="user-circle" size={30} IconColor={COLORS.WHITE} /> */}
           <Text style={Styles.TEXTHEADER}>Home</Text>
           <MaterialCommunityIcon
             title="bell-ring"

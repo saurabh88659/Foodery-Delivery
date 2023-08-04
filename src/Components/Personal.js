@@ -2,11 +2,7 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
-  ScrollView,
-  RefreshControl,
   TouchableOpacity,
-  Stylesheet,
   Dimensions,
   TextInput,
   ToastAndroid,
@@ -20,12 +16,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerr from '@react-native-community/datetimepicker';
 
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
-import {he} from 'date-fns/locale';
+// import {
+//   responsiveHeight,
+//   responsiveWidth,
+//   responsiveFontSize,
+// } from 'react-native-responsive-dimensions';
+// import {he} from 'date-fns/locale';
+
 import {COLORS} from '../utils/Colors';
 const {height, width} = Dimensions.get('window');
 
@@ -121,7 +118,6 @@ export default function Personal() {
 
   const fetchLocationInfo = () => {
     const CollectData = query.search(`${pincode}`);
-
     if (CollectData[0] == null) {
       ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
     } else {

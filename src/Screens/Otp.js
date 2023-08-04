@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,12 +18,78 @@ import {
 } from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import Button from '../Components/Button';
-import {logowithlogin} from '../utils/Const';
+import {BASE_URL, SimpleToast, logowithlogin} from '../utils/Const';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Routes from '../Navigation/Routes';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Otp({navigation}) {
+export default function Otp({navigation, route}) {
   const [isOTP, setIsOTP] = useState('');
+  const phoneNumber = route.params;
+  const fNumber = phoneNumber.split('', 6);
+  const [state, setState] = useState({
+    isLoading: false,
+  });
+
+  const _HandleOTP = async () => {
+    // const fcmToken = await AsyncStorage.getItem('fcmToken');
+    // console.log('FCM TOKEN--------->>>>>', fcmToken);
+
+    setState({
+      ...state,
+      isLoading: true,
+    });
+
+    let otpdata = {
+      mobileNumber: phoneNumber,
+      otp: isOTP,
+      deviceToken: '123456789',
+    };
+    axios
+      .post(BASE_URL + `/verifyOTPDeliveryApp`, otpdata, {})
+      .then(async response => {
+        setState({
+          ...state,
+          isLoading: false,
+        });
+
+        await AsyncStorage.setItem('token', response?.data?.token);
+        await AsyncStorage.setItem(
+          'refreshToken',
+          response?.data?.refreshToken,
+        );
+        await AsyncStorage.setItem(
+          'deliveryBoy_id',
+          response?.data?.deliveryBoy_id,
+        );
+        SimpleToast({title: response?.data?.message, isLong: true});
+        axios
+          .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
+            headers: {
+              Authorization: `Bearer ${response.data.token}`,
+            },
+          })
+          .then(res => {
+            if (res.data.result.firstName && res?.data?.result.email) {
+              navigation.navigate(Routes.HOME_SCREEN);
+            } else {
+              navigation.navigate(Routes.REGISTRATION_SCREEN);
+            }
+          })
+          .catch(error => {
+            console.log('profile catch erro------->>', error);
+          });
+      })
+      .catch(error => {
+        SimpleToast({title: error?.response?.data?.message, isLong: true});
+        console.log('otp catch error--->>>', error);
+        setState({
+          ...state,
+          isLoading: false,
+        });
+      });
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -38,13 +105,13 @@ export default function Otp({navigation}) {
           <View style={Styles.BOXMAINCON}>
             <Text style={Styles.HEADERTEXT}>Enter OTP</Text>
             <Text style={Styles.HEADERTEXTONE}>
-              We've send an OTP to your mobile number +91 7393******
+              We've send an OTP to your mobile number{`\n`} +91 {fNumber} ****
             </Text>
 
-            <View style={{marginHorizontal: 40, marginTop: 20}}>
+            <View style={{marginHorizontal: 10, marginTop: 20}}>
               <OTPInputView
                 style={{height: heightPixel(70)}}
-                pinCount={4}
+                pinCount={6}
                 autoFocusOnLoad={false}
                 codeInputFieldStyle={Styles.underlineStyleBase}
                 codeInputHighlightStyle={Styles.underlineStyleHighLighted}
@@ -55,8 +122,29 @@ export default function Otp({navigation}) {
             </View>
             <View style={{marginTop: heightPixel(40)}}>
               <Button
-                title={'Verify Now'}
-                onPress={() => navigation.navigate(Routes.REGISTRATION_SCREEN)}
+                title={
+                  state.isLoading ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <ActivityIndicator color={COLORS.LIGHTGREEN} />
+                      <Text
+                        style={{
+                          color: COLORS.WHITE,
+                          fontSize: fontPixel(15),
+                          paddingLeft: 5,
+                        }}>
+                        Please wait....
+                      </Text>
+                    </View>
+                  ) : (
+                    'Verify Now'
+                  )
+                }
+                onPress={_HandleOTP}
               />
             </View>
           </View>

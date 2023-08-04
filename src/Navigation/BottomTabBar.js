@@ -9,7 +9,7 @@ import Home from '../Screens/Home';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {Entypos, FontAwesome, userTab} from '../utils/Const';
 import ProfileStack from './ProfileStack';
-import ViewDetails from '../Screens/ViewDetails';
+import BookingStack from './BookingStack';
 const Tab = createBottomTabNavigator();
 
 // const getTabBarVisibility = route => {
@@ -58,8 +58,8 @@ function BottomTabBar() {
       />
 
       <Tab.Screen
-        name={Routes.VIEW_DETAILS}
-        component={ViewDetails}
+        name={Routes.BOOKING_STACK}
+        component={BookingStack}
         options={{
           headerShown: false,
           tabBarColor: COLORS.BLUE,

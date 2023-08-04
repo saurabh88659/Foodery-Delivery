@@ -8,18 +8,30 @@ import {
   Keyboard,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import Button from '../Components/Button';
-import {facebook, footertext, google, logowithlogin} from '../utils/Const';
+import {
+  BASE_URL,
+  SimpleToast,
+  facebook,
+  footertext,
+  google,
+  logowithlogin,
+} from '../utils/Const';
 import Routes from '../Navigation/Routes';
+import axios from 'axios';
 
 export default function Login({navigation}) {
   const [phoneNo, setPhoneNo] = useState('');
   const [errorMobileNumber, setErrorMobileNumber] = useState(null);
+  const [state, setState] = useState({
+    isLoading: false,
+  });
 
   const _validateMobileNumber = mobileNo => {
     console.log('mobileNo', mobileNo);
@@ -31,6 +43,39 @@ export default function Login({navigation}) {
     } else {
       setErrorMobileNumber(null);
     }
+  };
+
+  const _HandleSend = () => {
+    setState({
+      ...state,
+      isLoading: true,
+    });
+    const dataPhone = {
+      mobileNumber: phoneNo,
+    };
+    axios
+      .post(BASE_URL + `/loginDeliveryApp`, dataPhone, {})
+      .then(response => {
+        if (response?.data?.message == 'OTP Sent Successfully') {
+          SimpleToast({title: response?.data?.message, isLong: true});
+          navigation.navigate(Routes.OTP_SCREEN, phoneNo);
+          setState({
+            ...state,
+            isLoading: false,
+          });
+        } else {
+          console.log('else condtion');
+        }
+        console.log('Login response', response?.data);
+      })
+      .catch(error => {
+        console.log('Login Catch error', error);
+        SimpleToast({title: error?.response?.data?.message, isLong: true});
+        setState({
+          ...state,
+          isLoading: false,
+        });
+      });
   };
 
   return (
@@ -59,8 +104,29 @@ export default function Login({navigation}) {
               <Text style={Styles.Errortext}>{errorMobileNumber}</Text>
             ) : null}
             <Button
-              title={'Log In'}
-              onPress={() => navigation.navigate(Routes.OTP_SCREEN)}
+              title={
+                state.isLoading ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <ActivityIndicator color={COLORS.LIGHTGREEN} />
+                    <Text
+                      style={{
+                        color: COLORS.WHITE,
+                        fontSize: fontPixel(15),
+                        paddingLeft: 5,
+                      }}>
+                      Please wait....
+                    </Text>
+                  </View>
+                ) : (
+                  'Login'
+                )
+              }
+              onPress={_HandleSend}
             />
             <Text style={Styles.WITHSTY}>or login with</Text>
             <View style={Styles.FGBOX}>
@@ -69,7 +135,9 @@ export default function Login({navigation}) {
             </View>
             <View style={Styles.FMAINBOX}>
               <Text style={Styles.FTEXT}>{footertext}</Text>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate(Routes.TERMS_CONDITIONS)}
+                activeOpacity={0.6}>
                 <Text style={Styles.FTEXT2}>Terms & Conditions</Text>
               </TouchableOpacity>
             </View>
