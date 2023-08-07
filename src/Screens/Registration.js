@@ -34,6 +34,7 @@ import Custombtn from '../Components/Custombtn';
 import {COLORS} from '../utils/Colors';
 import MyHeader from '../Components/MyHeader';
 import Routes from '../Navigation/Routes';
+import {CustomStatusBar} from '../utils/Const';
 // import Button from '../Components/Button';
 // const {height, width} = Dimensions.get('window');
 //var query = require('india-pincode-search');
@@ -46,13 +47,17 @@ const labels = [
 ]; // Array of step labels
 const stepCount = labels.length;
 
-export default function Registration({navigation}) {
+export default function Registration({navigation, route}) {
   const [currentStep, setCurrentStep] = useState(0);
   const [date, setDate] = useState(new Date());
   const [bankName, onBankName] = useState('');
   const [ifscCode, onIfscCode] = useState('');
   const [accountHolder, onAccountHolder] = useState('');
   const [bankAccount, onBankAccount] = useState('');
+
+  const phoneNumber = route.params;
+
+  // console.log('hhhhhhhhhhhhhhh--------->>', phoneNumber);
 
   const [showPicker, setShowPicker] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -66,31 +71,24 @@ export default function Registration({navigation}) {
     setCurrentStep(prevStep => Math.min(prevStep + 1, stepCount - 1));
   };
 
-  const handlePreviousStep = () => {
-    setCurrentStep(prevStep => Math.max(prevStep - 1, 0));
-  };
+  // const handlePreviousStep = () => {
+  //   setCurrentStep(prevStep => Math.max(prevStep - 1, 0));
+  // };
 
   const handleSubmit = () => {
     // Handle form submission here
     // For example, you can call an API or save the form data
   };
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowPicker(false);
-    setDate(currentDate);
-  };
+  // const handleDateChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setShowPicker(false);
+  //   setDate(currentDate);
+  // };
 
-  const handlePress = () => {
-    setShowPicker(true);
-  };
-
-  const [Firstname, setfirstname] = useState('');
-  const [Lastname, setLastname] = useState('');
-
-  const [WorkExp, setWorkExp] = useState('');
-
-  const [emailId, setemailId] = useState('');
+  // const handlePress = () => {
+  //   setShowPicker(true);
+  // };
 
   // .................................state...................................
 
@@ -125,46 +123,47 @@ export default function Registration({navigation}) {
     {label: 'West Bengal', value: '28'},
   ];
 
-  const [value, setValue] = useState(null);
-  const [value2, setValue2] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  // const [value, setValue] = useState(null);
+  // const [value2, setValue2] = useState(null);
+  // const [isFocus, setIsFocus] = useState(false);
 
   //11111............................................City ........................................................
 
-  const [cityvalue, setCityValue] = useState('');
+  // const [cityvalue, setCityValue] = useState('');
 
   //22222............................................City ........................................................
 
-  const [cityvalue2, setCityValue2] = useState('');
+  // const [cityvalue2, setCityValue2] = useState('');
 
   //....................................Pincode..........................
 
-  const [pincode, setpincode] = useState(null);
-  const [pincode2, setpincode2] = useState(null);
+  // const [pincode, setpincode] = useState(null);
+  // const [pincode2, setpincode2] = useState(null);
 
-  const fetchLocationInfo = () => {
-    const CollectData = query.search(`${pincode}`);
+  // const fetchLocationInfo = () => {
+  //   const CollectData = query.search(`${pincode}`);
 
-    if (CollectData[0] == null) {
-      ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
-    } else {
-      setCityValue(CollectData[0].city);
-      console.log('data', CollectData);
-    }
-  };
+  //   if (CollectData[0] == null) {
+  //     ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
+  //   } else {
+  //     setCityValue(CollectData[0].city);
+  //     console.log('data', CollectData);
+  //   }
+  // };
 
-  const fetchLocationInfo2 = () => {
-    const CollectData = query.search(`${pincode2}`);
+  // const fetchLocationInfo2 = () => {
+  //   const CollectData = query.search(`${pincode2}`);
 
-    if (CollectData[0] == null) {
-      ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
-    } else {
-      setCityValue2(CollectData[0].city);
-    }
-  };
+  //   if (CollectData[0] == null) {
+  //     ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
+  //   } else {
+  //     setCityValue2(CollectData[0].city);
+  //   }
+  // };
+
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar backgroundColor="#E70B89" />
+      <CustomStatusBar />
       <MyHeader
         title={'Registration Details'}
         onPress={() => navigation.goBack()}
@@ -193,7 +192,7 @@ export default function Registration({navigation}) {
               automaticallyAdjustContentInsets={true}
               // contentContainerStyle={{paddingBottom: 1}}
             >
-              <PersonalDetails />
+              <PersonalDetails data={phoneNumber} />
 
               <View
                 style={{
@@ -223,7 +222,6 @@ export default function Registration({navigation}) {
 
               <View
                 style={{
-                  //backgroundColor: 'purple',
                   paddingVertical: 12,
                   alignSelf: 'center',
                 }}>
@@ -250,7 +248,7 @@ export default function Registration({navigation}) {
               {currentStep < stepCount - 1 ? (
                 <View
                   style={{
-                    //backgroundColor: 'green',
+                    // backgroundColor: 'green',
                     alignSelf: 'center',
                     paddingVertical: 20,
                     paddingHorizontal: 10,

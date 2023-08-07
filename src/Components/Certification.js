@@ -1,19 +1,25 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
+import {COLORS} from '../utils/Colors';
+import {fontPixel} from './Dimensions';
+import {RadioButton} from 'react-native-paper';
+import DocumentPicker from 'react-native-document-picker';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-import DocumentPicker from 'react-native-document-picker';
-import {COLORS} from '../utils/Colors';
-
 export default function Certification() {
+  const [checked, setChecked] = React.useState('Yes');
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [selectedFssai, setSelectedFssai] = React.useState(null);
-  const [selectedIso, setSelectedIso] = React.useState(null);
-  const [selectedFPO, setSelectedFPO] = React.useState(null);
-  const [selectedMark, setSelectedMark] = React.useState(null);
 
   const pickDocument = async () => {
     try {
@@ -21,13 +27,8 @@ export default function Certification() {
         type: [DocumentPicker.types.allFiles],
       });
       setSelectedFile(result);
-      setSelectedFssai(result);
-      setSelectedIso(result);
-      setSelectedFPO(result);
-      setSelectedMark(result);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        // User cancelled the document picker
       } else {
         console.log('Error selecting document:', err);
       }
@@ -35,16 +36,60 @@ export default function Certification() {
   };
 
   const handleUpload = () => {
-    // Implement your file upload logic here
     if (selectedFile) {
-      // Perform the upload process, e.g., send the file to your server or cloud storage
       console.log('Uploading:', selectedFile.uri);
     }
   };
 
   return (
-    <View>
-      {/* -----------------------------Upload fssai licence-------------------- */}
+    <SafeAreaView style={Styles.CONTAINERMAIN}>
+      <View style={{alignItems: 'center'}}>
+        <Text style={Styles.HEADTITLE}>Do you have your own vehicle?</Text>
+      </View>
+      <View style={Styles.MAINBOXHEAD}>
+        <View style={Styles.BOXHEAD}>
+          <RadioButton
+            value="Yes"
+            status={checked === 'Yes' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('Yes')}
+          />
+          <Text style={{color: COLORS.BLACK, fontSize: 16, fontWeight: '500'}}>
+            Yes
+          </Text>
+        </View>
+        <View style={Styles.RADIOBOX}>
+          <RadioButton
+            value="No"
+            status={checked === 'No' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('No')}
+          />
+          <Text style={{color: COLORS.BLACK, fontSize: 16, fontWeight: '500'}}>
+            No
+          </Text>
+        </View>
+      </View>
+      <View style={{marginHorizontal: 20, marginTop: 15}}>
+        <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+          Enter your Vehicle Number
+        </Text>
+        <TextInput
+          placeholder="Enter your Vehicle Number"
+          placeholderTextColor={COLORS.GRAYDARK}
+          style={Styles.TEXTINPUT}
+        />
+      </View>
+      <View style={{marginHorizontal: 20, marginTop: 15}}>
+        <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+          Driving License Number
+        </Text>
+        <TextInput
+          placeholder="Enter your Vehicle Number"
+          placeholderTextColor={COLORS.GRAYDARK}
+          style={Styles.TEXTINPUT}
+        />
+      </View>
+
+      {/* -----------------------------Upload Driving Licens-------------------- */}
       <Text
         style={{
           color: COLORS.BLACK,
@@ -55,12 +100,12 @@ export default function Certification() {
           marginLeft: 12,
           marginTop: 15,
         }}>
-        Upload FSSAI Licence
+        Upload Driving Licens
       </Text>
       <View
         style={{
           backgroundColor: '#fff',
-          width: responsiveWidth(95),
+          width: responsiveWidth(90),
           height: responsiveHeight(6),
           alignSelf: 'center',
           flexDirection: 'row',
@@ -71,24 +116,23 @@ export default function Certification() {
         }}>
         <TouchableOpacity
           onPress={pickDocument}
+          activeOpacity={0.6}
           style={{
             width: responsiveWidth(25),
-            height: responsiveHeight(5),
+            paddingVertical: 12,
             alignSelf: 'center',
             marginLeft: 10,
             justifyContent: 'center',
             borderRadius: 2,
             borderColor: 'gray',
             borderWidth: 1,
+            alignItems: 'center',
           }}>
           <Text
             style={{
               color: COLORS.BLACK,
               fontWeight: 'bold',
               fontSize: 12,
-              textAlign: 'left',
-              paddingVertical: 5,
-              marginLeft: 2,
             }}>
             Choose a File
           </Text>
@@ -96,7 +140,6 @@ export default function Certification() {
         {selectedFssai && (
           <View
             style={{
-              //backgroundColor: 'pink',
               width: responsiveWidth(60),
               height: responsiveHeight(5),
               alignSelf: 'center',
@@ -113,290 +156,52 @@ export default function Certification() {
           </View>
         )}
       </View>
-
-      {/* -----------------------------Upload ISO Certification-------------------- */}
-
-      <Text
-        style={{
-          color: COLORS.BLACK,
-          fontWeight: '500',
-          fontSize: 12,
-          textAlign: 'left',
-          paddingVertical: 5,
-          marginLeft: 12,
-          marginTop: 15,
-        }}>
-        Upload ISO Certificate
-      </Text>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          width: responsiveWidth(95),
-          height: responsiveHeight(6),
-          alignSelf: 'center',
-          flexDirection: 'row',
-          borderRadius: 4,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginTop: 5,
-        }}>
-        <TouchableOpacity
-          onPress={pickDocument}
-          style={{
-            //backgroundColor: 'pink',
-            width: responsiveWidth(25),
-            height: responsiveHeight(5),
-            alignSelf: 'center',
-            marginLeft: 10,
-            justifyContent: 'center',
-            borderRadius: 2,
-            borderColor: 'gray',
-            borderWidth: 1,
-          }}>
-          <Text
-            style={{
-              color: COLORS.BLACK,
-              fontWeight: 'bold',
-              fontSize: 12,
-              textAlign: 'left',
-              paddingVertical: 5,
-              marginLeft: 2,
-            }}>
-            Choose a File
-          </Text>
-        </TouchableOpacity>
-        {selectedIso && (
-          <View
-            style={{
-              //backgroundColor: 'pink',
-              width: responsiveWidth(60),
-              height: responsiveHeight(5),
-              alignSelf: 'center',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-              numberOfLines={1}>
-              File Name: {selectedIso.name}
-            </Text>
-          </View>
-        )}
+      <View style={{marginHorizontal: 20, marginTop: 15}}>
+        <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+          Expiry Date of DL
+        </Text>
+        <TextInput
+          placeholder="Enter your Expiry Date of DL"
+          placeholderTextColor={COLORS.GRAYDARK}
+          style={Styles.TEXTINPUT}
+        />
       </View>
-
-      {/* -----------------------------Upload FPO Mark Certificate-------------------- */}
-      <Text
-        style={{
-          color: COLORS.BLACK,
-          fontWeight: '500',
-          fontSize: 12,
-          textAlign: 'left',
-          paddingVertical: 5,
-          marginLeft: 12,
-          marginTop: 15,
-        }}>
-        Upload FPO Mark Certificate
-      </Text>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          width: responsiveWidth(95),
-          height: responsiveHeight(6),
-          alignSelf: 'center',
-          flexDirection: 'row',
-          borderRadius: 4,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginTop: 5,
-        }}>
-        <TouchableOpacity
-          onPress={pickDocument}
-          style={{
-            //backgroundColor: 'pink',
-            width: responsiveWidth(25),
-            height: responsiveHeight(5),
-            alignSelf: 'center',
-            marginLeft: 10,
-            justifyContent: 'center',
-            borderRadius: 2,
-            borderColor: 'gray',
-            borderWidth: 1,
-          }}>
-          <Text
-            style={{
-              color: COLORS.BLACK,
-              fontWeight: 'bold',
-              fontSize: 12,
-              textAlign: 'left',
-              paddingVertical: 5,
-              marginLeft: 2,
-            }}>
-            Choose a File
-          </Text>
-        </TouchableOpacity>
-        {selectedFPO && (
-          <View
-            style={{
-              //backgroundColor: 'pink',
-              width: responsiveWidth(60),
-              height: responsiveHeight(5),
-              alignSelf: 'center',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-              numberOfLines={1}>
-              File Name: {selectedFPO.name}
-            </Text>
-          </View>
-        )}
-      </View>
-
-      {/* -----------------------------Upload FSSC 22000 Certificate-------------------- */}
-      <Text
-        style={{
-          color: COLORS.BLACK,
-          fontWeight: '500',
-          fontSize: 12,
-          textAlign: 'left',
-          paddingVertical: 5,
-          marginLeft: 12,
-          marginTop: 15,
-        }}>
-        Upload FSSC 22000 Certificate
-      </Text>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          width: responsiveWidth(95),
-          height: responsiveHeight(6),
-          alignSelf: 'center',
-          flexDirection: 'row',
-          borderRadius: 4,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginTop: 5,
-        }}>
-        <TouchableOpacity
-          onPress={pickDocument}
-          style={{
-            //backgroundColor: 'pink',
-            width: responsiveWidth(25),
-            height: responsiveHeight(5),
-            alignSelf: 'center',
-            marginLeft: 10,
-            justifyContent: 'center',
-            borderRadius: 2,
-            borderColor: 'gray',
-            borderWidth: 1,
-          }}>
-          <Text
-            style={{
-              color: COLORS.BLACK,
-              fontWeight: 'bold',
-              fontSize: 12,
-              textAlign: 'left',
-              paddingVertical: 5,
-              marginLeft: 2,
-            }}>
-            Choose a File
-          </Text>
-        </TouchableOpacity>
-        {selectedFile && (
-          <View
-            style={{
-              //backgroundColor: 'pink',
-              width: responsiveWidth(60),
-              height: responsiveHeight(5),
-              alignSelf: 'center',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-              numberOfLines={1}>
-              File Name: {selectedFile.name}
-            </Text>
-          </View>
-        )}
-      </View>
-
-      {/* -----------------------------Upload AG Mark Certificate-------------------- */}
-      <Text
-        style={{
-          color: COLORS.BLACK,
-          fontWeight: '500',
-          fontSize: 12,
-          textAlign: 'left',
-          paddingVertical: 5,
-          marginLeft: 12,
-          marginTop: 15,
-        }}>
-        Upload AG Mark Certificate
-      </Text>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          width: responsiveWidth(95),
-          height: responsiveHeight(6),
-          alignSelf: 'center',
-          flexDirection: 'row',
-          borderRadius: 4,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginTop: 5,
-        }}>
-        <TouchableOpacity
-          style={{
-            //backgroundColor: 'pink',
-            width: responsiveWidth(25),
-            height: responsiveHeight(5),
-            alignSelf: 'center',
-            marginLeft: 10,
-            justifyContent: 'center',
-            borderRadius: 2,
-            borderColor: 'gray',
-            borderWidth: 1,
-          }}>
-          <Text
-            style={{
-              color: COLORS.BLACK,
-              fontWeight: 'bold',
-              fontSize: 12,
-              textAlign: 'left',
-              paddingVertical: 5,
-              marginLeft: 2,
-            }}>
-            Choose a File
-          </Text>
-        </TouchableOpacity>
-        {selectedMark && (
-          <View
-            style={{
-              //backgroundColor: 'pink',
-              width: responsiveWidth(60),
-              height: responsiveHeight(5),
-              alignSelf: 'center',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-              numberOfLines={1}>
-              File Name: {selectedMark.name}
-            </Text>
-          </View>
-        )}
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
+
+const Styles = StyleSheet.create({
+  CONTAINERMAIN: {
+    flex: 1,
+    // backgroundColor: COLORS.WHITE,
+  },
+  HEADTITLE: {
+    color: COLORS.BLACK,
+    fontSize: fontPixel(20),
+    fontWeight: '500',
+  },
+  MAINBOXHEAD: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 15,
+  },
+  BOXHEAD: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  RADIOBOX: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  TEXTINPUT: {
+    borderWidth: 1,
+    borderColor: COLORS.GRAYDARK,
+    borderRadius: 4,
+    paddingHorizontal: 15,
+    backgroundColor: COLORS.WHITE,
+    marginTop: 7,
+    color: COLORS.BLACK,
+  },
+});

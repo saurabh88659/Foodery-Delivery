@@ -13,6 +13,7 @@ const Button = props => {
       style={Styles.linearGradient}>
       <TouchableOpacity
         onPress={props.onPress}
+        disabled={props.disabled}
         style={{
           paddingHorizontal: widthPixel(100),
           // backgroundColor: 'red',

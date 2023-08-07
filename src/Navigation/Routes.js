@@ -4,6 +4,7 @@ export default {
       Splash is first screen of app that user faces, everytime app starts with splash
       comes in play , when new Delivery boy wants to register with Email verification.
     */
+  SPLASH_SCREEN: 'SplashScreen',
   LOG_IN_SCREEN: 'Login',
   OTP_SCREEN: 'Otp',
   LOGIN_ACCOUNT: 'Loginaccount',

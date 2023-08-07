@@ -55,7 +55,6 @@ export default function EditProfile({navigation}) {
             </View>
           </View>
         </LinearGradient>
-
         <View style={Styles.sectionStyle}>
           <FontAwesome title="user" size={25} IconColor={COLORS.PINK} />
           <TextInput

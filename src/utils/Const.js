@@ -19,7 +19,9 @@ const recordbutton = require('../Assets/recordbutton.png');
 
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
-import {Dimensions} from 'react-native';
+import {Dimensions, StatusBar} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {COLORS} from './Colors';
 
 const BASE_URL = 'http:/192.168.68.119:8000/api/deliveryApp'; //  Server URL  Localhost
 
@@ -94,6 +96,16 @@ const SimpleToast = ({title, isLong}) => {
   isLong ? Toast.show(title, Toast.LONG) : Toast.show(title, Toast.SHORT);
 };
 
+const CustomStatusBar = () => (
+  <LinearGradient
+    colors={[COLORS.PURPLE, COLORS.PINK]}
+    start={{x: 0, y: 0}}
+    end={{x: 1, y: 0}}
+    style={{height: StatusBar.currentHeight}}>
+    <StatusBar translucent backgroundColor="transparent" />
+  </LinearGradient>
+);
+
 export {
   logowithlogin,
   google,
@@ -116,4 +128,5 @@ export {
   recordbutton,
   BASE_URL,
   SimpleToast,
+  CustomStatusBar,
 };

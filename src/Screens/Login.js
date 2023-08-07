@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,6 +18,7 @@ import {COLORS} from '../utils/Colors';
 import Button from '../Components/Button';
 import {
   BASE_URL,
+  CustomStatusBar,
   SimpleToast,
   facebook,
   footertext,
@@ -81,6 +83,7 @@ export default function Login({navigation}) {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={Styles.CONTAINERMAIN}>
+        <CustomStatusBar />
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
@@ -104,6 +107,7 @@ export default function Login({navigation}) {
               <Text style={Styles.Errortext}>{errorMobileNumber}</Text>
             ) : null}
             <Button
+              disabled={errorMobileNumber ? true : false}
               title={
                 state.isLoading ? (
                   <View
@@ -128,15 +132,17 @@ export default function Login({navigation}) {
               }
               onPress={_HandleSend}
             />
-            <Text style={Styles.WITHSTY}>or login with</Text>
-            <View style={Styles.FGBOX}>
+            {/* <Text style={Styles.WITHSTY}>or login with</Text> */}
+            {/* <View style={Styles.FGBOX}>
               <Image source={google} style={Styles.LOGGFSTY} />
               <Image source={facebook} style={Styles.LOGGFSTY} />
-            </View>
+            </View> */}
             <View style={Styles.FMAINBOX}>
               <Text style={Styles.FTEXT}>{footertext}</Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate(Routes.TERMS_CONDITIONS)}
+                onPress={() => {
+                  navigation.navigate('TermsConditions');
+                }}
                 activeOpacity={0.6}>
                 <Text style={Styles.FTEXT2}>Terms & Conditions</Text>
               </TouchableOpacity>
@@ -180,6 +186,7 @@ const Styles = StyleSheet.create({
     height: heightPixel(55),
     paddingHorizontal: 15,
     color: COLORS.BLACK,
+    borderRadius: 7,
   },
   LOGOSTY: {
     height: heightPixel(200),

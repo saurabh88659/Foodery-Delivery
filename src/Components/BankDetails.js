@@ -36,6 +36,7 @@ export default function Bankdetails() {
   const [ifscCode, onIfscCode] = useState('');
   const [accountHolder, onAccountHolder] = useState('');
   const [bankAccount, onBankAccount] = useState('');
+
   return (
     <View>
       <Text
@@ -62,7 +63,6 @@ export default function Bankdetails() {
         onChangeText={onBankAccount}
         value={bankAccount}
       />
-
       <Text
         style={{
           color: COLORS.BLACK,
@@ -86,7 +86,6 @@ export default function Bankdetails() {
         onChangeText={onAccountHolder}
         value={accountHolder}
       />
-
       <Text
         style={{
           color: COLORS.BLACK,
@@ -110,7 +109,6 @@ export default function Bankdetails() {
         onChangeText={onIfscCode}
         value={ifscCode}
       />
-
       <Text
         style={{
           color: COLORS.BLACK,
@@ -134,7 +132,6 @@ export default function Bankdetails() {
         onChangeText={onBankName}
         value={bankName}
       />
-
       <Text
         style={{
           color: COLORS.BLACK,
@@ -145,10 +142,8 @@ export default function Bankdetails() {
         }}>
         OR
       </Text>
-
       <View
         style={{
-          //backgroundColor: 'green',
           width: responsiveWidth(92),
           height: responsiveHeight(10),
           alignSelf: 'center',
@@ -164,10 +159,8 @@ export default function Bankdetails() {
           }}>
           Enter UPI ID
         </Text>
-
         <View
           style={{
-            //backgroundColor: 'pink',
             width: responsiveWidth(92),
             height: responsiveHeight(6),
             alignSelf: 'center',
@@ -180,14 +173,11 @@ export default function Bankdetails() {
             keyboardType="email-address"
             style={{
               backgroundColor: COLORS.WHITE,
-
               height: responsiveHeight(5),
               width: responsiveWidth(70),
               borderRadius: 4,
               paddingLeft: 8,
-
-              color: '#000',
-              //elevation: 2,
+              color: COLORS.BLACK,
               borderWidth: 1,
               borderColor: 'gray',
               alignItems: 'center',

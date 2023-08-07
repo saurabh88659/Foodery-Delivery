@@ -4,7 +4,7 @@ import Routes from './Routes';
 import Profile from '../Screens/Profile';
 import EditProfile from '../Screens/EditProfile';
 import About from '../Screens/About';
-import TermsConditions from '../Screens/TermsConditions';
+// import TermsConditions from '../Screens/TermsConditions';
 import PrivacyPolicy from '../Screens/PrivacyPolicy';
 
 const Stack = createNativeStackNavigator();
@@ -26,11 +26,11 @@ function ProfileStack() {
         component={About}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={Routes.TERMS_CONDITIONS}
         component={TermsConditions}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name={Routes.PRIVACY_POLICY}
         component={PrivacyPolicy}

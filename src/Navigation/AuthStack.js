@@ -12,17 +12,23 @@ import ViewDetails from '../Screens/ViewDetails';
 import Registration from '../Screens/Registration';
 import Otp from '../Screens/Otp';
 import BottomTabBar from './BottomTabBar';
+import SplashScreen from '../Screens/SplashScreen';
+import TermsConditions from '../Screens/TermsConditions';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
   return (
-    <Stack.Navigator initialRouteName={'Login'}>
+    <Stack.Navigator initialRouteName={Routes.SPLASH_SCREEN}>
+      <Stack.Screen
+        name={Routes.SPLASH_SCREEN}
+        component={SplashScreen}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name={Routes.LOG_IN_SCREEN}
         component={Login}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={Routes.LOGIN_ACCOUNT}
         component={Loginaccount}
@@ -71,6 +77,11 @@ function AuthStack() {
       <Stack.Screen
         name={Routes.BOTTOM_TAB_BAR}
         component={BottomTabBar}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.TERMS_CONDITIONS}
+        component={TermsConditions}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

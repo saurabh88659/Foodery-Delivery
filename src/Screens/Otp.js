@@ -74,7 +74,7 @@ export default function Otp({navigation, route}) {
             if (res.data.result.firstName && res?.data?.result.email) {
               navigation.navigate(Routes.HOME_SCREEN);
             } else {
-              navigation.navigate(Routes.REGISTRATION_SCREEN);
+              navigation.navigate(Routes.REGISTRATION_SCREEN, phoneNumber);
             }
           })
           .catch(error => {
