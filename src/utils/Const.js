@@ -7,6 +7,9 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Toast from 'react-native-simple-toast';
+import LinearGradient from 'react-native-linear-gradient';
+import {COLORS} from './Colors';
+import {Dimensions, StatusBar} from 'react-native';
 
 const logowithlogin = require('../Assets/LogoInLogin.png');
 const google = require('../Assets/google.png');
@@ -19,15 +22,13 @@ const recordbutton = require('../Assets/recordbutton.png');
 
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
-import {Dimensions, StatusBar} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {COLORS} from './Colors';
 
-const BASE_URL = 'http:/192.168.68.119:8000/api/deliveryApp'; //  Server URL  Localhost
+const BASE_URL = 'http:/192.168.68.124:8000/api/deliveryApp'; //  Server URL  Localhost
+// const BASE_URL = 'https://groceryfoodery-api-app.onrender.com/api/deliveryApp'; //  Server URL
 
 const {height, width} = Dimensions.get('window');
 
-// 👇👇👇 DATA for mapView 👇👇👇
+// 👇👇👇 DATA for mapView 👇👇👇123
 
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;

@@ -16,6 +16,7 @@ export default {
   VIEW_DETAILS: 'ViewDetails',
   REGISTRATION_SCREEN: 'Registration',
   BOTTOM_TAB_BAR: 'BottomTabBar',
+  REGISTRATION_SCREEN_ONE: 'RegistrationScreen',
   /*
         BOTTOM TAB BAR
         connnects the initial screens for the screens below.

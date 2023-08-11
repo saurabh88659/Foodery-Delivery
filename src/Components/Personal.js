@@ -8,7 +8,7 @@ import {
   ToastAndroid,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {forwardRef, useEffect, useState} from 'react';
 
 import {format} from 'date-fns';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -30,10 +30,9 @@ const {height, width} = Dimensions.get('window');
 
 var query = require('india-pincode-search');
 
-const Personal = props => {
+const Personal = forwardRef((props, ref) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [date, setDate] = useState(new Date());
-
   const Phone = props.data;
 
   const [showPicker, setShowPicker] = useState(false);
@@ -59,9 +58,9 @@ const Personal = props => {
     setDate(currentDate);
   };
 
-  const handlePress = () => {
-    setShowPicker(true);
-  };
+  // const handlePress = () => {
+  //   setShowPicker(true);
+  // };
 
   // const [Firstname, setfirstname] = useState('');
   // const [Lastname, setLastname] = useState('');
@@ -125,7 +124,7 @@ const Personal = props => {
       ToastAndroid.show('Please Enter Correct Pincode', ToastAndroid.LONG);
     } else {
       setCityValue(CollectData[0].city);
-      console.log('data', CollectData);
+      console.log('data--------->>>>>>', CollectData);
     }
   };
 
@@ -160,8 +159,13 @@ const Personal = props => {
     const isValidfirst = validateFirstNameChange(firstName);
     const isValidlast = validateLastNameChange(lastName);
     if (isValidfirst && isValidlast) {
-      // console.alert('Submit one -------------->>>>>>>>>>>>>');
+      console.alert('Submit one -------------->>>>>>>>>>>>>');
+      // onNext();
     }
+  };
+
+  const onNext = () => {
+    console.alert('Submit one -------------->>>>>>>>>>>>>');
   };
 
   return (
@@ -195,12 +199,14 @@ const Personal = props => {
           marginTop: 5,
         }}>
         <TextInput
-          placeholder="First name"
-          value={firstName}
+          // placeholder="First name"
+          value={props.firstName}
+          ref={ref}
+          placeholder="Enter something"
           onChangeText={text => {
             setFirstName(text);
           }}
-          placeholderTextColor={COLORS.darkGray}
+          placeholderTextColor={COLORS.GRAYDARK}
           style={{
             borderWidth: 1,
             borderColor: COLORS.GRAY,
@@ -221,7 +227,7 @@ const Personal = props => {
           placeholderTextColor={COLORS.DARK_GRAY}
           style={{
             borderWidth: 1,
-            borderColor: COLORS.lightGray,
+            borderColor: COLORS.GRAYDARK,
             borderRadius: 4,
             paddingHorizontal: 15,
             backgroundColor: COLORS.WHITE,
@@ -261,7 +267,7 @@ const Personal = props => {
           style={{
             height: 45,
             borderWidth: 1,
-            borderColor: COLORS.lightGray,
+            borderColor: COLORS.GRAYDARK,
             borderRadius: 4,
             marginTop: 0,
             backgroundColor: COLORS.WHITE,
@@ -275,7 +281,9 @@ const Personal = props => {
               top: 8,
             }}>
             <Text style={{color: COLORS.BLACK}}>{formattedDate}</Text>
-            <TouchableOpacity onPress={handlePress}>
+            <TouchableOpacity
+            //  onPress={handlePress}
+            >
               <FontAwesome5Icon name="calendar-alt" color="#a9a9a9" size={28} />
             </TouchableOpacity>
           </View>
@@ -304,7 +312,7 @@ const Personal = props => {
           // onChangeText={text => {
           //   setWorkExp(text);
           // }}
-          placeholderTextColor={COLORS.darkGray}
+          placeholderTextColor={COLORS.GRAYDARK}
           style={{
             borderWidth: 1,
             borderColor: COLORS.lightGray,
@@ -698,10 +706,10 @@ const Personal = props => {
           }}
         />
       </View>
-      <Custombtn title={'Next'} onPress={handleSubmit} />
+      {/* <Custombtn title={'Next'} onPress={handlePreviousStep} /> */}
     </SafeAreaView>
   );
-};
+});
 export default Personal;
 const Styles = StyleSheet.create({
   docTitle: {

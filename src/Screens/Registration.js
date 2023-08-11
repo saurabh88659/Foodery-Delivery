@@ -15,9 +15,7 @@ import {
 } from 'react-native';
 
 import React, {useState} from 'react';
-
 import {format} from 'date-fns';
-
 // import {Dropdown} from 'react-native-element-dropdown';
 import StepIndicator from 'react-native-step-indicator';
 import {
@@ -55,10 +53,10 @@ export default function Registration({navigation, route}) {
   const [accountHolder, onAccountHolder] = useState('');
   const [bankAccount, onBankAccount] = useState('');
 
+  const textInputRef = React.useRef(null);
+  console.log('textInputRef-------', textInputRef);
+
   const phoneNumber = route.params;
-
-  // console.log('hhhhhhhhhhhhhhh--------->>', phoneNumber);
-
   const [showPicker, setShowPicker] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -84,6 +82,7 @@ export default function Registration({navigation, route}) {
   //   const currentDate = selectedDate || date;
   //   setShowPicker(false);
   //   setDate(currentDate);
+
   // };
 
   // const handlePress = () => {
@@ -187,12 +186,16 @@ export default function Registration({navigation, route}) {
           stepCount={stepCount}
         />
         {currentStep === 0 && (
-          <View style={{height: responsiveHeight(77)}}>
+          <View
+            style={{
+              height: responsiveHeight(77),
+              // backgroundColor: COLORS.WHITE,
+            }}>
             <ScrollView
               automaticallyAdjustContentInsets={true}
               // contentContainerStyle={{paddingBottom: 1}}
             >
-              <PersonalDetails data={phoneNumber} />
+              <PersonalDetails data={phoneNumber} ref={textInputRef} />
 
               <View
                 style={{
@@ -212,6 +215,7 @@ export default function Registration({navigation, route}) {
             </ScrollView>
           </View>
         )}
+
         {currentStep === 1 && (
           <View style={{height: responsiveHeight(77)}}>
             <ScrollView
@@ -238,6 +242,7 @@ export default function Registration({navigation, route}) {
             </ScrollView>
           </View>
         )}
+
         {currentStep === 2 && (
           <View style={{height: responsiveHeight(70)}}>
             <ScrollView
@@ -248,7 +253,6 @@ export default function Registration({navigation, route}) {
               {currentStep < stepCount - 1 ? (
                 <View
                   style={{
-                    // backgroundColor: 'green',
                     alignSelf: 'center',
                     paddingVertical: 20,
                     paddingHorizontal: 10,
@@ -279,7 +283,7 @@ export default function Registration({navigation, route}) {
                   <TouchableOpacity
                     style={Styles.button}
                     onPress={() => navigation.navigate(Routes.BOTTOM_TAB_BAR)}>
-                    <Text style={Styles.buttonText}>SUBMIT </Text>
+                    <Text style={Styles.buttonText}>SUBMIT</Text>
                   </TouchableOpacity>
                 )}
               </View>

@@ -58,6 +58,7 @@ export default function Login({navigation}) {
     axios
       .post(BASE_URL + `/loginDeliveryApp`, dataPhone, {})
       .then(response => {
+        console.log('response login --------', response);
         if (response?.data?.message == 'OTP Sent Successfully') {
           SimpleToast({title: response?.data?.message, isLong: true});
           navigation.navigate(Routes.OTP_SCREEN, phoneNo);
@@ -71,8 +72,8 @@ export default function Login({navigation}) {
         console.log('Login response', response?.data);
       })
       .catch(error => {
-        console.log('Login Catch error', error);
-        SimpleToast({title: error?.response?.data?.message, isLong: true});
+        console.log('Login Catch error', error?.response?.data?.message);
+        // SimpleToast({title: error?.response?.data?.message, isLong: true});
         setState({
           ...state,
           isLoading: false,

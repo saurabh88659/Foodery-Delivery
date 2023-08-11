@@ -71,10 +71,16 @@ export default function Otp({navigation, route}) {
             },
           })
           .then(res => {
-            if (res.data.result.firstName && res?.data?.result.email) {
+            console.log('----------------', res.data.result);
+            if (
+              res.data.result.firstName &&
+              res?.data?.result.email &&
+              res?.data?.result.bankName &&
+              res?.data?.result.ifscCode
+            ) {
               navigation.navigate(Routes.HOME_SCREEN);
             } else {
-              navigation.navigate(Routes.REGISTRATION_SCREEN, phoneNumber);
+              navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
             }
           })
           .catch(error => {
@@ -83,7 +89,7 @@ export default function Otp({navigation, route}) {
       })
       .catch(error => {
         SimpleToast({title: error?.response?.data?.message, isLong: true});
-        console.log('otp catch error--->>>', error);
+        console.log('otp catch error--->>>', error?.response?.data?.message);
         setState({
           ...state,
           isLoading: false,

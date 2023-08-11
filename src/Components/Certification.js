@@ -88,7 +88,6 @@ export default function Certification() {
           style={Styles.TEXTINPUT}
         />
       </View>
-
       {/* -----------------------------Upload Driving Licens-------------------- */}
       <Text
         style={{

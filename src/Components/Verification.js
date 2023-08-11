@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React, {useState} from 'react';
-import DocumentPicker from 'react-native-document-picker';
+// import DocumentPicker from 'react-native-document-picker';
 import Icon from 'react-native-vector-icons/Entypo';
 import {
   responsiveHeight,
@@ -15,34 +15,35 @@ export default function Verification() {
   const [shouldShow, setShouldShow] = useState(false);
   const [shouldShowNo, setShouldShowNo] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImage1, setSelectedImage1] = useState(null);
   const [selectedImage2, setSelectedImage2] = useState(null);
   const [selectedImage3, setSelectedImage3] = useState(null);
 
-  const pickDocument = async () => {
-    try {
-      const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      setSelectedFile(result);
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-      } else {
-        console.log('Error selecting document:', err);
-      }
-    }
-  };
+  // const pickDocument = async () => {
+  //   try {
+  //     const result = await DocumentPicker.pick({
+  //       type: [DocumentPicker.types.allFiles],
+  //     });
+  //     setSelectedFile(result);
+  //   } catch (err) {
+  //     if (DocumentPicker.isCancel(err)) {
+  //     } else {
+  //       console.log('Error selecting document:', err);
+  //     }
+  //   }
+  // };
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      console.log('Uploading:', selectedFile.uri);
-    }
-  };
+  // const handleUpload = () => {
+  //   if (selectedFile) {
+  //     console.log('Uploading:', selectedFile.uri);
+  //   }
+  // };
 
-  const handleRadioButtonPress = value => {
-    setSelectedOption(value);
-  };
+  // const handleRadioButtonPress = value => {
+  //   setSelectedOption(value);
+  // };
   const pickImage = () => {
     ImagePicker.openPicker({
       width: responsiveWidth(40),
