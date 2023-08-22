@@ -54,6 +54,8 @@ export default function Otp({navigation, route}) {
           isLoading: false,
         });
 
+        console.log('get profile data---------->>', response.data);
+
         await AsyncStorage.setItem('token', response?.data?.token);
         await AsyncStorage.setItem(
           'refreshToken',
@@ -67,20 +69,20 @@ export default function Otp({navigation, route}) {
         axios
           .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
             headers: {
-              Authorization: `Bearer ${response.data.token}`,
+              Authorization: `Bearer ${response?.data?.token}`,
             },
           })
           .then(res => {
-            console.log('----------------', res.data.result);
+            console.log('----------------', res?.data?.result);
             if (
-              res.data.result.firstName &&
-              res?.data?.result.email &&
-              res?.data?.result.bankName &&
-              res?.data?.result.ifscCode
+              res?.data?.result?.firstName &&
+              res?.data?.result?.email &&
+              res?.data?.result?.bankName &&
+              res?.data?.result?.ifscCode
             ) {
-              navigation.navigate(Routes.HOME_SCREEN);
-            } else {
               navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
+            } else {
+              navigation.navigate(Routes.BOTTOM_TAB_BAR);
             }
           })
           .catch(error => {

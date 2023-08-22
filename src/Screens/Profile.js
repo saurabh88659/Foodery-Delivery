@@ -23,8 +23,15 @@ import {
   MaterialIcon,
 } from '../utils/Const';
 import Routes from '../Navigation/Routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile({navigation}) {
+  const _Logout = async () => {
+    await AsyncStorage.removeItem('token');
+    // await AsyncStorage.removeItem('isLoggedIn');
+    navigation.navigate(Routes.LOG_IN_SCREEN);
+  };
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <ScrollView
@@ -95,6 +102,7 @@ export default function Profile({navigation}) {
           <Text style={Styles.QTEXTONE}>Privacy Policy</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={_Logout}
           activeOpacity={0.5}
           style={[Styles.QBOXONE, {marginTop: pixelSizeVertical(20)}]}>
           <Feathers title={'power'} size={30} IconColor={COLORS.PINK} />

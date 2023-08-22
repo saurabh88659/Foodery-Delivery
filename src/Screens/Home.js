@@ -1,4 +1,11 @@
-import {View, Text, SafeAreaView, StyleSheet, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  Image,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -9,13 +16,41 @@ import {
   widthPixel,
 } from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
-import {FontAwesome, MaterialCommunityIcon} from '../utils/Const';
+import {
+  BASE_URL,
+  FontAwesome,
+  MaterialCommunityIcon,
+  manlogo,
+} from '../utils/Const';
 import DeliveryServices from './DeliveryServices';
 import PickupServices from './PickupServices';
+import {_getStorage} from '../utils/Storage';
+import axios from 'axios';
 
 const Tab = createMaterialTopTabNavigator();
-
 export default function Home() {
+  const [isCount, setIsCount] = useState({});
+  useEffect(() => {
+    _CountData();
+  }, []);
+
+  const _CountData = async () => {
+    const token = await _getStorage('token');
+    console.log('token-----------', token);
+
+    axios
+      .get(BASE_URL + `/getCountOrderData`, {
+        headers: {Authorization: `Bearer ${token}`},
+      })
+      .then(response => {
+        console.log('response data get count total---------', response?.data);
+        setIsCount(response?.data);
+      })
+      .catch(error => {
+        console.log('get count catch error-------->>', error);
+      });
+  };
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <LinearGradient
@@ -33,37 +68,38 @@ export default function Home() {
           />
         </View>
       </LinearGradient>
-      <View>
+      <View style={{justifyContent: 'flex-start'}}>
         <Text style={Styles.CATSTYLTEXT}>Categories</Text>
         <View style={Styles.CARDSTYLES}>
-          <View style={Styles.JUSTISTYLES}></View>
+          <View style={Styles.JUSTISTYLES}>
+            <Image source={manlogo} style={Styles.JUSTISTYLES} />
+          </View>
           <Text style={Styles.TEXTJUSTISTYL}>Total assignned Delivered</Text>
-          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>05</Text>
+          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>
+            {isCount?.totalAssigned_Delivery}
+          </Text>
         </View>
         <View style={Styles.CARDSTYLES}>
-          <View style={Styles.JUSTISTYLES}></View>
-          <Text style={Styles.TEXTJUSTISTYL}>Total assignned Delivered</Text>
-          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>05</Text>
+          <View style={Styles.JUSTISTYLES}>
+            <Image source={manlogo} style={Styles.JUSTISTYLES} />
+          </View>
+          <Text style={Styles.TEXTJUSTISTYL}>Delivery Completed</Text>
+          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>
+            {isCount?.totalDelivery_Completed}
+          </Text>
         </View>
         <View style={Styles.CARDSTYLES}>
-          <View style={Styles.JUSTISTYLES}></View>
-          <Text style={Styles.TEXTJUSTISTYL}>Total assignned Delivered</Text>
-          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>05</Text>
+          <View style={Styles.JUSTISTYLES}>
+            <Image source={manlogo} style={Styles.JUSTISTYLES} />
+          </View>
+          <Text style={Styles.TEXTJUSTISTYL}>Delivery Cancel</Text>
+          <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>
+            {isCount?.totalDelivery_Cancel}
+          </Text>
         </View>
       </View>
       <View style={{flex: 1}}>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
-            tabBarStyle: {backgroundColor: COLORS.WHITE},
-            // tabBarItemStyle: {width: 90},
-            tabBarActiveTintColor: COLORS.PINK,
-            tabBarInactiveTintColor: COLORS.BLACK,
-            tabBarIndicatorStyle: {
-              borderBottomColor: COLORS.PINK,
-              borderBottomWidth: 2,
-            },
-          }}>
+        <Tab.Navigator screenOptions={Styles.Tobscreen}>
           <Tab.Screen name="Delivery Services" component={DeliveryServices} />
           <Tab.Screen name="Pickup Services" component={PickupServices} />
         </Tab.Navigator>
@@ -85,13 +121,14 @@ const Styles = StyleSheet.create({
     flexDirection: 'row',
     flexDirection: 'row',
     elevation: 10,
-    paddingVertical: 14,
+    paddingVertical: StatusBar.currentHeight,
   },
   MAINBOX: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: widthPixel(screenWidth),
+    top: heightPixel(15),
   },
   TEXTHEADER: {
     color: COLORS.WHITE,
@@ -125,12 +162,21 @@ const Styles = StyleSheet.create({
     height: heightPixel(50),
     width: widthPixel(50),
     borderRadius: 50 / 2,
-    borderWidth: 1,
-    borderColor: COLORS.PINK,
   },
   TEXTJUSTISTYL: {
     color: COLORS.BLACK,
     fontSize: fontPixel(18),
     fontWeight: '500',
+  },
+  Tobscreen: {
+    tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
+    tabBarStyle: {backgroundColor: COLORS.WHITE},
+    // tabBarItemStyle: {width: 90},
+    tabBarActiveTintColor: COLORS.PINK,
+    tabBarInactiveTintColor: COLORS.BLACK,
+    tabBarIndicatorStyle: {
+      borderBottomColor: COLORS.PINK,
+      borderBottomWidth: 2,
+    },
   },
 });

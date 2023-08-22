@@ -210,8 +210,8 @@ const Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: heightPixel(100),
+    alignItems: 'flex-end',
+    marginBottom: heightPixel(20),
   },
   FTEXT: {color: COLORS.BLACK, fontSize: fontPixel(14)},
   FTEXT2: {

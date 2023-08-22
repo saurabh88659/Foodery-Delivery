@@ -1,8 +1,14 @@
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import React from 'react';
 import {COLORS} from '../utils/Colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {fontPixel} from './Dimensions';
+import {fontPixel, heightPixel} from './Dimensions';
 import {Ionicon} from '../utils/Const';
 
 const MyHeader = props => {
@@ -18,6 +24,7 @@ const MyHeader = props => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            top: heightPixel(15),
           }}>
           <TouchableOpacity activeOpacity={0.6} onPress={props.onPress}>
             <Ionicon
@@ -44,14 +51,12 @@ const MyHeader = props => {
 
 const Styles = StyleSheet.create({
   linearGradient: {
-    backgroundColor: COLORS.GREEN,
     paddingHorizontal: '3%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    justifyContent: 'flex-start',
     flexDirection: 'row',
     elevation: 10,
-    paddingVertical: 14,
+    paddingVertical: StatusBar.currentHeight,
   },
 });
 

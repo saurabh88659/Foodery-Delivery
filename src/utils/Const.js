@@ -23,7 +23,7 @@ const recordbutton = require('../Assets/recordbutton.png');
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
 
-const BASE_URL = 'http:/192.168.68.124:8000/api/deliveryApp'; //  Server URL  Localhost
+const BASE_URL = 'http:/192.168.68.109:8000/api/deliveryApp'; //  Server URL  Localhost
 // const BASE_URL = 'https://groceryfoodery-api-app.onrender.com/api/deliveryApp'; //  Server URL
 
 const {height, width} = Dimensions.get('window');

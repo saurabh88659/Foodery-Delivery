@@ -7,14 +7,28 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS} from '../utils/Colors';
-import {fontPixel, widthPixel} from '../Components/Dimensions';
-import {manlogo} from '../utils/Const';
+import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
+import {BASE_URL, manlogo} from '../utils/Const';
 import Routes from '../Navigation/Routes';
+import {_getStorage} from '../utils/Storage';
+import axios from 'axios';
+import moment from 'moment';
 
 export default function DeliveryServices({navigation}) {
+  const [isServicesData, setIsServicesData] = useState([]);
+  useEffect(() => {
+    _Services_Delivery();
+  }, []);
+
   const SRTDATA = [
+    {
+      name: 'ravi',
+    },
+    {
+      name: 'ravi',
+    },
     {
       name: 'ravi',
     },
@@ -23,12 +37,30 @@ export default function DeliveryServices({navigation}) {
     },
   ];
 
+  const _Services_Delivery = async () => {
+    const token = await _getStorage('token');
+    console.log('token----DG------->>>', token);
+    axios
+      .get(BASE_URL + `/getAllOrderHistory`, {})
+
+      .then(response => {
+        console.log(
+          'response services delivery------>>>',
+          response?.data?.result,
+        );
+        setIsServicesData(response?.data?.result);
+      })
+      .catch(error => {
+        console.log('delivery services error-------->>>', error);
+      });
+  };
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
-        data={SRTDATA}
+        data={isServicesData}
         renderItem={({item, index}) => (
           <View style={Styles.BOXMAIN}>
             <View style={Styles.JUSTIBOXMAIN}>
@@ -37,11 +69,21 @@ export default function DeliveryServices({navigation}) {
                   style={{
                     flexDirection: 'row',
                   }}>
-                  <Image source={manlogo} style={Styles.MANLOGOSTYL} />
+                  <View
+                    style={{
+                      height: heightPixel(60),
+                      width: widthPixel(50),
+                      borderRadius: 50,
+                    }}>
+                    <Image
+                      source={{uri: item.user?.profilePic}}
+                      style={Styles.MANLOGOSTYL}
+                    />
+                  </View>
                   <View>
-                    <Text style={Styles.QTEXTSTY}>json dev</Text>
+                    <Text style={Styles.QTEXTSTY}>{item?.user?.name}</Text>
                     <Text style={[Styles.QTEXTSTY, {marginVertical: 6}]}>
-                      +91 77397793839
+                      +91 {item?.user?.phone}
                     </Text>
                     <Text
                       numberOfLines={3}
@@ -57,14 +99,16 @@ export default function DeliveryServices({navigation}) {
                         Styles.QTEXTSTY,
                         {marginTop: 5, fontWeight: '400'},
                       ]}>
-                      Delivered Date: 01/08/2023
+                      Delivered Date:
+                      {moment(item?.delieveredAt).format('DD/MM/YYYY')}
                     </Text>
                     <Text
                       style={[
                         Styles.QTEXTSTY,
                         {marginTop: 5, fontWeight: '400'},
                       ]}>
-                      Delivered Time: 11:51 AM
+                      Delivered Time:{' '}
+                      {moment(item?.delieveredAt).format('h:mm:ss a')}
                     </Text>
                   </View>
                 </View>
@@ -73,11 +117,15 @@ export default function DeliveryServices({navigation}) {
                   <Text style={[Styles.QTEXTSTY, {left: widthPixel(20)}]}>
                     Order No.
                   </Text>
-                  <Text style={Styles.ORDERIDTEXT}>#393940</Text>
+                  <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>
                   <Text style={Styles.QPAMENT}>Payment Status</Text>
-                  <Text style={Styles.GREYTEXT}>Prepaid</Text>
+                  <Text style={Styles.GREYTEXT}>
+                    {item?.paymentInfo?.status}
+                  </Text>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate(Routes.VIEW_DETAILS)}
+                    onPress={() =>
+                      navigation.navigate(Routes.VIEW_DETAILS, item)
+                    }
                     style={Styles.VIEWBTN}>
                     <Text style={Styles.VIEWTEXT}>View Details</Text>
                   </TouchableOpacity>
@@ -105,7 +153,12 @@ const Styles = StyleSheet.create({
     borderColor: COLORS.PINK,
     borderRadius: 15,
   },
-  MANLOGOSTYL: {height: 50, width: 50, resizeMode: 'contain'},
+  MANLOGOSTYL: {
+    height: 50,
+    width: 50,
+    resizeMode: 'contain',
+    borderRadius: 25,
+  },
   JUSTIBOXMAIN: {
     marginTop: 10,
   },

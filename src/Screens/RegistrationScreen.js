@@ -34,6 +34,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import axios from 'axios';
 import {_getStorage} from '../utils/Storage';
+// import Routes from '../Navigation/Routes';
 
 export default function RegistrationScreen({navigation, route}) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -310,7 +311,7 @@ export default function RegistrationScreen({navigation, route}) {
     ) {
       setIsError(true);
       showToast();
-      // return;
+      return;
     }
     setIsError(false);
 
@@ -366,8 +367,7 @@ export default function RegistrationScreen({navigation, route}) {
   const [isUploadSelfieTwoImage, setIsUploadSelfieTwoImage] = useState(null);
 
   const [selectedImages, setSelectedImages] = useState('');
-
-  // console.log('selectedImages------------', selectedImages);
+  // console.log('isUploadFrontImage------------', isUploadFrontImage.mime);
 
   const pickUploadFrontImage = () => {
     ImagePicker.openPicker({
@@ -448,86 +448,69 @@ export default function RegistrationScreen({navigation, route}) {
       });
   };
 
-  const _UploadFrontImage = async data => {
-    const token = await _getStorage('token');
-    var filename = data?.path?.replace(/^.*[\\\/]/, '');
-
-    const selectedImages = new FormData();
-
-    console.log('selectedImages-==========', selectedImages._parts);
-
-    imageFrontIamge.append('image', {
-      name: filename,
-      type: data.mime,
-      uri:
-        Platform.OS === 'android'
-          ? data.path
-          : data.path.replace('file://', ''),
-    });
-    imageFrontIamge.append('uploadFor', 'verification.aadharFront');
-
-    axios
-      .put(BASE_URL + `/deliveryBoyDocs`, imageFrontIamge, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(res => {
-        console.log('result', res.data);
-        SimpleToast({
-          title: 'Image Updated Successfully For verification Selfie Tow',
-          isLong: true,
-        });
-      })
-      .catch(error => {
-        console.log('error in catch', error);
-      });
-  };
-
   const _UploadImagesUsingFetch = async () => {
     const formData = new FormData();
     const token = await _getStorage('token');
+    console.log('token', token);
 
-    selectedImages.forEach((uri, index) => {
-      formData.append('images', {
-        uri:
-          Platform.OS === 'android'
-            ? uri.path
-            : uri.path.replace('file://', ''),
-        type: uri.mime,
-        name: uri?.path?.replace(/^.*[\\\/]/, ''),
-      });
+    formData.append('aadharFront', {
+      uri:
+        Platform.OS === 'android'
+          ? isUploadFrontImage.path
+          : isUploadFrontImage.path.replace('file://', ''),
+      type: isUploadFrontImage.mime,
+      name: isUploadFrontImage?.path?.replace(/^.*[\\\/]/, ''),
+    });
+
+    formData.append('aadharBack', {
+      uri:
+        Platform.OS === 'android'
+          ? isUploadBacktImage.path
+          : isUploadBacktImage.path.replace('file://', ''),
+      type: isUploadBacktImage.mime,
+      name: isUploadBacktImage?.path?.replace(/^.*[\\\/]/, ''),
+    });
+
+    formData.append('pancard', {
+      uri:
+        Platform.OS === 'android'
+          ? isUploadPanCardImage.path
+          : isUploadPanCardImage.path.replace('file://', ''),
+      type: isUploadPanCardImage.mime,
+      name: isUploadPanCardImage?.path?.replace(/^.*[\\\/]/, ''),
+    });
+
+    formData.append('selfie1', {
+      uri:
+        Platform.OS === 'android'
+          ? isUploadSelfieOneImage.path
+          : isUploadSelfieOneImage.path.replace('file://', ''),
+      type: isUploadSelfieOneImage.mime,
+      name: isUploadSelfieOneImage?.path?.replace(/^.*[\\\/]/, ''),
+    });
+
+    formData.append('selfie2', {
+      uri:
+        Platform.OS === 'android'
+          ? isUploadSelfieTwoImage.path
+          : isUploadSelfieTwoImage.path.replace('file://', ''),
+      type: isUploadSelfieTwoImage.mime,
+      name: isUploadSelfieTwoImage?.path?.replace(/^.*[\\\/]/, ''),
     });
 
     console.log('formData============', formData);
 
-    // axios
-    //   .put(BASE_URL + `/deliveryBoyDocs`, formData, {
-    //     headers: {Authorization: `Bearer ${token}`},
-    //   })
-    //   .then(response => {
-    //     console.log('image response data', response);
-    //   })
-    //   .catch(error => {
-    //     console.log('image catch error', error);
-    //   });
-
-    try {
-      const response = await fetch(BASE_URL + `/deliveryBoyDocs`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    axios
+      .put(BASE_URL + `/deliveryBoyDocs`, formData, {
+        'Content-Type': 'multipart/form-data',
         headers: {Authorization: `Bearer ${token}`},
-        body: formData,
+      })
+      .then(response => {
+        console.log('image response data', response.data);
+      })
+      .catch(error => {
+        console.log('image catch error', error);
       });
-
-      const responseData = await response;
-      console.log('Upload response:', responseData);
-    } catch (error) {
-      console.error('Upload error:', error);
-    }
   };
 
   {
@@ -537,13 +520,55 @@ export default function RegistrationScreen({navigation, route}) {
   const [checked, setChecked] = React.useState('Yes');
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [selectedFssai, setSelectedFssai] = React.useState(null);
+  const [isvalidDLError, setIsvalidDLError] = useState(false);
+  const [vehicleNo, setVehicleNo] = React.useState('');
+  const [drivingLicenseNo, setDrivingLicenseNo] = React.useState('');
+  const [expiryDL, setExpiryDL] = React.useState('');
+  const [vehicleNoError, setVehicleNoError] = React.useState('');
+  const [drivingLicenseNoError, setDrivingLicenseNoError] = React.useState('');
+  const [expiryDLError, setExpiryDLError] = React.useState('');
+
+  // console.log('selectedFile', selectedFile?.name);
+
+  const validateVehicalNoChange = () => {
+    const namePattern = /^\d{10}$/;
+    if (!namePattern.test(vehicleNo)) {
+      setVehicleNoError('Please enter a valid Vehical No');
+      return false;
+    } else {
+      setVehicleNoError('');
+      return true;
+    }
+  };
+
+  const validateDrivingLicenseNoChange = () => {
+    const namePattern = /^\d{16}$/;
+    if (!namePattern.test(drivingLicenseNo)) {
+      setDrivingLicenseNoError('Please enter a valid Driving License No');
+      return false;
+    } else {
+      setDrivingLicenseNoError('');
+      return true;
+    }
+  };
+
+  const validateExpiryDLChange = () => {
+    const namePattern = /^\d{2}[./-]\d{2}[./-]\d{4}$/;
+    if (!namePattern.test(expiryDL)) {
+      setExpiryDLError('Please enter a valid Expiry date of DL');
+      return false;
+    } else {
+      setExpiryDLError('');
+      return true;
+    }
+  };
 
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
       });
-      setSelectedFile(result);
+      setSelectedFile(result[0]);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
@@ -552,31 +577,173 @@ export default function RegistrationScreen({navigation, route}) {
     }
   };
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      console.log('Uploading:', selectedFile.uri);
+  const _Handle_Vehicle = async () => {
+    const isValidVehicaleNo = validateVehicalNoChange(vehicleNo);
+    const isValidDrivingLicenseNo =
+      validateDrivingLicenseNoChange(drivingLicenseNo);
+    const isValidExpirydateDL = validateExpiryDLChange(expiryDL);
+    if (
+      !isValidVehicaleNo ||
+      !isValidDrivingLicenseNo ||
+      !isValidExpirydateDL
+    ) {
+      setIsvalidDLError(true);
+      return;
     }
+    setIsvalidDLError(false);
+
+    const token = await _getStorage('token');
+    console.log('token------', token);
+    const formData = new FormData();
+
+    formData.append('vehicle_Number', vehicleNo);
+    formData.append('license_Number', drivingLicenseNo);
+    formData.append('expiry_Date', expiryDL);
+
+    formData.append('image', {
+      fileCopyUri: selectedFile?.fileCopyUri,
+      uri: selectedFile?.uri,
+      type: 'image/jpeg',
+      size: selectedFile?.size,
+      name: selectedFile?.name,
+    });
+
+    axios
+      .put(BASE_URL + `/uploadVehicleDetails`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        console.log('response DL------', response?.data?.result);
+      })
+      .catch(error => {
+        console.log('DL catch error', error);
+      });
   };
 
   {
     /* ==============================Bank Details======================== */
   }
 
+  const [onBankName, setOnBankName] = useState('');
   const [onBankNumber, setOnBankNumber] = useState('');
   const [onIfscCode, setOnIfscCode] = useState('');
   const [onAccountHolder, setOnAccountHolder] = useState('');
-  const [onBankName, setOnBankName] = useState('');
   const [onUpiId, setOnUpiId] = useState('');
+  const [isBankError, setIsBankError] = useState('');
 
-  const _BankDetailsHandle = () => {
+  const [onBankNameError, setOnBankNameError] = useState('');
+  const [onBankNumberError, setOnBankNumberError] = useState('');
+  const [onAccountHolderError, setOnAccountHolderError] = useState('');
+  const [onIfscCodeError, setOnIfscCodeError] = useState('');
+  const [onUpiIdError, setOnUpiIdError] = useState('');
+
+  const validateBankNameChange = () => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(onBankName)) {
+      setOnBankNameError('Please enter a valid Bank Name');
+      return false;
+    } else {
+      setOnBankNameError('');
+      return true;
+    }
+  };
+
+  const validateBankNumberChange = () => {
+    const namePattern = /^\d{12}$/;
+    if (!namePattern.test(onBankNumber)) {
+      setOnBankNumberError('Please enter a valid Bank Account No');
+      return false;
+    } else {
+      setOnBankNumberError('');
+      return true;
+    }
+  };
+
+  const validateHolderNameChange = () => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(onAccountHolder)) {
+      setOnAccountHolderError('Please enter a valid Bank Holder Name');
+      return false;
+    } else {
+      setOnAccountHolderError('');
+      return true;
+    }
+  };
+
+  const validateIFSCCodeChange = () => {
+    const namePattern = /[a-zA-Z0-9]+/;
+    if (!namePattern.test(onIfscCode)) {
+      setOnIfscCodeError('Please enter a valid IFSC Code');
+      return false;
+    } else {
+      setOnIfscCodeError('');
+      return true;
+    }
+  };
+
+  const validateUpiIDChange = () => {
+    const namePattern = /[a-zA-Z0-9]+/;
+    if (!namePattern.test(onUpiId)) {
+      setOnUpiIdError('Please enter a valid UPI ID');
+      return false;
+    } else {
+      setOnUpiIdError('');
+      return true;
+    }
+  };
+
+  const _BankDetailsHandle = async () => {
+    const token = await _getStorage('token');
+    // console.log('token-------------', token);
+    const isValidbankName = validateBankNameChange(onBankName);
+    const isvalidbankNumber = validateBankNumberChange(onBankNumber);
+    const isValidholdername = validateHolderNameChange(onAccountHolder);
+    const isValidIfsccode = validateIFSCCodeChange(onIfscCode);
+    const isValidUpiId = validateUpiIDChange(onUpiId);
+    if (
+      !isValidbankName ||
+      !isvalidbankNumber ||
+      !isValidholdername ||
+      !isValidIfsccode ||
+      !isValidUpiId
+    ) {
+      setIsBankError(true);
+      return;
+    }
+    setIsBankError(false);
+
     const bankdetalsobj = {
+      bankName: onBankName,
       accountNumber: onBankNumber,
       accountHolder: onAccountHolder,
-      bankName: onBankName,
       ifscCode: onIfscCode,
       upi: onUpiId,
     };
-    console.log('bankdetalsobj-------->>>>', bankdetalsobj);
+    axios
+      .put(BASE_URL + `/addBankAccountDeliveryBoy`, bankdetalsobj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => {
+        console.log(
+          'Bank Details--------------->>>>>',
+          response?.data?.message,
+        );
+        if (response?.data?.message) {
+          navigation.navigate('BottomTabBar');
+        }
+        SimpleToast({title: response?.data?.message, isLong: true});
+      })
+      .catch(error => {
+        console.log(
+          'Bank Details error------->>>>',
+          error?.response?.data?.message,
+        );
+      });
   };
 
   return (
@@ -647,6 +814,7 @@ export default function RegistrationScreen({navigation, route}) {
                   </View>
                 </View>
               </View>
+
               <View>
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
@@ -992,6 +1160,17 @@ export default function RegistrationScreen({navigation, route}) {
           </ProgressStep>
           {/* ==============================certification======================== */}
           <ProgressStep
+            // onNext={
+            //   checked == 'Yes'
+            //     ? false
+            //     : checked == 'No'
+            //     ? true
+            //     : checked == 'Yes'
+            //     ? _Handle_Vehicle
+            //     : null
+            // }
+            errors={isvalidDLError}
+            onNext={_Handle_Vehicle}
             nextBtnStyle={Styles.btnstyles}
             nextBtnTextStyle={Styles.btntextstyles}
             previousBtnStyle={Styles.btnstyles}
@@ -1003,6 +1182,7 @@ export default function RegistrationScreen({navigation, route}) {
                   Do you have your own vehicle?
                 </Text>
               </View>
+
               <View style={Styles.MAINBOXHEAD}>
                 <View style={Styles.BOXHEAD}>
                   <RadioButton
@@ -1035,57 +1215,104 @@ export default function RegistrationScreen({navigation, route}) {
                   </Text>
                 </View>
               </View>
-              <View style={{marginHorizontal: 20, marginTop: 15}}>
-                <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
-                  Enter your Vehicle Number
-                </Text>
-                <TextInput
-                  placeholder="Enter your Vehicle Number"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.TEXTINPUT}
-                />
-              </View>
-              <View style={{marginHorizontal: 20, marginTop: 15}}>
-                <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
-                  Driving License Number
-                </Text>
-                <TextInput
-                  placeholder="Enter your Vehicle Number"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.TEXTINPUT}
-                />
-              </View>
-              {/* -----------------------------Upload Driving Licens-------------------- */}
-              <Text style={Styles.uploadText}>Upload Driving Licens</Text>
-              <View style={Styles.DRIVINGBOX}>
-                <TouchableOpacity
-                  onPress={pickDocument}
-                  activeOpacity={0.6}
-                  style={Styles.BTNCHOOSEFILE}>
-                  <Text style={Styles.CHOOSETEXT}>Choose a File</Text>
-                </TouchableOpacity>
-                {selectedFssai && (
-                  <View style={Styles.FILENAMESTYL}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                      }}
-                      numberOfLines={1}>
-                      File Name: {selectedFssai.name}
+
+              {checked === 'Yes' ? (
+                <View>
+                  <View style={{marginHorizontal: 20, marginTop: 15}}>
+                    <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+                      Enter your Vehicle Number
                     </Text>
+                    <TextInput
+                      placeholder="Enter your Vehicle Number"
+                      placeholderTextColor={COLORS.GRAYDARK}
+                      style={Styles.TEXTINPUT}
+                      maxLength={10}
+                      keyboardType="number-pad"
+                      value={vehicleNo}
+                      onChangeText={text => setVehicleNo(text)}
+                    />
+                    {vehicleNoError ? (
+                      <Text style={Styles.ERRORTEXT}>{vehicleNoError}</Text>
+                    ) : null}
                   </View>
-                )}
-              </View>
-              <View style={{marginHorizontal: 20, marginTop: 15}}>
-                <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
-                  Expiry Date of DL
-                </Text>
-                <TextInput
-                  placeholder="Enter your Expiry Date of DL"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.TEXTINPUT}
-                />
-              </View>
+                  <View style={{marginHorizontal: 20, marginTop: 15}}>
+                    <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+                      Driving License Number
+                    </Text>
+                    <TextInput
+                      placeholder="Driving License Number"
+                      placeholderTextColor={COLORS.GRAYDARK}
+                      style={Styles.TEXTINPUT}
+                      value={drivingLicenseNo}
+                      maxLength={16}
+                      onChangeText={text => setDrivingLicenseNo(text)}
+                    />
+                    {drivingLicenseNoError ? (
+                      <Text style={Styles.ERRORTEXT}>
+                        {drivingLicenseNoError}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <Text style={Styles.uploadText}>Upload Driving Licens</Text>
+                  <View style={Styles.DRIVINGBOX}>
+                    <TouchableOpacity
+                      onPress={pickDocument}
+                      activeOpacity={0.6}
+                      style={Styles.BTNCHOOSEFILE}>
+                      <Text style={Styles.CHOOSETEXT}>Choose a File</Text>
+                    </TouchableOpacity>
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        Styles.CHOOSETEXT,
+                        {paddingLeft: 10, width: widthPixel(250)},
+                      ]}>
+                      {selectedFile?.name}
+                    </Text>
+
+                    {selectedFssai && (
+                      <View style={Styles.FILENAMESTYL}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                          }}
+                          numberOfLines={1}>
+                          File Name: {selectedFssai.name}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  <View style={{marginHorizontal: 20, marginTop: 15}}>
+                    <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
+                      Expiry Date of DL
+                    </Text>
+                    <TextInput
+                      placeholder="Enter your Expiry Date of DL"
+                      placeholderTextColor={COLORS.GRAYDARK}
+                      style={Styles.TEXTINPUT}
+                      value={expiryDL}
+                      onChangeText={text => setExpiryDL(text)}
+                    />
+                    {expiryDLError ? (
+                      <Text style={Styles.ERRORTEXT}>{expiryDLError}</Text>
+                    ) : null}
+                  </View>
+                </View>
+              ) : checked === 'No' ? (
+                <View
+                  style={{
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: fontPixel(25),
+                      color: COLORS.BLACK,
+                    }}>
+                    No
+                  </Text>
+                </View>
+              ) : null}
+              {/* -----------------------------Upload Driving Licens-------------------- */}
             </View>
           </ProgressStep>
           {/* ==============================Bank Details======================== */}
@@ -1095,17 +1322,37 @@ export default function RegistrationScreen({navigation, route}) {
             nextBtnTextStyle={Styles.btntextstyles}
             previousBtnStyle={Styles.btnstyles}
             previousBtnTextStyle={Styles.btntextstyles}
+            errors={isBankError}
             label="Bank Details">
-            <View style={{}}>
+            <View style={{marginHorizontal: 5}}>
+              <Text style={Styles.BANKTEXT}>Name of Bank</Text>
+              <TextInput
+                placeholder="Bank Name"
+                placeholderTextColor={COLORS.GRAYDARK}
+                style={Styles.BANKINPUT}
+                onChangeText={text => setOnBankName(text)}
+                value={onBankName}
+              />
+              {onBankNameError ? (
+                <Text style={[Styles.ERRORTEXT, {paddingLeft: 10}]}>
+                  {onBankNameError}
+                </Text>
+              ) : null}
               <Text style={Styles.BANKTEXT}>Bank Account Number</Text>
               <TextInput
                 style={Styles.BANKINPUT}
                 placeholder="Bank Account Number"
                 placeholderTextColor={COLORS.GRAYDARK}
                 keyboardType="number-pad"
+                maxLength={12}
                 onChangeText={text => setOnBankNumber(text)}
                 value={onBankNumber}
               />
+              {onBankNumberError ? (
+                <Text style={[Styles.ERRORTEXT, {paddingLeft: 10}]}>
+                  {onBankNumberError}
+                </Text>
+              ) : null}
               <Text style={Styles.BANKTEXT}>Account Holder Name</Text>
               <TextInput
                 placeholder="Account Holder Name"
@@ -1114,6 +1361,11 @@ export default function RegistrationScreen({navigation, route}) {
                 onChangeText={text => setOnAccountHolder(text)}
                 value={onAccountHolder}
               />
+              {onAccountHolderError ? (
+                <Text style={[Styles.ERRORTEXT, {paddingLeft: 10}]}>
+                  {onAccountHolderError}
+                </Text>
+              ) : null}
               <Text style={Styles.BANKTEXT}>IFSC Code</Text>
               <TextInput
                 placeholder="FSC Code"
@@ -1122,14 +1374,11 @@ export default function RegistrationScreen({navigation, route}) {
                 onChangeText={text => setOnIfscCode(text)}
                 value={onIfscCode}
               />
-              <Text style={Styles.BANKTEXT}>Bank Name</Text>
-              <TextInput
-                placeholder="Bank Name"
-                placeholderTextColor={COLORS.GRAYDARK}
-                style={Styles.BANKINPUT}
-                onChangeText={text => setOnBankName(text)}
-                value={onBankName}
-              />
+              {onIfscCodeError ? (
+                <Text style={[Styles.ERRORTEXT, {paddingLeft: 10}]}>
+                  {onIfscCodeError}
+                </Text>
+              ) : null}
               <Text style={Styles.ORSTYLES}>OR</Text>
               <View style={Styles.UIPBOXMAIN}>
                 <Text style={Styles.UPITEXT}>Enter UPI ID</Text>
@@ -1254,11 +1503,11 @@ const Styles = StyleSheet.create({
   uploadText: {
     color: COLORS.BLACK,
     fontWeight: '500',
-    fontSize: 12,
+    fontSize: 15,
     textAlign: 'left',
     paddingVertical: 5,
-    marginLeft: 12,
     marginTop: 15,
+    marginHorizontal: 20,
   },
   DRIVINGBOX: {
     backgroundColor: '#fff',
@@ -1270,6 +1519,7 @@ const Styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 5,
+    alignItems: 'center',
   },
   BTNCHOOSEFILE: {
     width: responsiveWidth(25),
@@ -1401,6 +1651,12 @@ const Styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: responsiveFontSize(1.5),
+  },
+  ERRORTEXT: {
+    color: 'red',
+    marginTop: 5,
+    fontSize: fontPixel(14),
+    fontWeight: '500',
   },
 });
 

@@ -8,7 +8,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS} from '../utils/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -18,14 +18,39 @@ import {
   widthPixel,
 } from '../Components/Dimensions';
 import {
+  BASE_URL,
   FontAwesome,
   FontAwesome6s,
   Ionicon,
   MaterialIcon,
 } from '../utils/Const';
 import Button from '../Components/Button';
+import {_getStorage} from '../utils/Storage';
+import axios from 'axios';
 
 export default function EditProfile({navigation}) {
+  const [isUserData, setIsUserData] = useState({});
+
+  useEffect(() => {
+    _ProfileData();
+  }, []);
+
+  const _ProfileData = async () => {
+    const token = await _getStorage('token');
+    axios
+      .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => {
+        console.log('profile response data', response?.data);
+      })
+      .catch(error => {
+        console.log('Profile catch error', error);
+      });
+  };
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <ScrollView
@@ -59,7 +84,7 @@ export default function EditProfile({navigation}) {
           <FontAwesome title="user" size={25} IconColor={COLORS.PINK} />
           <TextInput
             style={Styles.input}
-            placeholder="Phone or Email"
+            // placeholder="Enter Name"
             placeholderTextColor="#888888"
             // onChangeText={handleChange('email')}
             // onBlur={handleBlur('email')}
@@ -70,7 +95,7 @@ export default function EditProfile({navigation}) {
           <MaterialIcon title="redeem" size={25} IconColor={COLORS.PINK} />
           <TextInput
             style={Styles.input}
-            placeholder="Phone or Email"
+            // placeholder="Enter Date of Birth"
             placeholderTextColor="#888888"
             // onChangeText={handleChange('email')}
             // onBlur={handleBlur('email')}
@@ -81,7 +106,7 @@ export default function EditProfile({navigation}) {
           <MaterialIcon title="domain" size={25} IconColor={COLORS.PINK} />
           <TextInput
             style={Styles.input}
-            placeholder="Phone or Email"
+            // placeholder="Enter Lenmark"
             placeholderTextColor="#888888"
             // onChangeText={handleChange('email')}
             // onBlur={handleBlur('email')}
@@ -96,7 +121,7 @@ export default function EditProfile({navigation}) {
           />
           <TextInput
             style={Styles.input}
-            placeholder="Phone or Email"
+            // placeholder="Phone or Email"
             placeholderTextColor="#888888"
             // onChangeText={handleChange('email')}
             // onBlur={handleBlur('email')}
@@ -111,7 +136,7 @@ export default function EditProfile({navigation}) {
           />
           <TextInput
             style={Styles.input}
-            placeholder="Phone or Email"
+            // placeholder="Phone or Email"
             placeholderTextColor="#888888"
             // onChangeText={handleChange('email')}
             // onBlur={handleBlur('email')}
