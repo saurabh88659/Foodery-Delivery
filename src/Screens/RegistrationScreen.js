@@ -34,6 +34,12 @@ import {
 } from 'react-native-responsive-dimensions';
 import axios from 'axios';
 import {_getStorage} from '../utils/Storage';
+import {
+  _BankDetails,
+  _VehicleDetails,
+  _signUp,
+  _signdeliveryBoyDocs,
+} from '../utils/Controllers/EpicControllers';
 // import Routes from '../Navigation/Routes';
 
 export default function RegistrationScreen({navigation, route}) {
@@ -58,8 +64,7 @@ export default function RegistrationScreen({navigation, route}) {
   const [isError, setIsError] = useState(false);
 
   const phoneNumber = route.params;
-
-  console.log('phoneNumber--------------', phoneNumber);
+  // console.log('phoneNumber--------------', phoneNumber);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -120,7 +125,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateWorkExChange = () => {
-    const namePattern = /^[A-Za-z\s]+$/;
+    const namePattern = /^[a-zA-Z0-9_.-]*$/;
     if (!namePattern.test(workExperience)) {
       setWorkExperienceError('Please enter a valid Work Experience');
       return false;
@@ -251,32 +256,30 @@ export default function RegistrationScreen({navigation, route}) {
     }
   };
 
-  const showToast = () => {
-    Toast.show({
-      type: 'error',
-      text1: `${
-        firstNameError ||
-        lastNameError ||
-        workExperienceError ||
-        emailIdError ||
-        mobileAlNoError ||
-        emergencyMobileError ||
-        permanentAddressError ||
-        stateOneError ||
-        cityOneError ||
-        pinCodeOneError ||
-        currentAddressError ||
-        stateTwoError ||
-        cityTwoError ||
-        pinCodeTwoError
-      }`,
-      text2: 'This is some something 👋',
-    });
-  };
+  // const showToast = () => {
+  //   Toast.show({
+  //     type: 'error',
+  //     text1: `${
+  //       firstNameError ||
+  //       lastNameError ||
+  //       workExperienceError ||
+  //       emailIdError ||
+  //       mobileAlNoError ||
+  //       emergencyMobileError ||
+  //       permanentAddressError ||
+  //       stateOneError ||
+  //       cityOneError ||
+  //       pinCodeOneError ||
+  //       currentAddressError ||
+  //       stateTwoError ||
+  //       cityTwoError ||
+  //       pinCodeTwoError
+  //     }`,
+  //     text2: 'This is some something 👋',
+  //   });
+  // };
 
   const _PersonnalDetails = async () => {
-    const token = await _getStorage('token');
-    console.log('token----------', token);
     const isValidfirst = validateFirstNameChange(firstName);
     const isValidlast = validateLastNameChange(lastName);
     const isValidworkEx = validateWorkExChange(workExperience);
@@ -310,7 +313,7 @@ export default function RegistrationScreen({navigation, route}) {
       !isValidPincodeTwo
     ) {
       setIsError(true);
-      showToast();
+      // showToast();
       return;
     }
     setIsError(false);
@@ -337,23 +340,18 @@ export default function RegistrationScreen({navigation, route}) {
         state: stateOne,
       },
     };
-    console.log('personalobj-------------->>>', personalobj);
 
-    axios
-      .put(BASE_URL + `/signUpDeliveryApp`, personalobj, {
-        headers: {Authorization: `Bearer ${token}`},
-      })
-      .then(response => {
-        // setIsError(false);
-        console.log('response data sign up', response?.data);
-      })
-      .catch(error => {
-        // setIsError(true);
-        console.log(
-          'catch error signup------>>',
-          error?.response?.data?.message,
-        );
-      });
+    // console.log('personalobj-------------->>>', personalobj);
+    const result = await _signUp(personalobj);
+
+    if (result?.data) {
+      setIsError(false);
+      console.log('response data sign up---------------', result?.data);
+    } else {
+      setIsError(false);
+      console.log('catch error signup------>>', result);
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+    }
   };
 
   {
@@ -452,6 +450,7 @@ export default function RegistrationScreen({navigation, route}) {
     const formData = new FormData();
     const token = await _getStorage('token');
     console.log('token', token);
+    SimpleToast({title: 'Please wait....', isLong: true});
 
     formData.append('aadharFront', {
       uri:
@@ -500,17 +499,14 @@ export default function RegistrationScreen({navigation, route}) {
 
     console.log('formData============', formData);
 
-    axios
-      .put(BASE_URL + `/deliveryBoyDocs`, formData, {
-        'Content-Type': 'multipart/form-data',
-        headers: {Authorization: `Bearer ${token}`},
-      })
-      .then(response => {
-        console.log('image response data', response.data);
-      })
-      .catch(error => {
-        console.log('image catch error', error);
-      });
+    const result = await _signdeliveryBoyDocs(formData);
+    if (result?.data) {
+      SimpleToast({title: result?.data?.message, isLong: true});
+      console.log('image response data=============>>>>>>', result?.data);
+    } else {
+      console.log('image catch error>>>>>>>', result);
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+    }
   };
 
   {
@@ -592,8 +588,6 @@ export default function RegistrationScreen({navigation, route}) {
     }
     setIsvalidDLError(false);
 
-    const token = await _getStorage('token');
-    console.log('token------', token);
     const formData = new FormData();
 
     formData.append('vehicle_Number', vehicleNo);
@@ -608,19 +602,13 @@ export default function RegistrationScreen({navigation, route}) {
       name: selectedFile?.name,
     });
 
-    axios
-      .put(BASE_URL + `/uploadVehicleDetails`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(response => {
-        console.log('response DL------', response?.data?.result);
-      })
-      .catch(error => {
-        console.log('DL catch error', error);
-      });
+    const result = await _VehicleDetails(formData);
+    if (result?.data) {
+      console.log('vehicle Details response---->>', result?.data?.message);
+      SimpleToast({title: result?.data?.message, isLong: true});
+    } else {
+      console.log('vehicle catch error', result?.data);
+    }
   };
 
   {
@@ -633,7 +621,6 @@ export default function RegistrationScreen({navigation, route}) {
   const [onAccountHolder, setOnAccountHolder] = useState('');
   const [onUpiId, setOnUpiId] = useState('');
   const [isBankError, setIsBankError] = useState('');
-
   const [onBankNameError, setOnBankNameError] = useState('');
   const [onBankNumberError, setOnBankNumberError] = useState('');
   const [onAccountHolderError, setOnAccountHolderError] = useState('');
@@ -696,8 +683,6 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const _BankDetailsHandle = async () => {
-    const token = await _getStorage('token');
-    // console.log('token-------------', token);
     const isValidbankName = validateBankNameChange(onBankName);
     const isvalidbankNumber = validateBankNumberChange(onBankNumber);
     const isValidholdername = validateHolderNameChange(onAccountHolder);
@@ -722,28 +707,15 @@ export default function RegistrationScreen({navigation, route}) {
       ifscCode: onIfscCode,
       upi: onUpiId,
     };
-    axios
-      .put(BASE_URL + `/addBankAccountDeliveryBoy`, bankdetalsobj, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(response => {
-        console.log(
-          'Bank Details--------------->>>>>',
-          response?.data?.message,
-        );
-        if (response?.data?.message) {
-          navigation.navigate('BottomTabBar');
-        }
-        SimpleToast({title: response?.data?.message, isLong: true});
-      })
-      .catch(error => {
-        console.log(
-          'Bank Details error------->>>>',
-          error?.response?.data?.message,
-        );
-      });
+
+    const result = await _BankDetails(bankdetalsobj);
+    if (result?.data) {
+      navigation.navigate('BottomTabBar');
+      SimpleToast({title: result?.data?.message, isLong: true});
+    } else {
+      console.log('back catch error:', result?.data);
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+    }
   };
 
   return (
@@ -778,21 +750,45 @@ export default function RegistrationScreen({navigation, route}) {
                   Last Name
                 </Text>
               </View>
+
               <View style={Styles.TEXTMAINBOX}>
-                <TextInput
-                  placeholder="First name"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.INPUONE}
-                  value={firstName}
-                  onChangeText={text => setFirstName(text)}
-                />
-                <TextInput
-                  placeholder="Last name"
-                  placeholderTextColor={COLORS.DARK_GRAY}
-                  style={Styles.INPUONE}
-                  value={lastName}
-                  onChangeText={text => setLastName(text)}
-                />
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="First name"
+                    placeholderTextColor={COLORS.GRAYDARK}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      color: COLORS.BLACK,
+                    }}
+                    value={firstName}
+                    onChangeText={text => setFirstName(text)}
+                  />
+                  {firstNameError ? (
+                    <Text style={Styles.ERRORTEXT}>{firstNameError}</Text>
+                  ) : null}
+                </View>
+
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="Last name"
+                    placeholderTextColor={COLORS.DARK_GRAY}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      color: COLORS.BLACK,
+                    }}
+                    value={lastName}
+                    onChangeText={text => setLastName(text)}
+                  />
+                  {lastNameError ? (
+                    <Text style={Styles.ERRORTEXT}>{lastNameError}</Text>
+                  ) : null}
+                </View>
               </View>
 
               <View style={{marginHorizontal: 20, marginTop: 5}}>
@@ -828,20 +824,15 @@ export default function RegistrationScreen({navigation, route}) {
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
                   Gender
                 </Text>
-                {/* <TextInput
-                  placeholder="Gender"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.INPUTSTYLES}
-                  value={gender}
-                  onChangeText={text => setGender(text)}
-                  setWorkExperience
-                /> */}
+
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    onPress={() => setGender('male')}
+                    style={{flexDirection: 'row'}}>
                     <RadioButton
                       name="male"
                       value="male"
@@ -852,9 +843,11 @@ export default function RegistrationScreen({navigation, route}) {
                       style={{top: 10, fontWeight: '500', color: COLORS.BLACK}}>
                       Male
                     </Text>
-                  </View>
+                  </TouchableOpacity>
 
-                  <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    onPress={() => setGender('female')}
+                    style={{flexDirection: 'row'}}>
                     <RadioButton
                       name="female"
                       value="female"
@@ -865,7 +858,7 @@ export default function RegistrationScreen({navigation, route}) {
                       style={{top: 10, fontWeight: '500', color: COLORS.BLACK}}>
                       Female
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -880,6 +873,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={workExperience}
                   onChangeText={text => setWorkExperience(text)}
                 />
+                {workExperienceError ? (
+                  <Text style={Styles.ERRORTEXT}>{workExperienceError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -892,6 +888,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={emailId}
                   onChangeText={text => setEmailId(text)}
                 />
+                {emailIdError ? (
+                  <Text style={Styles.ERRORTEXT}>{emailIdError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -930,6 +929,9 @@ export default function RegistrationScreen({navigation, route}) {
                   keyboardType="number-pad"
                   onChangeText={text => setalternateMobileNo(text)}
                 />
+                {mobileAlNoError ? (
+                  <Text style={Styles.ERRORTEXT}>{mobileAlNoError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -944,6 +946,9 @@ export default function RegistrationScreen({navigation, route}) {
                   keyboardType="number-pad"
                   onChangeText={text => setEmergencyMobile(text)}
                 />
+                {emergencyMobileError ? (
+                  <Text style={Styles.ERRORTEXT}>{emergencyMobileError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -956,6 +961,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={permanentAddress}
                   onChangeText={text => setPermanentAddress(text)}
                 />
+                {permanentAddressError ? (
+                  <Text style={Styles.ERRORTEXT}>{permanentAddressError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -968,6 +976,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={stateOne}
                   onChangeText={text => setStateOne(text)}
                 />
+                {stateOneError ? (
+                  <Text style={Styles.ERRORTEXT}>{stateOneError}</Text>
+                ) : null}
               </View>
               <View style={Styles.TEXTMAINBOX}>
                 <Text style={Styles.FIRSTNAMETITLE}>City</Text>
@@ -976,23 +987,45 @@ export default function RegistrationScreen({navigation, route}) {
                 </Text>
               </View>
               <View style={Styles.TEXTMAINBOX}>
-                <TextInput
-                  placeholder="City"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.INPUONE}
-                  value={cityOne}
-                  maxLength={6}
-                  onChangeText={text => setCityOne(text)}
-                />
-                <TextInput
-                  placeholder="Pincode"
-                  placeholderTextColor={COLORS.DARK_GRAY}
-                  style={Styles.INPUONE}
-                  value={pinCodeOne}
-                  maxLength={6}
-                  keyboardType="number-pad"
-                  onChangeText={text => setPinCodeOne(text)}
-                />
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="City"
+                    placeholderTextColor={COLORS.GRAYDARK}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      color: COLORS.BLACK,
+                    }}
+                    value={cityOne}
+                    maxLength={6}
+                    onChangeText={text => setCityOne(text)}
+                  />
+                  {cityOneError ? (
+                    <Text style={Styles.ERRORTEXT}>{cityOneError}</Text>
+                  ) : null}
+                </View>
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="Pincode"
+                    placeholderTextColor={COLORS.DARK_GRAY}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      color: COLORS.BLACK,
+                    }}
+                    value={pinCodeOne}
+                    maxLength={6}
+                    keyboardType="number-pad"
+                    onChangeText={text => setPinCodeOne(text)}
+                  />
+                  {pinCodeOneError ? (
+                    <Text style={Styles.ERRORTEXT}>{pinCodeOneError}</Text>
+                  ) : null}
+                </View>
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -1005,6 +1038,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={currentAddress}
                   onChangeText={text => setCurrentAddress(text)}
                 />
+                {currentAddressError ? (
+                  <Text style={Styles.ERRORTEXT}>{currentAddressError}</Text>
+                ) : null}
               </View>
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
@@ -1017,6 +1053,9 @@ export default function RegistrationScreen({navigation, route}) {
                   value={stateTwo}
                   onChangeText={text => setStateTwo(text)}
                 />
+                {stateTwoError ? (
+                  <Text style={Styles.ERRORTEXT}>{stateTwoError}</Text>
+                ) : null}
               </View>
               <View style={Styles.TEXTMAINBOX}>
                 <Text style={Styles.FIRSTNAMETITLE}>City</Text>
@@ -1025,22 +1064,44 @@ export default function RegistrationScreen({navigation, route}) {
                 </Text>
               </View>
               <View style={Styles.TEXTMAINBOX}>
-                <TextInput
-                  placeholder="City"
-                  placeholderTextColor={COLORS.GRAYDARK}
-                  style={Styles.INPUONE}
-                  value={cityTwo}
-                  onChangeText={text => setCityTwo(text)}
-                />
-                <TextInput
-                  placeholder="Pincode"
-                  placeholderTextColor={COLORS.DARK_GRAY}
-                  style={Styles.INPUONE}
-                  value={pinCodeTwo}
-                  maxLength={6}
-                  keyboardType="number-pad"
-                  onChangeText={text => setPinCodeTwo(text)}
-                />
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="City"
+                    placeholderTextColor={COLORS.GRAYDARK}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      paddingHorizontal: 10,
+                      color: COLORS.BLACK,
+                    }}
+                    value={cityTwo}
+                    onChangeText={text => setCityTwo(text)}
+                  />
+                  {cityTwoError ? (
+                    <Text style={Styles.ERRORTEXT}>{cityTwoError}</Text>
+                  ) : null}
+                </View>
+                <View style={{width: widthPixel(170)}}>
+                  <TextInput
+                    placeholder="Pincode"
+                    placeholderTextColor={COLORS.DARK_GRAY}
+                    // style={Styles.INPUONE}
+                    style={{
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      paddingHorizontal: 10,
+                      color: COLORS.BLACK,
+                    }}
+                    value={pinCodeTwo}
+                    maxLength={6}
+                    keyboardType="number-pad"
+                    onChangeText={text => setPinCodeTwo(text)}
+                  />
+                  {pinCodeTwoError ? (
+                    <Text style={Styles.ERRORTEXT}>{pinCodeTwoError}</Text>
+                  ) : null}
+                </View>
               </View>
             </View>
           </ProgressStep>

@@ -3,8 +3,8 @@ import React from 'react';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {heightPixel} from '../Components/Dimensions';
-import {LONGITUDE_DELTA} from '../utils/Const';
-import MapView, {Marker} from 'react-native-maps';
+// import {LONGITUDE_DELTA} from '../utils/Const';
+// import MapView, {Marker} from 'react-native-maps';
 import Button from '../Components/Button';
 import Routes from '../Navigation/Routes';
 

@@ -10,6 +10,9 @@ import Toast from 'react-native-simple-toast';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from './Colors';
 import {Dimensions, StatusBar} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {checkInternetConnection} from './Handler/InternetInfo';
+import axios from 'axios';
 
 const logowithlogin = require('../Assets/LogoInLogin.png');
 const google = require('../Assets/google.png');
@@ -23,8 +26,8 @@ const recordbutton = require('../Assets/recordbutton.png');
 const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
 
-const BASE_URL = 'http:/192.168.68.109:8000/api/deliveryApp'; //  Server URL  Localhost
-// const BASE_URL = 'https://groceryfoodery-api-app.onrender.com/api/deliveryApp'; //  Server URL
+// const BASE_URL = 'http:/192.168.68.110:8000/api/deliveryApp'; //  Server URL  Localhost
+const BASE_URL = 'https://apigrocery.kickrtechnology.online/api/deliveryApp'; //  Server URL
 
 const {height, width} = Dimensions.get('window');
 
@@ -42,6 +45,7 @@ const Ionicon = ({title, size, IconColor, IconStyle}) => (
     style={IconStyle || {}}
   />
 );
+
 const MaterialCommunityIcon = ({title, size, IconColor, IconStyle}) => (
   <MaterialCommunityIcons
     name={title}
@@ -72,6 +76,7 @@ const EvilIcon = ({title, size, IconColor, IconStyle}) => (
     style={IconStyle || {}}
   />
 );
+
 const Feathers = ({title, size, IconColor, IconStyle}) => (
   <Feather name={title} size={size} color={IconColor} style={IconStyle || {}} />
 );
@@ -107,6 +112,35 @@ const CustomStatusBar = () => (
   </LinearGradient>
 );
 
+const Instance = async (method, url, header, data) => {
+  const isInternet = await checkInternetConnection();
+  console.log('isInternet', isInternet);
+  if (isInternet) {
+    try {
+      const result = await axios({
+        method: method,
+        url: url,
+        headers: header,
+        data: data,
+      });
+      return result;
+    } catch (e) {
+      return e;
+    }
+  } else {
+    // SimpleToast.show('No Internet Connection!', SimpleToast.LONG);
+    SimpleToast({title: 'No Internet Connection!', isLong: true});
+  }
+};
+
+const headerConfig = async () => {
+  const token = await AsyncStorage.getItem('token');
+  const HEADER = {
+    Authorization: `Bearer ${token}`,
+  };
+  return HEADER;
+};
+
 export {
   logowithlogin,
   google,
@@ -130,4 +164,6 @@ export {
   BASE_URL,
   SimpleToast,
   CustomStatusBar,
+  headerConfig,
+  Instance,
 };

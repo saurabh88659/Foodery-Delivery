@@ -15,6 +15,7 @@ import BottomTabBar from './BottomTabBar';
 import SplashScreen from '../Screens/SplashScreen';
 import TermsConditions from '../Screens/TermsConditions';
 import RegistrationScreen from '../Screens/RegistrationScreen';
+import Notifications from '../Screens/Notifications';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
@@ -88,6 +89,11 @@ function AuthStack() {
       <Stack.Screen
         name={Routes.REGISTRATION_SCREEN_ONE}
         component={RegistrationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.NOTIFICATIONS}
+        component={Notifications}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

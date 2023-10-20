@@ -17,6 +17,7 @@ export default {
   REGISTRATION_SCREEN: 'Registration',
   BOTTOM_TAB_BAR: 'BottomTabBar',
   REGISTRATION_SCREEN_ONE: 'RegistrationScreen',
+  NOTIFICATIONS: 'Notifications',
   /*
         BOTTOM TAB BAR
         connnects the initial screens for the screens below.

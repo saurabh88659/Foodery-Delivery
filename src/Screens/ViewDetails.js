@@ -36,6 +36,7 @@ export default function ViewDetails({navigation}) {
       name: 'boy',
     },
   ];
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <MyHeader onPress={() => navigation.goBack()} title={'View Details'} />

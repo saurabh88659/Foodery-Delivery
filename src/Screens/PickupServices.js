@@ -1,12 +1,35 @@
-import {View, Text, SafeAreaView, StyleSheet, ScrollView} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
+import React, {useState} from 'react';
 import {COLORS} from '../utils/Colors';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 
 export default function PickupServices() {
+  const [refresh, setRfresh] = useState(false);
+
+  setTimeout(() => {
+    setRfresh(false);
+  }, 5000);
+
+  const _getpickup = () => {};
+
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={_getpickup}
+            tintColor={COLORS.GREEN}
+            colors={[COLORS.PINK]}
+          />
+        }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 20}}>
         <View style={Styles.MAINBOX}>

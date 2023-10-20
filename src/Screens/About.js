@@ -61,6 +61,7 @@ const Styles = StyleSheet.create({
     justifyContent: 'center',
   },
   DOTS: {height: 10, width: 10, marginTop: 4},
+
   TEXTONE: {
     fontSize: fontPixel(15),
     color: COLORS.BLACK,

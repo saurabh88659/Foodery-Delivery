@@ -8,7 +8,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   fontPixel,
@@ -23,6 +23,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Routes from '../Navigation/Routes';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
 
 export default function Otp({navigation, route}) {
   const [isOTP, setIsOTP] = useState('');
@@ -32,10 +33,12 @@ export default function Otp({navigation, route}) {
     isLoading: false,
   });
 
-  const _HandleOTP = async () => {
-    // const fcmToken = await AsyncStorage.getItem('fcmToken');
-    // console.log('FCM TOKEN--------->>>>>', fcmToken);
+  useEffect(() => {
+    requestUserPermission();
+  }, []);
 
+  const _HandleOTP = async () => {
+    const fcmToken = await AsyncStorage.getItem('fcmToken');
     setState({
       ...state,
       isLoading: true,
@@ -44,7 +47,7 @@ export default function Otp({navigation, route}) {
     let otpdata = {
       mobileNumber: phoneNumber,
       otp: isOTP,
-      deviceToken: '123456789',
+      deviceToken: fcmToken,
     };
     axios
       .post(BASE_URL + `/verifyOTPDeliveryApp`, otpdata, {})
@@ -53,9 +56,6 @@ export default function Otp({navigation, route}) {
           ...state,
           isLoading: false,
         });
-
-        console.log('get profile data---------->>', response.data);
-
         await AsyncStorage.setItem('token', response?.data?.token);
         await AsyncStorage.setItem(
           'refreshToken',
@@ -77,12 +77,12 @@ export default function Otp({navigation, route}) {
             if (
               res?.data?.result?.firstName &&
               res?.data?.result?.email &&
-              res?.data?.result?.bankName &&
-              res?.data?.result?.ifscCode
+              res?.data?.result.bankDetails?.bankName &&
+              res?.data?.result?.bankDetails?.ifscCode
             ) {
-              navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
+              navigation.replace(Routes.BOTTOM_TAB_BAR);
             } else {
-              navigation.navigate(Routes.BOTTOM_TAB_BAR);
+              navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
             }
           })
           .catch(error => {

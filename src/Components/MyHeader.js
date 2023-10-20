@@ -24,7 +24,7 @@ const MyHeader = props => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            top: heightPixel(15),
+            // top: heightPixel(15),
           }}>
           <TouchableOpacity activeOpacity={0.6} onPress={props.onPress}>
             <Ionicon
@@ -56,7 +56,8 @@ const Styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'row',
     elevation: 10,
-    paddingVertical: StatusBar.currentHeight,
+    // paddingVertical: StatusBar.currentHeight,
+    paddingVertical: 25,
   },
 });
 

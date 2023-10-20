@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS} from '../utils/Colors';
@@ -23,130 +24,322 @@ import {
   FontAwesome6s,
   Ionicon,
   MaterialIcon,
+  SimpleToast,
 } from '../utils/Const';
 import Button from '../Components/Button';
 import {_getStorage} from '../utils/Storage';
-import axios from 'axios';
+import {
+  _getProfile,
+  _getUploadProfilePic,
+} from '../utils/Controllers/EpicControllers';
+import ImagePicker from 'react-native-image-crop-picker';
+import {BottomSheet, ColorPicker} from 'react-native-btr';
+import moment from 'moment';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function EditProfile({navigation}) {
   const [isUserData, setIsUserData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [isProfile, setIsProfile] = useState('');
+  const [isName, setIsName] = useState('');
+  const [isbirth, setIsbirth] = useState('');
+  const [isLenmark, setIsLenmark] = useState('');
+  const [iState, setIsState] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const isFocused = useIsFocused();
+
+  const [state, setState] = useState({
+    isLoading: false,
+    profileImg: null,
+  });
 
   useEffect(() => {
-    _ProfileData();
-  }, []);
+    if (isFocused) {
+      _ProfileData();
+    }
+  }, [isFocused]);
+
+  const TakePhotoFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: true,
+      width: 300,
+      height: 400,
+      quality: 1,
+      mediaType: 'any',
+    }).then(image => {
+      console.log('hey', image.path);
+      if (image) {
+        setVisible(false);
+        setState({
+          ...state,
+          profileImg: image,
+        });
+      } else {
+        console.log('Please selected Image');
+      }
+    });
+  };
+
+  const ChoosePhotoFromGalery = () => {
+    ImagePicker.openPicker({
+      cropping: true,
+      quality: 1,
+      mediaType: 'any',
+    }).then(image => {
+      console.log('hey', image.path);
+      if (image) {
+        setVisible(false);
+        setState({
+          ...state,
+          profileImg: image,
+        });
+      } else {
+        console.log('Please selected Image');
+      }
+    });
+  };
+
+  const UploadProfilePic = async () => {
+    SimpleToast({title: 'Please wait...', isLong: true});
+    var imgName = state.profileImg?.path?.replace(/^.*[\\\/]/, '');
+    let formData = new FormData();
+    formData.append('image', {
+      name: imgName,
+      type: state.profileImg?.mime,
+      uri:
+        Platform.OS === 'android'
+          ? state.profileImg?.path
+          : state.profileImg?.path?.replace('file://', ''),
+    });
+    const result = await _getUploadProfilePic(formData);
+
+    if (result?.data) {
+      console.log('UPLOAD Profile Pic', result?.data?.message);
+      SimpleToast({title: result?.data?.message, isLong: true});
+      setState({...state, profileImg: null});
+      setState({
+        ...state,
+        isLoading: false,
+      });
+    } else {
+      console.log('catch error update profile pic', result?.data);
+      SimpleToast({title: 'Server Error:', isLong: true});
+      setState({...state, profileImg: null});
+      setState({
+        ...state,
+        isLoading: false,
+      });
+    }
+  };
 
   const _ProfileData = async () => {
-    const token = await _getStorage('token');
-    axios
-      .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(response => {
-        console.log('profile response data', response?.data);
-      })
-      .catch(error => {
-        console.log('Profile catch error', error);
+    setState({
+      ...state,
+      isLoading: true,
+    });
+    const result = await _getProfile();
+    if (result?.data) {
+      console.log(
+        'profile response data',
+        result?.data?.result?.verification?.selfie2,
+      );
+      setIsName(result?.data?.result?.firstName);
+      setIsProfile(result?.data?.result);
+      setIsbirth(moment(result?.data?.result?.DOB).format('DD/MM/YYYY'));
+      // setIsLenmark();
+      setIsState(result?.data?.result);
+      setState({
+        ...state,
+        isLoading: false,
       });
+    } else {
+      console.log('Profile catch error', result?.data);
+      setState({
+        ...state,
+        isLoading: false,
+      });
+    }
+  };
+
+  const toggleBottomNavigationView = () => {
+    setVisible(!visible);
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: heightPixel(30)}}>
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={[COLORS.PURPLE, COLORS.PINK]}
-          style={Styles.linearGradient}>
-          <View style={{}}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.6}
-              style={Styles.BACKICONSTYL}>
-              <Ionicon
-                title="arrow-back-outline"
-                size={30}
-                IconColor={COLORS.WHITE}
-              />
-            </TouchableOpacity>
-            <View style={Styles.IMAGEBOX}>
-              <Image
-                source={require('../Assets/Ravi.jpg')}
+      {state.isLoading ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color={COLORS.PINK} />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: heightPixel(30)}}>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={[COLORS.PURPLE, COLORS.PINK]}
+            style={Styles.linearGradient}>
+            <View style={{}}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                activeOpacity={0.6}
+                style={Styles.BACKICONSTYL}>
+                <Ionicon
+                  title="arrow-back-outline"
+                  size={30}
+                  IconColor={COLORS.WHITE}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={toggleBottomNavigationView}
+                style={[Styles.IMAGEBOX, {position: 'absolute'}]}>
+                {/* <Image
+                source={{uri: isProfile?.verification?.selfie2}}
                 style={Styles.IMAGE}
-              />
+              /> */}
+                {state.profileImg || isProfile?.verification?.selfie1 ? (
+                  <Image
+                    source={
+                      state.profileImg
+                        ? {uri: state.profileImg?.path}
+                        : {uri: isProfile?.verification?.selfie1}
+                    }
+                    style={Styles.IMAGE}
+                  />
+                ) : null}
+              </TouchableOpacity>
             </View>
+          </LinearGradient>
+
+          <View style={Styles.sectionStyle}>
+            <FontAwesome title="user" size={25} IconColor={COLORS.PINK} />
+            <TextInput
+              style={Styles.input}
+              placeholder="Enter Name"
+              placeholderTextColor="#888888"
+              value={isName}
+              onChangeText={text => setIsName(text)}
+            />
           </View>
-        </LinearGradient>
-        <View style={Styles.sectionStyle}>
-          <FontAwesome title="user" size={25} IconColor={COLORS.PINK} />
-          <TextInput
-            style={Styles.input}
-            // placeholder="Enter Name"
-            placeholderTextColor="#888888"
-            // onChangeText={handleChange('email')}
-            // onBlur={handleBlur('email')}
-            // value={values.email}
-          />
+          <View
+            style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
+            <MaterialIcon title="redeem" size={25} IconColor={COLORS.PINK} />
+            <TextInput
+              style={Styles.input}
+              placeholder="Please Enter Date Of Birth"
+              placeholderTextColor="#888888"
+              // onChangeText={handleChange('email')}
+              // onBlur={handleBlur('email')}
+              // value={values.email}
+              value={isbirth}
+              onChangeText={text => setIsbirth(text)}
+            />
+          </View>
+          <View
+            style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
+            <MaterialIcon title="domain" size={25} IconColor={COLORS.PINK} />
+            <TextInput
+              style={Styles.input}
+              placeholder="Enter Lenmark"
+              placeholderTextColor="#888888"
+              // onChangeText={handleChange('email')}
+              // onBlur={handleBlur('email')}
+              // value={values.email}
+            />
+          </View>
+          <View
+            style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
+            <FontAwesome6s
+              title="map-location-dot"
+              size={25}
+              IconColor={COLORS.PINK}
+            />
+            <TextInput
+              style={Styles.input}
+              placeholder="Phone or Email"
+              placeholderTextColor="#888888"
+              // onChangeText={handleChange('email')}
+              // onBlur={handleBlur('email')}
+              // value={values.email}
+            />
+          </View>
+          <View
+            style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
+            <MaterialIcon
+              title="location-city"
+              size={25}
+              IconColor={COLORS.PINK}
+            />
+            <TextInput
+              style={Styles.input}
+              placeholder="Please Enter State"
+              placeholderTextColor="#888888"
+              // onChangeText={handleChange('email')}
+              // onBlur={handleBlur('email')}
+              // value={values.email}
+            />
+          </View>
+          <View style={{marginVertical: heightPixel(30)}}>
+            <Button title={'Save Changes'} onPress={UploadProfilePic} />
+          </View>
+        </ScrollView>
+      )}
+
+      <BottomSheet
+        visible={visible}
+        onBackButtonPress={toggleBottomNavigationView}
+        onBackdropPress={toggleBottomNavigationView}>
+        <View style={Styles.bottomNavigationView}>
+          <View style={{marginTop: 60}}>
+            <TouchableOpacity
+              onPress={TakePhotoFromCamera}
+              style={{
+                paddingVertical: 15,
+                backgroundColor: COLORS.PINK,
+                alignItems: 'center',
+                marginHorizontal: 20,
+                borderRadius: 4,
+              }}>
+              <Text
+                style={{color: COLORS.WHITE, fontWeight: '500', fontSize: 17}}>
+                Take Photo
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={ChoosePhotoFromGalery}
+              style={{
+                paddingVertical: 15,
+                backgroundColor: COLORS.PINK,
+                alignItems: 'center',
+                marginHorizontal: 20,
+                borderRadius: 4,
+                marginTop: 20,
+              }}>
+              <Text
+                style={{color: COLORS.WHITE, fontWeight: '500', fontSize: 17}}>
+                Choose From Gellery
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setVisible(!visible)}
+              style={{
+                paddingVertical: 15,
+                backgroundColor: COLORS.PINK,
+                alignItems: 'center',
+                marginHorizontal: 20,
+                borderRadius: 4,
+                marginTop: 20,
+              }}>
+              <Text
+                style={{color: COLORS.WHITE, fontWeight: '500', fontSize: 17}}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
-          <MaterialIcon title="redeem" size={25} IconColor={COLORS.PINK} />
-          <TextInput
-            style={Styles.input}
-            // placeholder="Enter Date of Birth"
-            placeholderTextColor="#888888"
-            // onChangeText={handleChange('email')}
-            // onBlur={handleBlur('email')}
-            // value={values.email}
-          />
-        </View>
-        <View style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
-          <MaterialIcon title="domain" size={25} IconColor={COLORS.PINK} />
-          <TextInput
-            style={Styles.input}
-            // placeholder="Enter Lenmark"
-            placeholderTextColor="#888888"
-            // onChangeText={handleChange('email')}
-            // onBlur={handleBlur('email')}
-            // value={values.email}
-          />
-        </View>
-        <View style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
-          <FontAwesome6s
-            title="map-location-dot"
-            size={25}
-            IconColor={COLORS.PINK}
-          />
-          <TextInput
-            style={Styles.input}
-            // placeholder="Phone or Email"
-            placeholderTextColor="#888888"
-            // onChangeText={handleChange('email')}
-            // onBlur={handleBlur('email')}
-            // value={values.email}
-          />
-        </View>
-        <View style={[Styles.sectionStyle, {marginTop: pixelSizeVertical(20)}]}>
-          <MaterialIcon
-            title="location-city"
-            size={25}
-            IconColor={COLORS.PINK}
-          />
-          <TextInput
-            style={Styles.input}
-            // placeholder="Phone or Email"
-            placeholderTextColor="#888888"
-            // onChangeText={handleChange('email')}
-            // onBlur={handleBlur('email')}
-            // value={values.email}
-          />
-        </View>
-        <View style={{marginVertical: heightPixel(30)}}>
-          <Button title={'Save Changes'} />
-        </View>
-      </ScrollView>
+      </BottomSheet>
     </SafeAreaView>
   );
 }
@@ -176,6 +369,7 @@ const Styles = StyleSheet.create({
     width: 122,
     resizeMode: 'contain',
     borderRadius: 130 / 2,
+    backgroundColor: COLORS.PINK,
   },
   QBOXONE: {
     marginTop: pixelSizeVertical(100),
@@ -207,9 +401,17 @@ const Styles = StyleSheet.create({
     borderColor: COLORS.PINK,
   },
   input: {
-    height: 40,
+    // height: 40,
     color: COLORS.BLACK,
     fontSize: 15,
     paddingHorizontal: 20,
+    width: widthPixel(330),
+  },
+  bottomNavigationView: {
+    backgroundColor: '#fff',
+    width: '100%',
+    height: 280,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });

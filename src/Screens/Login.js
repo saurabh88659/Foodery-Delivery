@@ -27,7 +27,6 @@ import {
 } from '../utils/Const';
 import Routes from '../Navigation/Routes';
 import axios from 'axios';
-
 export default function Login({navigation}) {
   const [phoneNo, setPhoneNo] = useState('');
   const [errorMobileNumber, setErrorMobileNumber] = useState(null);
@@ -52,9 +51,11 @@ export default function Login({navigation}) {
       ...state,
       isLoading: true,
     });
+
     const dataPhone = {
       mobileNumber: phoneNo,
     };
+
     axios
       .post(BASE_URL + `/loginDeliveryApp`, dataPhone, {})
       .then(response => {

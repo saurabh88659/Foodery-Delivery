@@ -19,6 +19,7 @@ import {checkInternetConnection} from '../utils/Handler/InternetInfo';
 import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {_getProfile} from '../utils/Controllers/EpicControllers';
 
 export default function SplashScreen({navigation}) {
   const [hasInternet, setHasInternet] = useState(false);
@@ -26,20 +27,14 @@ export default function SplashScreen({navigation}) {
   const [isloadData, setIsloadData] = useState(false);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   navigation.replace(Routes.LOG_IN_SCREEN);
-    // }, 2000);
     _Handle_Splash_SCREEN();
   }, []);
 
   const _Handle_Splash_SCREEN = async () => {
-    console.log('hey1');
     setIsloadData(true);
     const token = await _getStorage('token');
     checkInternetConnection().then(isInternet => {
       if (isInternet) {
-        console.log('hey2');
-
         if (token) {
           axios
             .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
@@ -48,18 +43,17 @@ export default function SplashScreen({navigation}) {
               },
             })
             .then(resp => {
-              console.log('response--------->>>>', resp.data);
               if (
                 resp.data.result.firstName &&
                 resp?.data?.result.email &&
-                resp?.data?.result.bankName &&
-                resp?.data?.result.ifscCode
+                resp?.data?.result.bankDetails?.bankName &&
+                resp?.data?.result?.bankDetails?.ifscCode
               ) {
-                navigation.navigate(Routes.LOG_IN_SCREEN);
-                console.log('Splahs screen ======D===', resp?.data?.result);
+                console.log('Splahs screen ======D===', resp.data);
                 setIsloadData(false);
+                navigation.replace(Routes.BOTTOM_TAB_BAR);
               } else {
-                navigation.navigate(Routes.BOTTOM_TAB_BAR);
+                navigation.navigate(Routes.LOG_IN_SCREEN);
                 console.log('Splahs screen =========', resp?.data?.result);
               }
             })
@@ -77,17 +71,11 @@ export default function SplashScreen({navigation}) {
                   const deliveryBoyId = await AsyncStorage.getItem(
                     'deliveryBoy_id',
                   );
-
-                  console.log('userId--------->>', deliveryBoyId);
                   const SubmitDAta = {
                     refreshToken: resfreshToken,
                     deliveryBoy_id: deliveryBoyId,
                   };
 
-                  console.log('SubmitDAta==========', SubmitDAta);
-
-                  //refresh token api
-                  // console.log('refresh token------->>', SubmitDAta);
                   axios
                     .post(BASE_URL + `/User/refreshToken`, SubmitDAta)
 
@@ -101,9 +89,6 @@ export default function SplashScreen({navigation}) {
 
                       if (res?.data?.token) {
                         navigation.replace(Routes.BOTTOM_TAB_BAR);
-                        console.log(
-                          'heyyyyyyyyyyyy====================================0000000000000',
-                        );
                       }
                     })
                     .catch(error => {

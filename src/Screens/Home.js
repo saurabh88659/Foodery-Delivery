@@ -5,6 +5,8 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,52 +22,108 @@ import {
   BASE_URL,
   FontAwesome,
   MaterialCommunityIcon,
+  SimpleToast,
   manlogo,
 } from '../utils/Const';
 import DeliveryServices from './DeliveryServices';
 import PickupServices from './PickupServices';
 import {_getStorage} from '../utils/Storage';
-import axios from 'axios';
+import {_countOrder} from '../utils/Controllers/EpicControllers';
+import Routes from '../Navigation/Routes';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
 
 const Tab = createMaterialTopTabNavigator();
-export default function Home() {
+export default function Home({navigation}) {
   const [isCount, setIsCount] = useState({});
+  const Locations = useSelector(state => state.LocationReducer);
+  console.log('Locations====', Locations);
+
   useEffect(() => {
     _CountData();
+    requestUserPermission();
   }, []);
 
   const _CountData = async () => {
-    const token = await _getStorage('token');
-    console.log('token-----------', token);
+    const fcmToken = await AsyncStorage.getItem('fcmToken');
 
-    axios
-      .get(BASE_URL + `/getCountOrderData`, {
-        headers: {Authorization: `Bearer ${token}`},
-      })
-      .then(response => {
-        console.log('response data get count total---------', response?.data);
-        setIsCount(response?.data);
-      })
-      .catch(error => {
-        console.log('get count catch error-------->>', error);
-      });
+    console.log('fcmToken', fcmToken);
+    const result = await _countOrder();
+    if (result?.data) {
+      setIsCount(result?.data);
+    } else {
+      console.log('count catch error', result?.data);
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+    }
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', backAction);
+    };
+  }, []);
+
+  let currentCount = 0;
+
+  const backAction = () => {
+    if (navigation.isFocused()) {
+      if (Platform.OS === 'ios') return;
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          if (currentCount === 1) {
+            BackHandler.exitApp();
+            subscription.remove();
+            return true;
+          }
+          backPressHandler();
+          return true;
+        },
+      );
+
+      return true;
+    }
+  };
+
+  const backPressHandler = () => {
+    if (currentCount < 1) {
+      SimpleToast({title: 'Press back again to exit:', isLong: true});
+      currentCount += 1;
+    }
+    setTimeout(() => {
+      currentCount = 0;
+    }, 3000);
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
+      {/* <StatusBar translucent backgroundColor="transparent" /> */}
+
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={[COLORS.PURPLE, COLORS.PINK]}
         style={Styles.linearGradient}>
         <View style={Styles.MAINBOX}>
+          <View></View>
           <Text style={Styles.TEXTHEADER}>Home</Text>
-          <MaterialCommunityIcon
-            title="bell-ring"
-            size={30}
-            IconColor={COLORS.WHITE}
-            IconStyle={{alignSelf: 'flex-end', left: widthPixel(140)}}
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
+            activeOpacity={0.6}>
+            <MaterialCommunityIcon
+              title="bell-ring"
+              size={30}
+              IconColor={COLORS.WHITE}
+              IconStyle={
+                {
+                  // alignSelf: 'flex-end',
+                  // left: widthPixel(140),
+                }
+              }
+            />
+          </TouchableOpacity>
         </View>
       </LinearGradient>
       <View style={{justifyContent: 'flex-start'}}>
@@ -115,20 +173,21 @@ const Styles = StyleSheet.create({
   },
   linearGradient: {
     backgroundColor: COLORS.GREEN,
-    paddingHorizontal: '3%',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    flexDirection: 'row',
     elevation: 10,
-    paddingVertical: StatusBar.currentHeight,
+    // paddingVertical: StatusBar.currentHeight,
+    // marginTop: 100,
+    paddingVertical: 25,
   },
   MAINBOX: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     width: widthPixel(screenWidth),
-    top: heightPixel(15),
+    // top: heightPixel(15),
+    // marginHorizontal: 15,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   TEXTHEADER: {
     color: COLORS.WHITE,
