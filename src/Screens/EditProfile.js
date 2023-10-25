@@ -19,7 +19,6 @@ import {
   widthPixel,
 } from '../Components/Dimensions';
 import {
-  BASE_URL,
   FontAwesome,
   FontAwesome6s,
   Ionicon,
@@ -33,7 +32,7 @@ import {
   _getUploadProfilePic,
 } from '../utils/Controllers/EpicControllers';
 import ImagePicker from 'react-native-image-crop-picker';
-import {BottomSheet, ColorPicker} from 'react-native-btr';
+import {BottomSheet} from 'react-native-btr';
 import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -47,6 +46,10 @@ export default function EditProfile({navigation}) {
   const [iState, setIsState] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const isFocused = useIsFocused();
+  const [mobileNum, setMobileNum] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [isState, seIstState] = useState('');
 
   const [state, setState] = useState({
     isLoading: false,
@@ -102,6 +105,7 @@ export default function EditProfile({navigation}) {
   const UploadProfilePic = async () => {
     SimpleToast({title: 'Please wait...', isLong: true});
     var imgName = state.profileImg?.path?.replace(/^.*[\\\/]/, '');
+
     let formData = new FormData();
     formData.append('image', {
       name: imgName,
@@ -139,10 +143,9 @@ export default function EditProfile({navigation}) {
     });
     const result = await _getProfile();
     if (result?.data) {
-      console.log(
-        'profile response data',
-        result?.data?.result?.verification?.selfie2,
-      );
+      setAddress(result?.data?.result?.currentAddress.address);
+      setCity(result?.data?.result?.currentAddress?.city);
+      seIstState(result?.data?.result?.currentAddress?.state);
       setIsName(result?.data?.result?.firstName);
       setIsProfile(result?.data?.result);
       setIsbirth(moment(result?.data?.result?.DOB).format('DD/MM/YYYY'));
@@ -221,6 +224,7 @@ export default function EditProfile({navigation}) {
               placeholderTextColor="#888888"
               value={isName}
               onChangeText={text => setIsName(text)}
+              editable={false}
             />
           </View>
           <View
@@ -230,11 +234,9 @@ export default function EditProfile({navigation}) {
               style={Styles.input}
               placeholder="Please Enter Date Of Birth"
               placeholderTextColor="#888888"
-              // onChangeText={handleChange('email')}
-              // onBlur={handleBlur('email')}
-              // value={values.email}
               value={isbirth}
               onChangeText={text => setIsbirth(text)}
+              editable={false}
             />
           </View>
           <View
@@ -242,11 +244,11 @@ export default function EditProfile({navigation}) {
             <MaterialIcon title="domain" size={25} IconColor={COLORS.PINK} />
             <TextInput
               style={Styles.input}
-              placeholder="Enter Lenmark"
+              placeholder="Enter City"
               placeholderTextColor="#888888"
-              // onChangeText={handleChange('email')}
-              // onBlur={handleBlur('email')}
-              // value={values.email}
+              value={city}
+              onChangeText={text => setCity(text)}
+              editable={false}
             />
           </View>
           <View
@@ -258,11 +260,11 @@ export default function EditProfile({navigation}) {
             />
             <TextInput
               style={Styles.input}
-              placeholder="Phone or Email"
+              placeholder="Please Enter Address"
               placeholderTextColor="#888888"
-              // onChangeText={handleChange('email')}
-              // onBlur={handleBlur('email')}
-              // value={values.email}
+              value={address}
+              onChangeText={text => setAddress(text)}
+              editable={false}
             />
           </View>
           <View
@@ -276,9 +278,8 @@ export default function EditProfile({navigation}) {
               style={Styles.input}
               placeholder="Please Enter State"
               placeholderTextColor="#888888"
-              // onChangeText={handleChange('email')}
-              // onBlur={handleBlur('email')}
-              // value={values.email}
+              value={isState}
+              onChangeText={text => seIstState(text)}
             />
           </View>
           <View style={{marginVertical: heightPixel(30)}}>

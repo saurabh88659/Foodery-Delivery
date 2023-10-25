@@ -3,7 +3,7 @@ import React from 'react';
 import {COLORS} from '../utils/Colors';
 import MyHeader from '../Components/MyHeader';
 import Lottie from 'lottie-react-native';
-import {thankyou} from '../utils/Const';
+import {CustomStatusBar, thankyou} from '../utils/Const';
 import {fontPixel, heightPixel} from '../Components/Dimensions';
 import Button from '../Components/Button';
 import Routes from '../Navigation/Routes';
@@ -11,6 +11,8 @@ import Routes from '../Navigation/Routes';
 export default function VerificationThanks({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINER}>
+      <CustomStatusBar />
+
       <MyHeader onPress={() => navigation.goBack()} title={'Verification'} />
       <Lottie
         source={thankyou}

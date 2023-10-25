@@ -13,7 +13,8 @@ import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import Button from '../Components/Button';
 import ImagePicker from 'react-native-image-crop-picker';
 import Routes from '../Navigation/Routes';
-import {Ionicon, SimpleToast} from '../utils/Const';
+import {CustomStatusBar, Ionicon, SimpleToast} from '../utils/Const';
+import {_putVerifyselfie} from '../utils/Controllers/EpicControllers';
 
 export default function VerificationSelfie({navigation}) {
   const [state, setState] = useState({
@@ -44,18 +45,34 @@ export default function VerificationSelfie({navigation}) {
       });
   };
 
-  const _uploadimage = image => {
-    if (image.path) {
+  const _uploadimage = async () => {
+    SimpleToast({title: 'Please wait...', isLong: true});
+    var imgName = state.profileImg?.path?.replace(/^.*[\\\/]/, '');
+    let formData = new FormData();
+    formData.append('image', {
+      name: imgName,
+      type: state.profileImg?.mime,
+      uri:
+        Platform.OS === 'android'
+          ? state.profileImg?.path
+          : state.profileImg?.path?.replace('file://', ''),
+    });
+    const result = await _putVerifyselfie(formData);
+    if (result?.data) {
+      console.log('upload image=====>>>>', result?.data?.message);
+      SimpleToast({title: result?.data?.message, isLong: true});
       setTimeout(() => {
         navigation.navigate(Routes.VERIFICATION_THANKS);
       }, 3000);
     } else {
-      console.log('no image');
+      console.log('upload image catch error', result?.response?.data?.message);
+      // SimpleToast({title: result?.response?.data?.message, isLong: true});
     }
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINER}>
+      <CustomStatusBar />
       <MyHeader onPress={() => navigation.goBack()} title={'Verification'} />
       <View style={{alignItems: 'center', marginTop: 15}}>
         <Text style={Styles.HeadersText}>

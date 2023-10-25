@@ -14,7 +14,6 @@ const Tab = createBottomTabNavigator();
 
 // const getTabBarVisibility = route => {
 //   const routeName = getFocusedRouteNameFromRoute(route);
-
 //   if (routeName === 'FruitsVegetables' || routeName === 'SubCategories') {
 //     return 'none';
 //   }
@@ -26,7 +25,7 @@ function BottomTabBar() {
     <Tab.Navigator
       initialRouteName={Routes.TAB_HOME}
       tabBarHideOnKeyboard={true}
-      backBehavior="none"
+      // backBehavior="none"
       screenOptions={{
         showLabel: false,
         headerShown: true,

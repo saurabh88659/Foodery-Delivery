@@ -7,11 +7,18 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS} from '../utils/Colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {BASE_URL, CustomStatusBar, logowithlogin} from '../utils/Const';
+import {
+  BASE_URL,
+  CustomStatusBar,
+  SimpleToast,
+  logowithlogin,
+} from '../utils/Const';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
 import {_getStorage} from '../utils/Storage';
@@ -49,15 +56,12 @@ export default function SplashScreen({navigation}) {
                 resp?.data?.result.bankDetails?.bankName &&
                 resp?.data?.result?.bankDetails?.ifscCode
               ) {
-                console.log('Splahs screen ======D===', resp.data);
                 setIsloadData(false);
                 navigation.replace(Routes.BOTTOM_TAB_BAR);
               } else {
                 navigation.navigate(Routes.LOG_IN_SCREEN);
-                console.log('Splahs screen =========', resp?.data?.result);
               }
             })
-
             .catch(async err => {
               if (err.response?.data) {
                 if (err.response?.data?.message == 'You are not  user.!') {

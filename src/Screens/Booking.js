@@ -13,7 +13,7 @@ import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {fontPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
-import {SimpleToast, manlogo} from '../utils/Const';
+import {CustomStatusBar, SimpleToast, manlogo} from '../utils/Const';
 import {_getallBokking} from '../utils/Controllers/EpicControllers';
 import moment from 'moment';
 export default function Booking({navigation}) {
@@ -30,7 +30,6 @@ export default function Booking({navigation}) {
     setIsLoading(true);
     if (result?.data) {
       setIsLoading(false);
-      console.log('result data------>>>>', result?.data?.result);
       setIsbookingdata(result?.data?.result);
     } else {
       setIsLoading(false);
@@ -42,7 +41,11 @@ export default function Booking({navigation}) {
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      <MyHeader onPress={() => navigation.goBack()} title={'My Booking'} />
+      <CustomStatusBar />
+      <MyHeader
+        onPress={() => navigation.navigate(Routes.HOME_SCREEN)}
+        title={'My Booking'}
+      />
       {isLoading ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator size="large" color={COLORS.PINK} />

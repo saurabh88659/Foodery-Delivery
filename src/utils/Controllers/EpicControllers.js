@@ -153,3 +153,20 @@ export const _viewDetailsByid = async id => {
     return e;
   }
 };
+
+export const _putVerifyselfie = async data => {
+  const header = await headerConfig();
+  header['Content-type'] = 'multipart/form-data';
+
+  try {
+    const result = await Instance(
+      'PUT',
+      BASE_URL + '/updateDeliveryBoyImage',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};

@@ -18,6 +18,44 @@ import Routes from '../Navigation/Routes';
 // import Routes from '../Navigation/Routes';
 
 export default function Loginaccount({navigation}) {
+  const [username, setUsername] = useState('');
+  const [passowrd, setPassword] = useState('');
+
+  const [usernameError, setUsernameError] = useState('');
+  const [passowrdError, setPasswordError] = useState('');
+
+  const validatUserName = () => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(username)) {
+      setUsernameError('Please enter a valid User Name');
+      return false;
+    } else {
+      setUsernameError('');
+      return true;
+    }
+  };
+
+  const validatPassword = () => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(passowrd)) {
+      setPasswordError('Please enter a valid Password');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+  };
+
+  const _Handle_Submit = () => {
+    const isValidUser = validatUserName(username);
+    const isvalidpassword = validatPassword(passowrd);
+    if (isValidUser && isvalidpassword) {
+      console.log('heeeee');
+    } else {
+      console.log('hey=====>>>');
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={Styles.CONTAINERMAIN}>
@@ -40,7 +78,12 @@ export default function Loginaccount({navigation}) {
                 placeholder="Please Enter Your Name"
                 placeholderTextColor={COLORS.GRAYDARK}
                 style={Styles.INPUT}
+                value={username}
+                onChangeText={text => setUsername(text)}
               />
+              {usernameError ? (
+                <Text style={Styles.ERRORTEXT}>{usernameError}</Text>
+              ) : null}
               <Text style={[Styles.MAINBOXTEXT, {marginTop: 15}]}>
                 Password
               </Text>
@@ -48,12 +91,18 @@ export default function Loginaccount({navigation}) {
                 placeholder="Password"
                 placeholderTextColor={COLORS.GRAYDARK}
                 style={Styles.INPUT}
+                value={passowrd}
+                onChangeText={text => setPassword(text)}
               />
+              {passowrdError ? (
+                <Text style={Styles.ERRORTEXT}>{passowrdError}</Text>
+              ) : null}
             </View>
             <View style={{marginVertical: heightPixel(50)}}>
               <Button
                 title={'Login'}
-                onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
+                // onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
+                onPress={_Handle_Submit}
               />
             </View>
           </View>
@@ -124,5 +173,10 @@ const Styles = StyleSheet.create({
     borderRadius: 7,
     marginTop: 10,
     color: COLORS.BLACK,
+  },
+  ERRORTEXT: {
+    color: 'red',
+    fontSize: 11,
+    top: 4,
   },
 });

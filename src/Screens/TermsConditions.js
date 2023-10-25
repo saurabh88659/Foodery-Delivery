@@ -10,11 +10,13 @@ import React from 'react';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {fontPixel} from '../Components/Dimensions';
-import {recordbutton} from '../utils/Const';
+import {CustomStatusBar, recordbutton} from '../utils/Const';
 
 export default function TermsConditions({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
+      <CustomStatusBar />
+
       <MyHeader
         onPress={() => navigation.goBack()}
         title={'Terms and Conditions'}

@@ -32,7 +32,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import axios from 'axios';
+// import axios from 'axios';
 import {_getStorage} from '../utils/Storage';
 import {
   _BankDetails,
@@ -340,10 +340,7 @@ export default function RegistrationScreen({navigation, route}) {
         state: stateOne,
       },
     };
-
-    // console.log('personalobj-------------->>>', personalobj);
     const result = await _signUp(personalobj);
-
     if (result?.data) {
       setIsError(false);
       console.log('response data sign up---------------', result?.data);

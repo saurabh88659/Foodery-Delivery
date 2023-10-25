@@ -20,6 +20,7 @@ import {
 import {COLORS} from '../utils/Colors';
 import {
   BASE_URL,
+  CustomStatusBar,
   FontAwesome,
   MaterialCommunityIcon,
   SimpleToast,
@@ -47,8 +48,7 @@ export default function Home({navigation}) {
 
   const _CountData = async () => {
     const fcmToken = await AsyncStorage.getItem('fcmToken');
-
-    console.log('fcmToken', fcmToken);
+    // console.log('fcmToken', fcmToken);
     const result = await _countOrder();
     if (result?.data) {
       setIsCount(result?.data);
@@ -99,8 +99,7 @@ export default function Home({navigation}) {
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      {/* <StatusBar translucent backgroundColor="transparent" /> */}
-
+      <CustomStatusBar />
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
@@ -110,7 +109,7 @@ export default function Home({navigation}) {
           <View></View>
           <Text style={Styles.TEXTHEADER}>Home</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
+            onPress={() => navigation.navigate(Routes.LOGIN_ACCOUNT)}
             activeOpacity={0.6}>
             <MaterialCommunityIcon
               title="bell-ring"
@@ -174,20 +173,19 @@ const Styles = StyleSheet.create({
   linearGradient: {
     backgroundColor: COLORS.GREEN,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     elevation: 10,
     // paddingVertical: StatusBar.currentHeight,
     // marginTop: 100,
-    paddingVertical: 25,
+    paddingVertical: 15,
+
+    alignItems: 'center',
   },
   MAINBOX: {
-    alignItems: 'center',
-    width: widthPixel(screenWidth),
-    // top: heightPixel(15),
-    // marginHorizontal: 15,
-    justifyContent: 'space-between',
+    flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
   },
   TEXTHEADER: {
     color: COLORS.WHITE,

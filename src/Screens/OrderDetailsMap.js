@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import React from 'react';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
@@ -7,10 +7,14 @@ import {heightPixel} from '../Components/Dimensions';
 // import MapView, {Marker} from 'react-native-maps';
 import Button from '../Components/Button';
 import Routes from '../Navigation/Routes';
+import {CustomStatusBar} from '../utils/Const';
 
 export default function OrderDetailsMap({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINER}>
+      {/* <StatusBar backgroundColor={COLORS.WHITE} barStyle="dark-content" /> */}
+      <CustomStatusBar />
+
       <MyHeader onPress={() => navigation.goBack()} title={'Order Details'} />
       <View style={Styles.CARTSTY}>
         <View style={Styles.HEDTEXT}>
