@@ -3,12 +3,9 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  StatusBar,
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  PermissionsAndroid,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS} from '../utils/Colors';
@@ -40,71 +37,72 @@ export default function SplashScreen({navigation}) {
   const _Handle_Splash_SCREEN = async () => {
     setIsloadData(true);
     const token = await _getStorage('token');
+    const isNew = await AsyncStorage.getItem('isNew');
+
     checkInternetConnection().then(isInternet => {
       if (isInternet) {
         if (token) {
-          axios
-            .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-            .then(resp => {
-              if (
-                resp.data.result.firstName &&
-                resp?.data?.result.email &&
-                resp?.data?.result.bankDetails?.bankName &&
-                resp?.data?.result?.bankDetails?.ifscCode
-              ) {
-                setIsloadData(false);
-                navigation.replace(Routes.BOTTOM_TAB_BAR);
-              } else {
-                navigation.navigate(Routes.LOG_IN_SCREEN);
-              }
-            })
-            .catch(async err => {
-              if (err.response?.data) {
-                if (err.response?.data?.message == 'You are not  user.!') {
-                  navigation.replace(Routes.LOG_IN_SCREEN);
-                } else if (
-                  err.response.data?.message === 'Token is not valid!'
-                ) {
-                  const resfreshToken = await AsyncStorage.getItem(
-                    'refreshToken',
-                  );
-                  const deliveryBoyId = await AsyncStorage.getItem(
-                    'deliveryBoy_id',
-                  );
-                  const SubmitDAta = {
-                    refreshToken: resfreshToken,
-                    deliveryBoy_id: deliveryBoyId,
-                  };
-
-                  axios
-                    .post(BASE_URL + `/User/refreshToken`, SubmitDAta)
-
-                    .then(async res => {
-                      // console.log('dablu------------------', res?.data);
-                      await AsyncStorage.setItem('token', res?.data?.token);
-                      await AsyncStorage.setItem(
-                        'refreshToken',
-                        res.data.refreshToken,
-                      );
-
-                      if (res?.data?.token) {
-                        navigation.replace(Routes.BOTTOM_TAB_BAR);
-                      }
-                    })
-                    .catch(error => {
-                      console.log('errr--->>>', error?.response?.data?.message);
-                      navigation.replace(Routes.BOTTOM_TAB_BAR);
-                      setIsLoading(false);
-                      setIsloadData(false);
-                    });
-                  // update access token in storage
+          if (JSON.parse(isNew)) {
+            navigation.navigate(Routes.LOG_IN_SCREEN);
+          } else {
+            axios
+              .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(resp => {
+                if (resp?.data?.result?.status === 'pending') {
+                  navigation.replace(Routes.LOGIN_ACCOUNT);
+                } else if (resp?.data?.result?.status === 'accepted') {
+                  navigation.replace(Routes.BOTTOM_TAB_BAR);
+                } else {
+                  navigation.navigate(Routes.LOG_IN_SCREEN);
                 }
-              }
-            });
+              })
+              .catch(async err => {
+                if (err.response?.data) {
+                  if (err.response?.data?.message == 'You are not  user.!') {
+                    navigation.replace(Routes.LOG_IN_SCREEN);
+                  } else if (
+                    err.response.data?.message === 'Token is not valid!'
+                  ) {
+                    const resfreshToken = await AsyncStorage.getItem(
+                      'refreshToken',
+                    );
+                    const deliveryBoyId = await AsyncStorage.getItem(
+                      'deliveryBoy_id',
+                    );
+                    const SubmitDAta = {
+                      refreshToken: resfreshToken,
+                      deliveryBoy_id: deliveryBoyId,
+                    };
+                    axios
+                      .post(BASE_URL + `/User/refreshToken`, SubmitDAta)
+                      .then(async res => {
+                        await AsyncStorage.setItem('token', res?.data?.token);
+                        await AsyncStorage.setItem(
+                          'refreshToken',
+                          res.data.refreshToken,
+                        );
+                        if (res?.data?.token) {
+                          navigation.replace(Routes.BOTTOM_TAB_BAR);
+                        }
+                      })
+                      .catch(error => {
+                        console.log(
+                          'errr--->>>',
+                          error?.response?.data?.message,
+                        );
+                        navigation.replace(Routes.BOTTOM_TAB_BAR);
+                        setIsLoading(false);
+                        setIsloadData(false);
+                      });
+                    // update access token in storage
+                  }
+                }
+              });
+          }
         } else {
           navigation.replace(Routes.LOG_IN_SCREEN);
         }
@@ -119,7 +117,6 @@ export default function SplashScreen({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <CustomStatusBar />
-
       {isLoading ? (
         <LinearGradient
           colors={[COLORS.PURPLE, COLORS.PINK]}

@@ -27,6 +27,7 @@ import {
 } from '../utils/Const';
 import Routes from '../Navigation/Routes';
 import axios from 'axios';
+import {_postphone} from '../utils/Controllers/EpicControllers';
 export default function Login({navigation}) {
   const [phoneNo, setPhoneNo] = useState('');
   const [errorMobileNumber, setErrorMobileNumber] = useState(null);
@@ -46,40 +47,28 @@ export default function Login({navigation}) {
     }
   };
 
-  const _HandleSend = () => {
+  const _HandleSend = async () => {
     setState({
       ...state,
       isLoading: true,
     });
-
     const dataPhone = {
       mobileNumber: phoneNo,
     };
-
-    axios
-      .post(BASE_URL + `/loginDeliveryApp`, dataPhone, {})
-      .then(response => {
-        console.log('response login --------', response);
-        if (response?.data?.message == 'OTP Sent Successfully') {
-          SimpleToast({title: response?.data?.message, isLong: true});
-          navigation.navigate(Routes.OTP_SCREEN, phoneNo);
-          setState({
-            ...state,
-            isLoading: false,
-          });
-        } else {
-          console.log('else condtion');
-        }
-        console.log('Login response', response?.data);
-      })
-      .catch(error => {
-        console.log('Login Catch error', error?.response?.data?.message);
-        // SimpleToast({title: error?.response?.data?.message, isLong: true});
+    const result = await _postphone(dataPhone);
+    if (result?.data) {
+      if (result?.data?.message == 'OTP Sent Successfully') {
+        SimpleToast({title: result?.data?.message, isLong: true});
+        navigation.navigate(Routes.OTP_SCREEN, phoneNo);
         setState({
           ...state,
           isLoading: false,
         });
-      });
+      } else {
+        console.log('else condtion');
+      }
+      console.log('Login response', result?.response?.data.message);
+    }
   };
 
   return (

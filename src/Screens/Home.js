@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  StatusBar,
   Image,
   TouchableOpacity,
   BackHandler,
@@ -11,17 +10,10 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {
-  fontPixel,
-  heightPixel,
-  screenWidth,
-  widthPixel,
-} from '../Components/Dimensions';
+import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import {
-  BASE_URL,
   CustomStatusBar,
-  FontAwesome,
   MaterialCommunityIcon,
   SimpleToast,
   manlogo,
@@ -32,14 +24,12 @@ import {_getStorage} from '../utils/Storage';
 import {_countOrder} from '../utils/Controllers/EpicControllers';
 import Routes from '../Navigation/Routes';
 import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
 
 const Tab = createMaterialTopTabNavigator();
 export default function Home({navigation}) {
   const [isCount, setIsCount] = useState({});
   const Locations = useSelector(state => state.LocationReducer);
-  console.log('Locations====', Locations);
 
   useEffect(() => {
     _CountData();
@@ -47,8 +37,6 @@ export default function Home({navigation}) {
   }, []);
 
   const _CountData = async () => {
-    const fcmToken = await AsyncStorage.getItem('fcmToken');
-    // console.log('fcmToken', fcmToken);
     const result = await _countOrder();
     if (result?.data) {
       setIsCount(result?.data);
@@ -109,7 +97,7 @@ export default function Home({navigation}) {
           <View></View>
           <Text style={Styles.TEXTHEADER}>Home</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate(Routes.LOGIN_ACCOUNT)}
+            onPress={() => navigation.navigate(Routes.VERIFICATION_SELFIE)}
             activeOpacity={0.6}>
             <MaterialCommunityIcon
               title="bell-ring"
@@ -173,7 +161,7 @@ const Styles = StyleSheet.create({
   linearGradient: {
     backgroundColor: COLORS.GREEN,
     flexDirection: 'row',
-    elevation: 10,
+    // elevation: 10,
     // paddingVertical: StatusBar.currentHeight,
     // marginTop: 100,
     paddingVertical: 15,

@@ -94,7 +94,8 @@ export default function Booking({navigation}) {
                         ]}>
                         {/* Plot no. A, 40, Block A, Industrial Area, Sector 62,
                       Noida, Uttar Pradesh 201301 */}
-                        {item?.currentAddress}
+                        {/* {item?.currentAddress} */}
+                        {item?.delieveryAddress?.completeAddress}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -125,9 +126,13 @@ export default function Booking({navigation}) {
                     </Text>
                     <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>
                     <Text style={Styles.QPAMENT}>Payment Status</Text>
-                    <Text style={Styles.GREYTEXT}>Prepaid</Text>
+                    <Text style={Styles.GREYTEXT}>
+                      {item?.paymentInfo?.status}
+                    </Text>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate(Routes.VIEW_DETAILS)}
+                      onPress={() =>
+                        navigation.navigate(Routes.VIEW_DETAILS, item)
+                      }
                       style={Styles.VIEWBTN}>
                       <Text style={Styles.VIEWTEXT}>View Details</Text>
                     </TouchableOpacity>

@@ -37,16 +37,16 @@ import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
 
 export default function EditProfile({navigation}) {
-  const [isUserData, setIsUserData] = useState({});
+  // const [isUserData, setIsUserData] = useState({});
   const [visible, setVisible] = useState(false);
   const [isProfile, setIsProfile] = useState('');
   const [isName, setIsName] = useState('');
   const [isbirth, setIsbirth] = useState('');
-  const [isLenmark, setIsLenmark] = useState('');
+  // const [isLenmark, setIsLenmark] = useState('');
   const [iState, setIsState] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const isFocused = useIsFocused();
-  const [mobileNum, setMobileNum] = useState('');
+  // const [mobileNum, setMobileNum] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [isState, seIstState] = useState('');
@@ -67,8 +67,6 @@ export default function EditProfile({navigation}) {
       cropping: true,
       width: 300,
       height: 400,
-      quality: 1,
-      mediaType: 'any',
     }).then(image => {
       console.log('hey', image.path);
       if (image) {
@@ -86,8 +84,8 @@ export default function EditProfile({navigation}) {
   const ChoosePhotoFromGalery = () => {
     ImagePicker.openPicker({
       cropping: true,
-      quality: 1,
-      mediaType: 'any',
+      width: 300,
+      height: 400,
     }).then(image => {
       console.log('hey', image.path);
       if (image) {
@@ -280,6 +278,7 @@ export default function EditProfile({navigation}) {
               placeholderTextColor="#888888"
               value={isState}
               onChangeText={text => seIstState(text)}
+              editable={false}
             />
           </View>
           <View style={{marginVertical: heightPixel(30)}}>

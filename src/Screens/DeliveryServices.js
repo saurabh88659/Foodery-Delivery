@@ -33,10 +33,10 @@ export default function DeliveryServices({navigation}) {
   const _Services_Delivery = async () => {
     const result = await _getOrderHistory();
     if (result?.data) {
+      console.log('result', result?.data?.message);
       setIsServicesData(result?.data?.result);
-      console.log('all order history- response---->>>>', result?.data);
+      SimpleToast({title: result?.data?.message, isLong: true});
     } else {
-      console.log('all order history----->>>>', result?.data);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
       setmessage(result?.response?.data?.message);
     }
@@ -75,7 +75,7 @@ export default function DeliveryServices({navigation}) {
                         width: widthPixel(50),
                         borderRadius: 50,
                       }}>
-                      {item?.item?.user?.profilePic ? (
+                      {item?.user?.profilePic ? (
                         <Image
                           source={{uri: item?.user?.profilePic}}
                           style={Styles.JUSTISTYLES}
@@ -93,10 +93,15 @@ export default function DeliveryServices({navigation}) {
                         numberOfLines={3}
                         style={[
                           Styles.QTEXTSTY,
-                          {width: widthPixel(220), fontWeight: '400'},
+                          {
+                            width: widthPixel(220),
+                            fontWeight: '400',
+                            color: COLORS.BLACK,
+                          },
                         ]}>
-                        Plot no. A, 40, Block A, Industrial Area, Sector 62,
-                        Noida, Uttar Pradesh 201301
+                        {/* Plot no. A, 40, Block A, Industrial Area, Sector 62,
+                          Noida, Uttar Pradesh 201301 */}
+                        {item?.delieveryAddress?.completeAddress}
                       </Text>
                       <Text
                         style={[

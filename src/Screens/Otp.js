@@ -7,6 +7,7 @@ import {
   Keyboard,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,11 +25,13 @@ import Routes from '../Navigation/Routes';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
+import {_getProfile, _postphone} from '../utils/Controllers/EpicControllers';
 
 export default function Otp({navigation, route}) {
-  const [isOTP, setIsOTP] = useState('');
   const phoneNumber = route.params;
+  const [isOTP, setIsOTP] = useState('');
   const fNumber = phoneNumber.split('', 6);
+  const [counter, setCounter] = React.useState(60);
   const [state, setState] = useState({
     isLoading: false,
   });
@@ -66,28 +69,30 @@ export default function Otp({navigation, route}) {
           response?.data?.deliveryBoy_id,
         );
         SimpleToast({title: response?.data?.message, isLong: true});
-        axios
-          .get(BASE_URL + `/getMyProfileDeliveryBoy`, {
-            headers: {
-              Authorization: `Bearer ${response?.data?.token}`,
-            },
-          })
-          .then(res => {
-            console.log('----------------', res?.data?.result);
-            if (
-              res?.data?.result?.firstName &&
-              res?.data?.result?.email &&
-              res?.data?.result.bankDetails?.bankName &&
-              res?.data?.result?.bankDetails?.ifscCode
-            ) {
+        await AsyncStorage.setItem(
+          'isNew',
+          JSON.stringify(response?.data?.isNew),
+        );
+        const result = await _getProfile();
+
+        if (response?.data?.isNew) {
+          navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
+        } else {
+          if (result?.data) {
+            if (result?.data?.result?.status === 'pending') {
+              navigation.replace(Routes.LOGIN_ACCOUNT);
+            } else if (result?.data?.result?.status === 'accepted') {
               navigation.replace(Routes.BOTTOM_TAB_BAR);
             } else {
               navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
             }
-          })
-          .catch(error => {
-            console.log('profile catch erro------->>', error);
-          });
+          } else {
+            console.log(
+              'profile catch error:',
+              result?.response?.data?.message,
+            );
+          }
+        }
       })
       .catch(error => {
         SimpleToast({title: error?.response?.data?.message, isLong: true});
@@ -98,6 +103,29 @@ export default function Otp({navigation, route}) {
         });
       });
   };
+
+  const resendsend = async () => {
+    const dataPhone = {
+      mobileNumber: phoneNumber,
+    };
+    const result = await _postphone(dataPhone);
+    if (result?.data) {
+      if (result?.data?.message == 'OTP Sent Successfully') {
+        SimpleToast({title: ' resend OTP sent successfully', isLong: true});
+        setCounter(60);
+      } else {
+        console.log('else condtion');
+      }
+      console.log('Login response', result?.data);
+    } else {
+      console.log('Login Catch error', result?.response?.data);
+    }
+  };
+  useEffect(() => {
+    const timer =
+      counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+    return () => clearInterval(timer);
+  }, [counter]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -115,7 +143,6 @@ export default function Otp({navigation, route}) {
             <Text style={Styles.HEADERTEXTONE}>
               We've send an OTP to your mobile number{`\n`} +91 {fNumber} ****
             </Text>
-
             <View style={{marginHorizontal: 10, marginTop: 20}}>
               <OTPInputView
                 style={{height: heightPixel(70)}}
@@ -127,6 +154,23 @@ export default function Otp({navigation, route}) {
                   setIsOTP(tex);
                 }}
               />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{color: 'grey'}}>Time remaining</Text>
+                <View>
+                  {counter !== 0 ? (
+                    <Text style={{color: 'black'}}>{counter}s</Text>
+                  ) : (
+                    <TouchableOpacity onPress={resendsend} style={{}}>
+                      <Text style={{color: 'grey'}}>Resend code</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
             </View>
             <View style={{marginTop: heightPixel(40)}}>
               <Button

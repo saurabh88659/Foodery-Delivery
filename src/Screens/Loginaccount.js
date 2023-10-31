@@ -7,15 +7,19 @@ import {
   Keyboard,
   Image,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
-import {accounttext, logowithlogin} from '../utils/Const';
+import {CustomStatusBar, accounttext, logowithlogin} from '../utils/Const';
 import Button from '../Components/Button';
-import Routes from '../Navigation/Routes';
 // import Routes from '../Navigation/Routes';
+// import Routes from '../Navigation/Routes';
+import Modal from 'react-native-modal';
+import Lottie from 'lottie-react-native';
+import {_getProfile} from '../utils/Controllers/EpicControllers';
 
 export default function Loginaccount({navigation}) {
   const [username, setUsername] = useState('');
@@ -23,6 +27,11 @@ export default function Loginaccount({navigation}) {
 
   const [usernameError, setUsernameError] = useState('');
   const [passowrdError, setPasswordError] = useState('');
+  const [modalVisibleone, setModalVisibleone] = useState(false);
+
+  useEffect(() => {
+    _Handle_PROFILE();
+  });
 
   const validatUserName = () => {
     const namePattern = /^[A-Za-z\s]+$/;
@@ -34,7 +43,6 @@ export default function Loginaccount({navigation}) {
       return true;
     }
   };
-
   const validatPassword = () => {
     const namePattern = /^[A-Za-z\s]+$/;
     if (!namePattern.test(passowrd)) {
@@ -45,7 +53,6 @@ export default function Loginaccount({navigation}) {
       return true;
     }
   };
-
   const _Handle_Submit = () => {
     const isValidUser = validatUserName(username);
     const isvalidpassword = validatPassword(passowrd);
@@ -56,10 +63,25 @@ export default function Loginaccount({navigation}) {
     }
   };
 
+  const _Handle_PROFILE = async () => {
+    const result = await _getProfile();
+    if (result?.data) {
+      if (result?.data?.result?.status === 'pending') {
+        setModalVisibleone(true);
+      } else {
+        setModalVisibleone(false);
+      }
+    } else {
+      console.log('profile catch data:', result?.response?.data?.message);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={Styles.CONTAINERMAIN}>
-        <LinearGradient
+        <CustomStatusBar />
+
+        {/* <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={[COLORS.PURPLE, COLORS.PINK]}
@@ -106,7 +128,55 @@ export default function Loginaccount({navigation}) {
               />
             </View>
           </View>
-        </View>
+        </View> */}
+        <Modal
+          transparent={true}
+          isVisible={modalVisibleone}
+          animationInTiming={1000}
+          animationOutTiming={1000}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}
+          onRequestClose={() => {
+            setModalVisibleone(false);
+          }}>
+          <View style={Styles.centeredView}>
+            <View style={Styles.modalView}>
+              <Lottie
+                source={require('../Assets/Lottie_json/Animation - 1698644964119.json')}
+                autoPlay
+                loop={true}
+                style={{height: heightPixel(200)}}
+              />
+              <Text style={Styles.Modalsubtext}>
+                Your Application is under review
+              </Text>
+              <Text style={Styles.Modaltext}>
+                Your Application has been submitted & will be reviewed by our
+                team. You will be notified if any extra information in needed
+              </Text>
+              {/* <TouchableOpacity
+                // onPress={() => navigation.navigate(Routes.LOGIN_ACCOUNT)}
+                style={{
+                  backgroundColor: COLORS.PINK,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  top: heightPixel(15),
+                  width: widthPixel(100),
+                  alignSelf: 'center',
+                  borderRadius: 4,
+                }}>
+                <Text
+                  style={{
+                    color: COLORS.WHITE,
+                    fontSize: 14,
+                    fontWeight: '500',
+                  }}>
+                  OK
+                </Text>
+              </TouchableOpacity> */}
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -115,6 +185,7 @@ export default function Loginaccount({navigation}) {
 const Styles = StyleSheet.create({
   CONTAINERMAIN: {
     flex: 1,
+    backgroundColor: COLORS.PINK,
   },
   linearGradient: {
     flex: 0.5,
@@ -178,5 +249,26 @@ const Styles = StyleSheet.create({
     color: 'red',
     fontSize: 11,
     top: 4,
+  },
+  modalView: {
+    backgroundColor: 'white',
+    marginHorizontal: 15,
+    borderRadius: 7,
+    padding: 25,
+    shadowColor: '#000',
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  Modalsubtext: {
+    color: COLORS.BLACK,
+    alignSelf: 'center',
+    fontWeight: '500',
+  },
+  Modaltext: {
+    color: COLORS.GRAY,
+    fontWeight: '500',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 4,
   },
 });

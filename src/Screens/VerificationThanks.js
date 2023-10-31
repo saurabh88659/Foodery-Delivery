@@ -12,7 +12,6 @@ export default function VerificationThanks({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINER}>
       <CustomStatusBar />
-
       <MyHeader onPress={() => navigation.goBack()} title={'Verification'} />
       <Lottie
         source={thankyou}
@@ -32,7 +31,7 @@ export default function VerificationThanks({navigation}) {
       <View style={{justifyContent: 'flex-end', flex: 1, marginBottom: 20}}>
         <Button
           title={'Go Back to Main Menu'}
-          onPress={() => navigation.navigate(Routes.HOME_SCREEN)}
+          onPress={() => navigation.navigate(Routes.BOTTOM_TAB_BAR)}
           //   onPress={onGallary}
         />
       </View>

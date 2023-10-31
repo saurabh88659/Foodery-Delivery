@@ -8,12 +8,7 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import {
-  BASE_URL,
-  CustomStatusBar,
-  FontAwesome,
-  SimpleToast,
-} from '../utils/Const';
+import {CustomStatusBar, FontAwesome, SimpleToast} from '../utils/Const';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
@@ -24,6 +19,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-toast-message';
+import Modal from 'react-native-modal';
+import Lottie from 'lottie-react-native';
 
 import {RadioButton} from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
@@ -40,14 +37,19 @@ import {
   _signUp,
   _signdeliveryBoyDocs,
 } from '../utils/Controllers/EpicControllers';
+import Routes from '../Navigation/Routes';
 // import Routes from '../Navigation/Routes';
 
 export default function RegistrationScreen({navigation, route}) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
+  const [dateError, setDateError] = useState('');
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState('');
+  const [genderError, setGenderError] = useState('');
+
   const [workExperience, setWorkExperience] = useState('');
   const [emailId, setEmailId] = useState('');
   // const [mobileNo, setMobileNo] = useState('');
@@ -62,10 +64,8 @@ export default function RegistrationScreen({navigation, route}) {
   const [cityTwo, setCityTwo] = useState('');
   const [pinCodeTwo, setPinCodeTwo] = useState('');
   const [isError, setIsError] = useState(false);
-
+  const [modalVisibleone, setModalVisibleone] = useState(false);
   const phoneNumber = route.params;
-  // console.log('phoneNumber--------------', phoneNumber);
-
   const showDatePicker = () => {
     setDatePickerVisibility(true);
     AsyncStorage.getItem('Date').then(value => setDate(value));
@@ -102,6 +102,28 @@ export default function RegistrationScreen({navigation, route}) {
   const [cityTwoError, setCityTwoError] = useState('');
   const [pinCodeTwoError, setPinCodeTwoError] = useState('');
 
+  const validdatebirth = () => {
+    const namePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    if (!namePattern.test(date)) {
+      setDateError('Please Select a valid date Birth');
+      return false;
+    } else {
+      setDateError('');
+      return true;
+    }
+  };
+
+  const validrediobutton = gender => {
+    if (gender === '') {
+      setGenderError('Please select a valid gender');
+      SimpleToast({title: 'Please select a valid gender', isLong: true});
+      return false;
+    } else {
+      setGenderError('');
+      return true;
+    }
+  };
+
   const validateFirstNameChange = () => {
     const namePattern = /^[A-Za-z\s]+$/;
     if (!namePattern.test(firstName)) {
@@ -125,7 +147,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateWorkExChange = () => {
-    const namePattern = /^[a-zA-Z0-9_.-]*$/;
+    const namePattern = /[a-zA-Z0-9]+/;
     if (!namePattern.test(workExperience)) {
       setWorkExperienceError('Please enter a valid Work Experience');
       return false;
@@ -169,7 +191,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validatePermanentsAddressChange = () => {
-    const namePattern = /^(?=.*[a-zA-Z])(?=.*\d)/;
+    const namePattern = /[a-zA-Z0-9]+/;
     if (!namePattern.test(permanentAddress)) {
       setPermanentAddressError('Please enter a valid Permanent Address');
       return false;
@@ -213,7 +235,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateCurrentAddressChange = () => {
-    const namePattern = /^(?=.*[a-zA-Z])(?=.*\d)/;
+    const namePattern = /[a-zA-Z0-9]+/;
     if (!namePattern.test(currentAddress)) {
       setCurrentAddressError('Please enter a valid Current Address');
       return false;
@@ -256,29 +278,6 @@ export default function RegistrationScreen({navigation, route}) {
     }
   };
 
-  // const showToast = () => {
-  //   Toast.show({
-  //     type: 'error',
-  //     text1: `${
-  //       firstNameError ||
-  //       lastNameError ||
-  //       workExperienceError ||
-  //       emailIdError ||
-  //       mobileAlNoError ||
-  //       emergencyMobileError ||
-  //       permanentAddressError ||
-  //       stateOneError ||
-  //       cityOneError ||
-  //       pinCodeOneError ||
-  //       currentAddressError ||
-  //       stateTwoError ||
-  //       cityTwoError ||
-  //       pinCodeTwoError
-  //     }`,
-  //     text2: 'This is some something 👋',
-  //   });
-  // };
-
   const _PersonnalDetails = async () => {
     const isValidfirst = validateFirstNameChange(firstName);
     const isValidlast = validateLastNameChange(lastName);
@@ -295,6 +294,8 @@ export default function RegistrationScreen({navigation, route}) {
     const isValidStateTwo = validateStateTwoChange(stateTwo);
     const isValidCityTwo = validateCityTwoChange(cityTwo);
     const isValidPincodeTwo = validatePincodeTwoChange(pinCodeTwo);
+    const isvalidate = validdatebirth(date);
+    const isvaligender = validrediobutton(gender);
 
     if (
       !isValidfirst ||
@@ -310,10 +311,11 @@ export default function RegistrationScreen({navigation, route}) {
       !isValidCurrentAddress ||
       !isValidStateTwo ||
       !isValidCityTwo ||
-      !isValidPincodeTwo
+      !isValidPincodeTwo ||
+      !isvaligender ||
+      !isvalidate
     ) {
       setIsError(true);
-      // showToast();
       return;
     }
     setIsError(false);
@@ -360,9 +362,7 @@ export default function RegistrationScreen({navigation, route}) {
   const [isUploadPanCardImage, setIsUploadPanCardImage] = useState(null);
   const [isUploadSelfieOneImage, setIsUploadSelfieOneImage] = useState(null);
   const [isUploadSelfieTwoImage, setIsUploadSelfieTwoImage] = useState(null);
-
   const [selectedImages, setSelectedImages] = useState('');
-  // console.log('isUploadFrontImage------------', isUploadFrontImage.mime);
 
   const pickUploadFrontImage = () => {
     ImagePicker.openPicker({
@@ -397,6 +397,7 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
+
   const pickUploadPanCartImage = () => {
     ImagePicker.openPicker({
       width: responsiveWidth(40),
@@ -412,8 +413,9 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
+
   const pickSelfieOne = () => {
-    ImagePicker.openPicker({
+    ImagePicker.openCamera({
       width: responsiveWidth(40),
       height: responsiveHeight(18),
       cropping: true,
@@ -427,8 +429,9 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
+
   const pickSelfieTwo = () => {
-    ImagePicker.openPicker({
+    ImagePicker.openCamera({
       width: responsiveWidth(40),
       height: responsiveHeight(18),
       cropping: true,
@@ -445,8 +448,6 @@ export default function RegistrationScreen({navigation, route}) {
 
   const _UploadImagesUsingFetch = async () => {
     const formData = new FormData();
-    const token = await _getStorage('token');
-    console.log('token', token);
     SimpleToast({title: 'Please wait....', isLong: true});
 
     formData.append('aadharFront', {
@@ -494,7 +495,18 @@ export default function RegistrationScreen({navigation, route}) {
       name: isUploadSelfieTwoImage?.path?.replace(/^.*[\\\/]/, ''),
     });
 
-    console.log('formData============', formData);
+    // if (
+    //   !isUploadFrontImage ||
+    //   !isUploadBacktImage ||
+    //   !isUploadPanCardImage ||
+    //   !isUploadSelfieOneImage ||
+    //   !isUploadSelfieTwoImage ||
+    //   !selectedImages
+    // ) {
+
+    // } else {
+    //   console.log('hey');
+    // }
 
     const result = await _signdeliveryBoyDocs(formData);
     if (result?.data) {
@@ -524,7 +536,7 @@ export default function RegistrationScreen({navigation, route}) {
   // console.log('selectedFile', selectedFile?.name);
 
   const validateVehicalNoChange = () => {
-    const namePattern = /^\d{10}$/;
+    const namePattern = /^[A-Z]{2}\s[0-9]{2}\s[A-Z]{2}\s[0-9]{4}$/;
     if (!namePattern.test(vehicleNo)) {
       setVehicleNoError('Please enter a valid Vehical No');
       return false;
@@ -535,7 +547,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateDrivingLicenseNoChange = () => {
-    const namePattern = /^\d{16}$/;
+    const namePattern = /^[0-3][0-9]{7}$/;
     if (!namePattern.test(drivingLicenseNo)) {
       setDrivingLicenseNoError('Please enter a valid Driving License No');
       return false;
@@ -707,8 +719,10 @@ export default function RegistrationScreen({navigation, route}) {
 
     const result = await _BankDetails(bankdetalsobj);
     if (result?.data) {
-      navigation.navigate('BottomTabBar');
+      AsyncStorage.removeItem('isNew');
+      // navigation.navigate(Routes.BOTTOM_TAB_BAR);
       SimpleToast({title: result?.data?.message, isLong: true});
+      setModalVisibleone(true);
     } else {
       console.log('back catch error:', result?.data);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
@@ -806,6 +820,9 @@ export default function RegistrationScreen({navigation, route}) {
                     </TouchableOpacity>
                   </View>
                 </View>
+                {dateError ? (
+                  <Text style={Styles.ERRORTEXT}>{dateError}</Text>
+                ) : null}
               </View>
 
               <View>
@@ -1458,6 +1475,50 @@ export default function RegistrationScreen({navigation, route}) {
         </ProgressSteps>
       </View>
       <Toast />
+      <Modal
+        transparent={true}
+        isVisible={modalVisibleone}
+        animationInTiming={1000}
+        animationOutTiming={1000}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={1000}
+        onRequestClose={() => {
+          setModalVisibleone(false);
+        }}>
+        <View style={Styles.centeredView}>
+          <View style={Styles.modalView}>
+            <Lottie
+              source={require('../Assets/Lottie_json/Animation - 1698644964119.json')}
+              autoPlay
+              loop={true}
+              style={{height: heightPixel(200)}}
+            />
+            <Text style={Styles.Modalsubtext}>
+              Your Application is under review
+            </Text>
+            <Text style={Styles.Modaltext}>
+              Your Application has been submitted & will be reviewed by our
+              team. You will be notified if any extra information in needed
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.replace(Routes.LOGIN_ACCOUNT)}
+              style={{
+                backgroundColor: COLORS.PINK,
+                paddingVertical: 10,
+                alignItems: 'center',
+                top: heightPixel(15),
+                width: widthPixel(100),
+                alignSelf: 'center',
+                borderRadius: 4,
+              }}>
+              <Text
+                style={{color: COLORS.WHITE, fontSize: 14, fontWeight: '500'}}>
+                OK
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -1715,6 +1776,27 @@ const Styles = StyleSheet.create({
     marginTop: 5,
     fontSize: fontPixel(14),
     fontWeight: '500',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    marginHorizontal: 15,
+    borderRadius: 7,
+    padding: 25,
+    shadowColor: '#000',
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  Modalsubtext: {
+    color: COLORS.BLACK,
+    alignSelf: 'center',
+    fontWeight: '500',
+  },
+  Modaltext: {
+    color: COLORS.GRAY,
+    fontWeight: '500',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 4,
   },
 });
 

@@ -1,5 +1,19 @@
 import {BASE_URL, Instance, headerConfig} from '../Const';
 
+export const _postphone = async data => {
+  try {
+    const result = await Instance(
+      'POST',
+      BASE_URL + '/loginDeliveryApp',
+      null,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
 export const _getProfile = async () => {
   const header = await headerConfig();
   console.log('header--DG->>', header);
@@ -162,6 +176,39 @@ export const _putVerifyselfie = async data => {
     const result = await Instance(
       'PUT',
       BASE_URL + '/updateDeliveryBoyImage',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _getpickupdetails = async data => {
+  const header = await headerConfig();
+
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getVendorandUserData',
+      header,
+      // data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _postOrderHistorbyid = async data => {
+  const header = await headerConfig();
+  console.log('data------', data);
+
+  try {
+    const result = await Instance(
+      'POST',
+      BASE_URL + '/getAllOrderHistoryOne',
       header,
       data,
     );
