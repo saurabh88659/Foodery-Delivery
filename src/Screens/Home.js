@@ -21,12 +21,16 @@ import {
 import DeliveryServices from './DeliveryServices';
 import PickupServices from './PickupServices';
 import {_getStorage} from '../utils/Storage';
-import {_countOrder} from '../utils/Controllers/EpicControllers';
+import {
+  _countOrder,
+  _putcoordinates,
+} from '../utils/Controllers/EpicControllers';
 import Routes from '../Navigation/Routes';
 import {useDispatch, useSelector} from 'react-redux';
 import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
 
 const Tab = createMaterialTopTabNavigator();
+
 export default function Home({navigation}) {
   const [isCount, setIsCount] = useState({});
   const Locations = useSelector(state => state.LocationReducer);
@@ -34,14 +38,28 @@ export default function Home({navigation}) {
   useEffect(() => {
     _CountData();
     requestUserPermission();
+    _coordinates();
   }, []);
+
+  const _coordinates = async () => {
+    const data = {
+      latitude: Locations?.latitude,
+      longitude: Locations?.longitude,
+    };
+    const result = await _putcoordinates(data);
+    if (result?.data) {
+      console.log('coordinates update:', result?.data);
+    } else {
+      console.log('coordinates catch error:', result?.data);
+    }
+  };
 
   const _CountData = async () => {
     const result = await _countOrder();
     if (result?.data) {
       setIsCount(result?.data);
     } else {
-      console.log('count catch error', result?.data);
+      console.log('count catch error', result?.response?.data?.message);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
     }
   };
@@ -97,7 +115,7 @@ export default function Home({navigation}) {
           <View></View>
           <Text style={Styles.TEXTHEADER}>Home</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate(Routes.VERIFICATION_SELFIE)}
+            onPress={() => navigation.navigate(Routes.NOTIFICATIONS)}
             activeOpacity={0.6}>
             <MaterialCommunityIcon
               title="bell-ring"

@@ -203,12 +203,26 @@ export const _getpickupdetails = async data => {
 
 export const _postOrderHistorbyid = async data => {
   const header = await headerConfig();
-  console.log('data------', data);
 
   try {
     const result = await Instance(
       'POST',
       BASE_URL + '/getAllOrderHistoryOne',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _putcoordinates = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'PUT',
+      BASE_URL + '/updateCoordinates',
       header,
       data,
     );

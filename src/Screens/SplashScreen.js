@@ -23,15 +23,23 @@ import {checkInternetConnection} from '../utils/Handler/InternetInfo';
 import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {_getProfile} from '../utils/Controllers/EpicControllers';
+import {
+  _getProfile,
+  _putcoordinates,
+} from '../utils/Controllers/EpicControllers';
+import {useSelector} from 'react-redux';
 
 export default function SplashScreen({navigation}) {
   const [hasInternet, setHasInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isloadData, setIsloadData] = useState(false);
 
+  const Locations = useSelector(state => state.LocationReducer);
+  console.log('Locations:', Locations);
+
   useEffect(() => {
     _Handle_Splash_SCREEN();
+    // _coordinates();
   }, []);
 
   const _Handle_Splash_SCREEN = async () => {

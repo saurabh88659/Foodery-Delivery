@@ -6,6 +6,8 @@ import EditProfile from '../Screens/EditProfile';
 import About from '../Screens/About';
 // import TermsConditions from '../Screens/TermsConditions';
 import PrivacyPolicy from '../Screens/PrivacyPolicy';
+import WalletScreen from '../Screens/WalletScreen';
+import TransactionDetails from '../Screens/TransactionDetails';
 
 const Stack = createNativeStackNavigator();
 function ProfileStack() {
@@ -34,6 +36,16 @@ function ProfileStack() {
       <Stack.Screen
         name={Routes.PRIVACY_POLICY}
         component={PrivacyPolicy}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.WALLET_SCREEN}
+        component={WalletScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.TRANSACTION_DETAILS}
+        component={TransactionDetails}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -86,7 +86,10 @@ export default function Profile({navigation}) {
             </TouchableOpacity>
           </View>
         </LinearGradient>
-        <TouchableOpacity activeOpacity={0.5} style={Styles.QBOXONE}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(Routes.WALLET_SCREEN)}
+          activeOpacity={0.5}
+          style={Styles.QBOXONE}>
           <MaterialCommunityIcon
             title={'wallet'}
             size={30}

@@ -16,6 +16,7 @@ import {SimpleToast} from '../utils/Const';
 export default function PickupServices() {
   const [refresh, setRfresh] = useState(false);
   const [details, setDetails] = useState([]);
+  const [datanotfound, setdatanotfound] = useState();
 
   useEffect(() => {
     _getpickup();
@@ -28,31 +29,34 @@ export default function PickupServices() {
   const _getpickup = async () => {
     const result = await _getpickupdetails();
     if (result?.data) {
-      console.log('result?.data=======DDDDDDDDd==>>>', result?.data);
       setDetails(result?.data?.result);
     } else {
       console.log('catch error:', result?.response?.data?.message);
+      setdatanotfound(result?.response?.data?.message);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
     }
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refresh}
-            onRefresh={_getpickup}
-            tintColor={COLORS.GREEN}
-            colors={[COLORS.PINK]}
-          />
-        }
-        data={details}
-        renderItem={({item, index}) => (
-          console.log('item:', item?.orderAddressId?.receiverName),
-          (
+      {datanotfound ? (
+        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <Text style={{color: COLORS.GRAY}}>data not found</Text>
+        </View>
+      ) : (
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={_getpickup}
+              tintColor={COLORS.GREEN}
+              colors={[COLORS.PINK]}
+            />
+          }
+          data={details}
+          renderItem={({item, index}) => (
             <View style={Styles.MAINBOX}>
               <View style={Styles.QBOX}>
                 <Text style={Styles.TEXTONE}>Pickup Details</Text>
@@ -235,9 +239,9 @@ export default function PickupServices() {
                 </View>
               </View>
             </View>
-          )
-        )}
-      />
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 }

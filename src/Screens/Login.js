@@ -26,7 +26,6 @@ import {
   logowithlogin,
 } from '../utils/Const';
 import Routes from '../Navigation/Routes';
-import axios from 'axios';
 import {_postphone} from '../utils/Controllers/EpicControllers';
 export default function Login({navigation}) {
   const [phoneNo, setPhoneNo] = useState('');

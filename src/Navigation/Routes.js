@@ -27,6 +27,8 @@ export default {
   PROFILE_STACK: 'ProfileStack',
   BOOKING_STACK: 'BookingStack',
   PROFILE_SCREEN: 'Profile',
+  WALLET_SCREEN: 'WalletScreen',
+  TRANSACTION_DETAILS: 'TransactionDetails',
 
   // PROFILE_STACK
   EDIT_PROFILE: 'EditProfile',

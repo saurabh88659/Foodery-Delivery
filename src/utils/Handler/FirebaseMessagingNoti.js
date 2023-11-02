@@ -10,7 +10,6 @@ export async function requestUserPermission() {
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
   if (enabled) {
     console.log('Authorization status:', authStatus);
     getFcmToken();
@@ -19,7 +18,6 @@ export async function requestUserPermission() {
 
 const getFcmToken = async () => {
   let fcmToken = await AsyncStorage.getItem('fcmToken');
-  console.log(fcmToken, 'the old token');
 
   if (!fcmToken) {
     try {
@@ -62,14 +60,13 @@ async function onDisplayNotification(data) {
     await notifee.requestPermission();
   }
   const channelId = await notifee.createChannel({
-    id: 'Noti 2',
-    name: 'Noti 2',
+    id: 'Noti 7',
+    name: 'Noti 7',
     importance: AndroidImportance.HIGH,
   });
-
   await notifee.displayNotification({
-    title: data?.notification?.title,
-    body: data?.notification?.body,
+    title: data?.data?.title,
+    body: data?.data?.body,
     android: {
       channelId: channelId,
     },
@@ -78,25 +75,23 @@ async function onDisplayNotification(data) {
 
 export async function notificationListeners() {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
-    console.log('A new FCM message arrived!', remoteMessage);
+    console.log(
+      'A new FCM message arrived!',
+      remoteMessage?.data?.notificationType,
+    );
     onDisplayNotification(remoteMessage);
   });
 
   messaging().onNotificationOpenedApp(remoteMessage => {
     console.log(
       'Notification caused app to open from background state:',
-      remoteMessage,
+      remoteMessage?.data,
     );
 
-    if (!!remoteMessage?.data && remoteMessage?.data == 'OrderDetailsMap') {
-      setTimeout(() => {
-        NavigationService.navigate(Routes.ORDER_DETAILS_MAP, {
-          data: remoteMessage?.data,
-        });
-      }, 1200);
-    }
-
-    if (!!remoteMessage?.data && remoteMessage?.data == 'OrderDetailsMap') {
+    if (
+      !!remoteMessage?.data?.notificationType &&
+      remoteMessage?.data?.notificationType == 'booking'
+    ) {
       setTimeout(() => {
         NavigationService.navigate(Routes.ORDER_DETAILS_MAP, {
           data: remoteMessage?.data,

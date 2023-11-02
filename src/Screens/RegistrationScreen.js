@@ -8,7 +8,12 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import {CustomStatusBar, FontAwesome, SimpleToast} from '../utils/Const';
+import {
+  CustomStatusBar,
+  Entypos,
+  FontAwesome,
+  SimpleToast,
+} from '../utils/Const';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
@@ -115,8 +120,8 @@ export default function RegistrationScreen({navigation, route}) {
 
   const validrediobutton = gender => {
     if (gender === '') {
-      setGenderError('Please select a valid gender');
-      SimpleToast({title: 'Please select a valid gender', isLong: true});
+      setGenderError('Please select  gender');
+      SimpleToast({title: 'Please select gender', isLong: true});
       return false;
     } else {
       setGenderError('');
@@ -342,10 +347,12 @@ export default function RegistrationScreen({navigation, route}) {
         state: stateOne,
       },
     };
+
     const result = await _signUp(personalobj);
     if (result?.data) {
       setIsError(false);
       console.log('response data sign up---------------', result?.data);
+      SimpleToast({title: result?.data?.message, isLong: true});
     } else {
       setIsError(false);
       console.log('catch error signup------>>', result);
@@ -362,7 +369,8 @@ export default function RegistrationScreen({navigation, route}) {
   const [isUploadPanCardImage, setIsUploadPanCardImage] = useState(null);
   const [isUploadSelfieOneImage, setIsUploadSelfieOneImage] = useState(null);
   const [isUploadSelfieTwoImage, setIsUploadSelfieTwoImage] = useState(null);
-  const [selectedImages, setSelectedImages] = useState('');
+
+  const [imageError, setImageError] = useState(false);
 
   const pickUploadFrontImage = () => {
     ImagePicker.openPicker({
@@ -371,10 +379,7 @@ export default function RegistrationScreen({navigation, route}) {
       cropping: true,
     })
       .then(image => {
-        setSelectedImages([...selectedImages, image]);
-        // _UploadImagesUsingFetch(image);
         setIsUploadFrontImage(image);
-        // _UploadFrontImage(image);
       })
       .catch(error => {
         console.log('Error selecting image: ', error);
@@ -388,9 +393,6 @@ export default function RegistrationScreen({navigation, route}) {
       cropping: true,
     })
       .then(image => {
-        // setSelectedImages(image);
-        setSelectedImages([...selectedImages, image]);
-        // _UploadImagesUsingFetch(image);
         setIsUploadBacktImage(image);
       })
       .catch(error => {
@@ -407,7 +409,6 @@ export default function RegistrationScreen({navigation, route}) {
       .then(image => {
         console.log(image);
         setIsUploadPanCardImage(image);
-        setSelectedImages([...selectedImages, image]);
       })
       .catch(error => {
         console.log('Error selecting image: ', error);
@@ -423,7 +424,6 @@ export default function RegistrationScreen({navigation, route}) {
       .then(image => {
         console.log(image);
         setIsUploadSelfieOneImage(image);
-        setSelectedImages([...selectedImages, image]);
       })
       .catch(error => {
         console.log('Error selecting image: ', error);
@@ -439,7 +439,6 @@ export default function RegistrationScreen({navigation, route}) {
       .then(image => {
         console.log(image);
         setIsUploadSelfieTwoImage(image);
-        setSelectedImages([...selectedImages, image]);
       })
       .catch(error => {
         console.log('Error taking image: ', error);
@@ -448,73 +447,72 @@ export default function RegistrationScreen({navigation, route}) {
 
   const _UploadImagesUsingFetch = async () => {
     const formData = new FormData();
-    SimpleToast({title: 'Please wait....', isLong: true});
-
-    formData.append('aadharFront', {
-      uri:
-        Platform.OS === 'android'
-          ? isUploadFrontImage.path
-          : isUploadFrontImage.path.replace('file://', ''),
-      type: isUploadFrontImage.mime,
-      name: isUploadFrontImage?.path?.replace(/^.*[\\\/]/, ''),
-    });
-
-    formData.append('aadharBack', {
-      uri:
-        Platform.OS === 'android'
-          ? isUploadBacktImage.path
-          : isUploadBacktImage.path.replace('file://', ''),
-      type: isUploadBacktImage.mime,
-      name: isUploadBacktImage?.path?.replace(/^.*[\\\/]/, ''),
-    });
-
-    formData.append('pancard', {
-      uri:
-        Platform.OS === 'android'
-          ? isUploadPanCardImage.path
-          : isUploadPanCardImage.path.replace('file://', ''),
-      type: isUploadPanCardImage.mime,
-      name: isUploadPanCardImage?.path?.replace(/^.*[\\\/]/, ''),
-    });
-
-    formData.append('selfie1', {
-      uri:
-        Platform.OS === 'android'
-          ? isUploadSelfieOneImage.path
-          : isUploadSelfieOneImage.path.replace('file://', ''),
-      type: isUploadSelfieOneImage.mime,
-      name: isUploadSelfieOneImage?.path?.replace(/^.*[\\\/]/, ''),
-    });
-
-    formData.append('selfie2', {
-      uri:
-        Platform.OS === 'android'
-          ? isUploadSelfieTwoImage.path
-          : isUploadSelfieTwoImage.path.replace('file://', ''),
-      type: isUploadSelfieTwoImage.mime,
-      name: isUploadSelfieTwoImage?.path?.replace(/^.*[\\\/]/, ''),
-    });
-
-    // if (
-    //   !isUploadFrontImage ||
-    //   !isUploadBacktImage ||
-    //   !isUploadPanCardImage ||
-    //   !isUploadSelfieOneImage ||
-    //   !isUploadSelfieTwoImage ||
-    //   !selectedImages
-    // ) {
-
-    // } else {
-    //   console.log('hey');
-    // }
-
-    const result = await _signdeliveryBoyDocs(formData);
-    if (result?.data) {
-      SimpleToast({title: result?.data?.message, isLong: true});
-      console.log('image response data=============>>>>>>', result?.data);
+    if (
+      (!isUploadFrontImage,
+      !isUploadBacktImage,
+      !isUploadPanCardImage,
+      !isUploadSelfieOneImage,
+      !isUploadSelfieTwoImage)
+    ) {
+      SimpleToast({title: 'Please Select documents', isLong: true});
+      setImageError(true);
+      return;
     } else {
-      console.log('image catch error>>>>>>>', result);
-      SimpleToast({title: result?.response?.data?.message, isLong: true});
+      setImageError(false);
+      formData.append('aadharFront', {
+        uri:
+          Platform.OS === 'android'
+            ? isUploadFrontImage.path
+            : isUploadFrontImage.path.replace('file://', ''),
+        type: isUploadFrontImage.mime,
+        name: isUploadFrontImage?.path?.replace(/^.*[\\\/]/, ''),
+      });
+
+      formData.append('aadharBack', {
+        uri:
+          Platform.OS === 'android'
+            ? isUploadBacktImage.path
+            : isUploadBacktImage.path.replace('file://', ''),
+        type: isUploadBacktImage.mime,
+        name: isUploadBacktImage?.path?.replace(/^.*[\\\/]/, ''),
+      });
+
+      formData.append('pancard', {
+        uri:
+          Platform.OS === 'android'
+            ? isUploadPanCardImage.path
+            : isUploadPanCardImage.path.replace('file://', ''),
+        type: isUploadPanCardImage.mime,
+        name: isUploadPanCardImage?.path?.replace(/^.*[\\\/]/, ''),
+      });
+
+      formData.append('selfie1', {
+        uri:
+          Platform.OS === 'android'
+            ? isUploadSelfieOneImage.path
+            : isUploadSelfieOneImage.path.replace('file://', ''),
+        type: isUploadSelfieOneImage.mime,
+        name: isUploadSelfieOneImage?.path?.replace(/^.*[\\\/]/, ''),
+      });
+
+      formData.append('selfie2', {
+        uri:
+          Platform.OS === 'android'
+            ? isUploadSelfieTwoImage.path
+            : isUploadSelfieTwoImage.path.replace('file://', ''),
+        type: isUploadSelfieTwoImage.mime,
+        name: isUploadSelfieTwoImage?.path?.replace(/^.*[\\\/]/, ''),
+      });
+
+      const result = await _signdeliveryBoyDocs(formData);
+
+      if (result?.data) {
+        SimpleToast({title: result?.data?.message, isLong: true});
+        console.log('image response data=============>>>>>>', result?.data);
+      } else {
+        // console.log('image catch error>>>>>>>', result);
+        SimpleToast({title: result?.response?.data?.message, isLong: true});
+      }
     }
   };
 
@@ -524,6 +522,7 @@ export default function RegistrationScreen({navigation, route}) {
 
   const [checked, setChecked] = React.useState('Yes');
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [selectedFileError, setSelectedFileEror] = React.useState('');
   const [selectedFssai, setSelectedFssai] = React.useState(null);
   const [isvalidDLError, setIsvalidDLError] = useState(false);
   const [vehicleNo, setVehicleNo] = React.useState('');
@@ -533,10 +532,8 @@ export default function RegistrationScreen({navigation, route}) {
   const [drivingLicenseNoError, setDrivingLicenseNoError] = React.useState('');
   const [expiryDLError, setExpiryDLError] = React.useState('');
 
-  // console.log('selectedFile', selectedFile?.name);
-
   const validateVehicalNoChange = () => {
-    const namePattern = /^[A-Z]{2}\s[0-9]{2}\s[A-Z]{2}\s[0-9]{4}$/;
+    const namePattern = /[a-zA-Z0-9]+/;
     if (!namePattern.test(vehicleNo)) {
       setVehicleNoError('Please enter a valid Vehical No');
       return false;
@@ -547,7 +544,8 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateDrivingLicenseNoChange = () => {
-    const namePattern = /^[0-3][0-9]{7}$/;
+    const namePattern =
+      /^(([A-Z]{2}[0-9]{2})|([A-Z]{2}-[0-9]{2}))((19|20)[0-9][0-9])[0-9]{7}$/;
     if (!namePattern.test(drivingLicenseNo)) {
       setDrivingLicenseNoError('Please enter a valid Driving License No');
       return false;
@@ -565,6 +563,16 @@ export default function RegistrationScreen({navigation, route}) {
     } else {
       setExpiryDLError('');
       return true;
+    }
+  };
+
+  const validimage = uri => {
+    if (uri) {
+      setSelectedFileEror('');
+      return true;
+    } else {
+      setSelectedFileEror('Please Upload Image/pdf');
+      return false;
     }
   };
 
@@ -587,18 +595,21 @@ export default function RegistrationScreen({navigation, route}) {
     const isValidDrivingLicenseNo =
       validateDrivingLicenseNoChange(drivingLicenseNo);
     const isValidExpirydateDL = validateExpiryDLChange(expiryDL);
+    const isimage = validimage(selectedFile);
+
     if (
       !isValidVehicaleNo ||
       !isValidDrivingLicenseNo ||
+      !isimage ||
       !isValidExpirydateDL
     ) {
       setIsvalidDLError(true);
       return;
     }
+
     setIsvalidDLError(false);
 
     const formData = new FormData();
-
     formData.append('vehicle_Number', vehicleNo);
     formData.append('license_Number', drivingLicenseNo);
     formData.append('expiry_Date', expiryDL);
@@ -610,13 +621,12 @@ export default function RegistrationScreen({navigation, route}) {
       size: selectedFile?.size,
       name: selectedFile?.name,
     });
-
     const result = await _VehicleDetails(formData);
     if (result?.data) {
       console.log('vehicle Details response---->>', result?.data?.message);
       SimpleToast({title: result?.data?.message, isLong: true});
     } else {
-      console.log('vehicle catch error', result?.data);
+      console.log('vehicle catch error', result?.response?.data?.message);
     }
   };
 
@@ -681,7 +691,7 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateUpiIDChange = () => {
-    const namePattern = /[a-zA-Z0-9]+/;
+    const namePattern = /[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}/;
     if (!namePattern.test(onUpiId)) {
       setOnUpiIdError('Please enter a valid UPI ID');
       return false;
@@ -1126,16 +1136,26 @@ export default function RegistrationScreen({navigation, route}) {
             previousBtnStyle={Styles.btnstyles}
             previousBtnTextStyle={Styles.btntextstyles}
             // previousBtnDisabled={true}
+            errors={imageError}
             onNext={_UploadImagesUsingFetch}
             label="Verification">
             <View>
               <Text style={Styles.UPLOADAADHARTEXT}>Upload Aadhar Card</Text>
               <View style={Styles.UPLOADROW}>
-                <View>
+                <View style={{}}>
+                  {isUploadFrontImage ? (
+                    <TouchableOpacity
+                      onPress={() => setIsUploadFrontImage('')}
+                      style={Styles.cross}>
+                      <Entypos title="cross" size={30} IconColor={'red'} />
+                    </TouchableOpacity>
+                  ) : null}
+
                   {isUploadFrontImage ? (
                     <Image
                       source={{uri: isUploadFrontImage.path}}
-                      style={Styles.image}
+                      style={[Styles.image]}
+                      // alt="no image url"
                     />
                   ) : (
                     <TouchableOpacity
@@ -1147,6 +1167,13 @@ export default function RegistrationScreen({navigation, route}) {
                   <Text style={Styles.FONTIMAGETEXT}>Upload Front Image</Text>
                 </View>
                 <View>
+                  {isUploadBacktImage ? (
+                    <TouchableOpacity
+                      onPress={() => setIsUploadBacktImage('')}
+                      style={Styles.cross}>
+                      <Entypos title="cross" size={30} IconColor={'red'} />
+                    </TouchableOpacity>
+                  ) : null}
                   {isUploadBacktImage ? (
                     <Image
                       source={{uri: isUploadBacktImage.path}}
@@ -1170,20 +1197,41 @@ export default function RegistrationScreen({navigation, route}) {
                 ]}>
                 Upload Pan Card
               </Text>
-              <View>
+
+              <View
+                style={{
+                  marginHorizontal: 5,
+                  width: widthPixel(164),
+                }}>
                 {isUploadPanCardImage ? (
-                  <Image
-                    source={{uri: isUploadPanCardImage.path}}
-                    style={Styles.image}
-                  />
-                ) : (
                   <TouchableOpacity
-                    onPress={pickUploadPanCartImage}
-                    style={[Styles.CAMERABTN, {marginHorizontal: 10}]}>
-                    <Icon color={'#000'} name="camera" size={40} />
+                    onPress={() => setIsUploadPanCardImage('')}
+                    style={[Styles.cross, {right: widthPixel(-11)}]}>
+                    <Entypos title="cross" size={30} IconColor={'red'} />
                   </TouchableOpacity>
-                )}
+                ) : null}
+                <View
+                  style={{
+                    width: widthPixel(164),
+                    alignItems: 'center',
+                    marginHorizontal: 10,
+                    borderRadius: 8,
+                  }}>
+                  {isUploadPanCardImage ? (
+                    <Image
+                      source={{uri: isUploadPanCardImage.path}}
+                      style={[Styles.image]}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={pickUploadPanCartImage}
+                      style={[Styles.CAMERABTN, {marginHorizontal: 10}]}>
+                      <Icon color={'#000'} name="camera" size={40} />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -1202,6 +1250,13 @@ export default function RegistrationScreen({navigation, route}) {
                 <View>
                   <View>
                     {isUploadSelfieOneImage ? (
+                      <TouchableOpacity
+                        onPress={() => setIsUploadSelfieOneImage('')}
+                        style={Styles.cross}>
+                        <Entypos title="cross" size={30} IconColor={'red'} />
+                      </TouchableOpacity>
+                    ) : null}
+                    {isUploadSelfieOneImage ? (
                       <Image
                         source={{uri: isUploadSelfieOneImage.path}}
                         style={Styles.image}
@@ -1217,6 +1272,13 @@ export default function RegistrationScreen({navigation, route}) {
                 </View>
 
                 <View>
+                  {isUploadSelfieTwoImage ? (
+                    <TouchableOpacity
+                      onPress={() => setIsUploadSelfieTwoImage('')}
+                      style={Styles.cross}>
+                      <Entypos title="cross" size={30} IconColor={'red'} />
+                    </TouchableOpacity>
+                  ) : null}
                   {isUploadSelfieTwoImage ? (
                     <Image
                       source={{uri: isUploadSelfieTwoImage.path}}
@@ -1280,17 +1342,18 @@ export default function RegistrationScreen({navigation, route}) {
                     status={checked === 'No' ? 'checked' : 'unchecked'}
                     onPress={() => setChecked('No')}
                   />
-                  <Text
-                    style={{
-                      color: COLORS.BLACK,
-                      fontSize: 16,
-                      fontWeight: '500',
-                    }}>
-                    No
-                  </Text>
+                  <View>
+                    <Text
+                      style={{
+                        color: COLORS.BLACK,
+                        fontSize: 16,
+                        fontWeight: '500',
+                      }}>
+                      No
+                    </Text>
+                  </View>
                 </View>
               </View>
-
               {checked === 'Yes' ? (
                 <View>
                   <View style={{marginHorizontal: 20, marginTop: 15}}>
@@ -1301,10 +1364,10 @@ export default function RegistrationScreen({navigation, route}) {
                       placeholder="Enter your Vehicle Number"
                       placeholderTextColor={COLORS.GRAYDARK}
                       style={Styles.TEXTINPUT}
-                      maxLength={10}
-                      keyboardType="number-pad"
+                      maxLength={15}
                       value={vehicleNo}
                       onChangeText={text => setVehicleNo(text)}
+                      autoCapitalize="characters"
                     />
                     {vehicleNoError ? (
                       <Text style={Styles.ERRORTEXT}>{vehicleNoError}</Text>
@@ -1319,8 +1382,9 @@ export default function RegistrationScreen({navigation, route}) {
                       placeholderTextColor={COLORS.GRAYDARK}
                       style={Styles.TEXTINPUT}
                       value={drivingLicenseNo}
-                      maxLength={16}
+                      maxLength={15}
                       onChangeText={text => setDrivingLicenseNo(text)}
+                      autoCapitalize="characters"
                     />
                     {drivingLicenseNoError ? (
                       <Text style={Styles.ERRORTEXT}>
@@ -1357,6 +1421,12 @@ export default function RegistrationScreen({navigation, route}) {
                       </View>
                     )}
                   </View>
+                  <View style={{marginHorizontal: 20}}>
+                    {selectedFileError ? (
+                      <Text style={Styles.ERRORTEXT}>{selectedFileError}</Text>
+                    ) : null}
+                  </View>
+
                   <View style={{marginHorizontal: 20, marginTop: 15}}>
                     <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
                       Expiry Date of DL
@@ -1377,13 +1447,25 @@ export default function RegistrationScreen({navigation, route}) {
                 <View
                   style={{
                     alignItems: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
+                    marginTop: heightPixel(200),
+                    marginHorizontal: 20,
                   }}>
+                  {/* <Lottie
+                    source={require('../Assets/Lottie_json/animation_lkqojitq.json')}
+                    autoPlay
+                    loop={true}
+                    style={{height: heightPixel(150)}}
+                  /> */}
                   <Text
                     style={{
-                      fontSize: fontPixel(25),
+                      fontSize: fontPixel(15),
                       color: COLORS.BLACK,
+                      textAlign: 'center',
                     }}>
-                    No
+                    Your application cannot be processed without a valid
+                    driver's license.
                   </Text>
                 </View>
               ) : null}
@@ -1461,7 +1543,10 @@ export default function RegistrationScreen({navigation, route}) {
                   <TextInput
                     placeholder="ex.mobilenumber@upi"
                     keyboardType="email-address"
-                    style={Styles.UPIINPUTID}
+                    style={[
+                      Styles.UPIINPUTID,
+                      {borderColor: onUpiIdError ? 'red' : COLORS.GRAY},
+                    ]}
                     onChangeText={text => setOnUpiId(text)}
                     value={onUpiId}
                   />
@@ -1731,7 +1816,6 @@ const Styles = StyleSheet.create({
     paddingLeft: 8,
     color: COLORS.BLACK,
     borderWidth: 1,
-    borderColor: 'gray',
     alignItems: 'center',
     fontSize: responsiveFontSize(1.5),
   },
@@ -1797,6 +1881,14 @@ const Styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     marginTop: 4,
+  },
+  cross: {
+    position: 'absolute',
+    alignItems: 'flex-end',
+    zIndex: +9999,
+    alignSelf: 'flex-end',
+    backgroundColor: COLORS.WHITE,
+    borderRadius: 50 / 2,
   },
 });
 
