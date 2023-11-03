@@ -62,7 +62,7 @@ export default function DeliveryServices({navigation}) {
           }
           data={isServicesData}
           renderItem={({item, index}) => (
-            <View style={Styles.BOXMAIN}>
+            <View key={index} style={Styles.BOXMAIN}>
               <View style={Styles.JUSTIBOXMAIN}>
                 <View style={Styles.MAINBOX}>
                   <View

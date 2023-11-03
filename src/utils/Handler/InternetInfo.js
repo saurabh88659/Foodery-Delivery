@@ -6,7 +6,6 @@ export const checkInternetConnection = () => {
     if (Platform.OS === 'android') {
       // For Android devices
       NetInfo.fetch().then(state => {
-        // console.log(state);
         resolve(state.isInternetReachable);
       });
     } else {

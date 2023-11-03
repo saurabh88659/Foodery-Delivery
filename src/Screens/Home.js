@@ -46,6 +46,8 @@ export default function Home({navigation}) {
       latitude: Locations?.latitude,
       longitude: Locations?.longitude,
     };
+
+    console.log('data====>>>>', data);
     const result = await _putcoordinates(data);
     if (result?.data) {
       console.log('coordinates update:', result?.data);
@@ -121,12 +123,6 @@ export default function Home({navigation}) {
               title="bell-ring"
               size={30}
               IconColor={COLORS.WHITE}
-              IconStyle={
-                {
-                  // alignSelf: 'flex-end',
-                  // left: widthPixel(140),
-                }
-              }
             />
           </TouchableOpacity>
         </View>

@@ -60,8 +60,8 @@ async function onDisplayNotification(data) {
     await notifee.requestPermission();
   }
   const channelId = await notifee.createChannel({
-    id: 'Noti 7',
-    name: 'Noti 7',
+    id: 'Noti 9',
+    name: 'Noti 9',
     importance: AndroidImportance.HIGH,
   });
   await notifee.displayNotification({
@@ -75,11 +75,19 @@ async function onDisplayNotification(data) {
 
 export async function notificationListeners() {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
-    console.log(
-      'A new FCM message arrived!',
-      remoteMessage?.data?.notificationType,
-    );
+    console.log('A new FCM message arrived!', remoteMessage?.data);
     onDisplayNotification(remoteMessage);
+
+    if (
+      !!remoteMessage?.data?.notificationType &&
+      remoteMessage?.data?.notificationType == 'booking'
+    ) {
+      setTimeout(() => {
+        NavigationService.navigate(Routes.ORDER_INVITE_SCREEN, {
+          data: remoteMessage?.data,
+        });
+      }, 1200);
+    }
   });
 
   messaging().onNotificationOpenedApp(remoteMessage => {

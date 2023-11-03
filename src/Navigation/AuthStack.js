@@ -16,6 +16,7 @@ import SplashScreen from '../Screens/SplashScreen';
 import TermsConditions from '../Screens/TermsConditions';
 import RegistrationScreen from '../Screens/RegistrationScreen';
 import Notifications from '../Screens/Notifications';
+import OrderInviteScreen from '../Screens/OrderInviteScreen';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
@@ -94,6 +95,11 @@ function AuthStack() {
       <Stack.Screen
         name={Routes.NOTIFICATIONS}
         component={Notifications}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.ORDER_INVITE_SCREEN}
+        component={OrderInviteScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -26,6 +26,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-toast-message';
 import Modal from 'react-native-modal';
 import Lottie from 'lottie-react-native';
+import ProgressDialog from 'react-native-progress-dialog';
 
 import {RadioButton} from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
@@ -34,7 +35,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-// import axios from 'axios';
 import {_getStorage} from '../utils/Storage';
 import {
   _BankDetails,
@@ -43,18 +43,15 @@ import {
   _signdeliveryBoyDocs,
 } from '../utils/Controllers/EpicControllers';
 import Routes from '../Navigation/Routes';
-// import Routes from '../Navigation/Routes';
 
 export default function RegistrationScreen({navigation, route}) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
   const [dateError, setDateError] = useState('');
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState('');
   const [genderError, setGenderError] = useState('');
-
   const [workExperience, setWorkExperience] = useState('');
   const [emailId, setEmailId] = useState('');
   // const [mobileNo, setMobileNo] = useState('');
@@ -70,6 +67,14 @@ export default function RegistrationScreen({navigation, route}) {
   const [pinCodeTwo, setPinCodeTwo] = useState('');
   const [isError, setIsError] = useState(false);
   const [modalVisibleone, setModalVisibleone] = useState(false);
+
+  const [isLoading, setIsLoading] = useState({
+    personalLoad: false,
+    verificationLoad: false,
+    certificationsLoad: false,
+    banckLoad: false,
+  });
+
   const phoneNumber = route.params;
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -348,15 +353,27 @@ export default function RegistrationScreen({navigation, route}) {
       },
     };
 
+    setIsLoading({
+      ...isLoading,
+      personalLoad: true,
+    });
+
     const result = await _signUp(personalobj);
     if (result?.data) {
-      setIsError(false);
       console.log('response data sign up---------------', result?.data);
       SimpleToast({title: result?.data?.message, isLong: true});
+      setIsLoading({
+        ...isLoading,
+        personalLoad: false,
+      });
     } else {
       setIsError(false);
       console.log('catch error signup------>>', result);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
+      setIsLoading({
+        ...isLoading,
+        personalLoad: false,
+      });
     }
   };
 
@@ -369,7 +386,6 @@ export default function RegistrationScreen({navigation, route}) {
   const [isUploadPanCardImage, setIsUploadPanCardImage] = useState(null);
   const [isUploadSelfieOneImage, setIsUploadSelfieOneImage] = useState(null);
   const [isUploadSelfieTwoImage, setIsUploadSelfieTwoImage] = useState(null);
-
   const [imageError, setImageError] = useState(false);
 
   const pickUploadFrontImage = () => {
@@ -504,14 +520,27 @@ export default function RegistrationScreen({navigation, route}) {
         name: isUploadSelfieTwoImage?.path?.replace(/^.*[\\\/]/, ''),
       });
 
+      setIsLoading({
+        ...isLoading,
+        verificationLoad: true,
+      });
+
       const result = await _signdeliveryBoyDocs(formData);
 
       if (result?.data) {
         SimpleToast({title: result?.data?.message, isLong: true});
         console.log('image response data=============>>>>>>', result?.data);
+        setIsLoading({
+          ...isLoading,
+          verificationLoad: false,
+        });
       } else {
         // console.log('image catch error>>>>>>>', result);
         SimpleToast({title: result?.response?.data?.message, isLong: true});
+        setIsLoading({
+          ...isLoading,
+          verificationLoad: false,
+        });
       }
     }
   };
@@ -621,12 +650,25 @@ export default function RegistrationScreen({navigation, route}) {
       size: selectedFile?.size,
       name: selectedFile?.name,
     });
+
+    setIsLoading({
+      ...isLoading,
+      banckLoad: true,
+    });
     const result = await _VehicleDetails(formData);
     if (result?.data) {
       console.log('vehicle Details response---->>', result?.data?.message);
       SimpleToast({title: result?.data?.message, isLong: true});
+      setIsLoading({
+        ...isLoading,
+        banckLoad: false,
+      });
     } else {
       console.log('vehicle catch error', result?.response?.data?.message);
+      setIsLoading({
+        ...isLoading,
+        banckLoad: false,
+      });
     }
   };
 
@@ -727,21 +769,47 @@ export default function RegistrationScreen({navigation, route}) {
       upi: onUpiId,
     };
 
+    setIsLoading({
+      ...isLoading,
+      banckLoad: true,
+    });
+
     const result = await _BankDetails(bankdetalsobj);
     if (result?.data) {
       AsyncStorage.removeItem('isNew');
       // navigation.navigate(Routes.BOTTOM_TAB_BAR);
       SimpleToast({title: result?.data?.message, isLong: true});
       setModalVisibleone(true);
+      setIsLoading({
+        ...isLoading,
+        banckLoad: false,
+      });
     } else {
       console.log('back catch error:', result?.data);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
+      setIsLoading({
+        ...isLoading,
+        banckLoad: false,
+      });
     }
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <CustomStatusBar />
+      <ProgressDialog
+        loaderColor={COLORS.PINK}
+        visible={isLoading.personalLoad}
+      />
+      <ProgressDialog
+        loaderColor={COLORS.PINK}
+        visible={isLoading.verificationLoad}
+      />
+      <ProgressDialog
+        loaderColor={COLORS.PINK}
+        visible={isLoading.certificationsLoad}
+      />
+      <ProgressDialog loaderColor={COLORS.PINK} visible={isLoading.banckLoad} />
       <MyHeader
         title={'Registration Details'}
         onPress={() => navigation.goBack()}

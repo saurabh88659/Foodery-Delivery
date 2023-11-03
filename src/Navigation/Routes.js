@@ -18,6 +18,7 @@ export default {
   BOTTOM_TAB_BAR: 'BottomTabBar',
   REGISTRATION_SCREEN_ONE: 'RegistrationScreen',
   NOTIFICATIONS: 'Notifications',
+  ORDER_INVITE_SCREEN: 'OrderInviteScreen',
   /*
         BOTTOM TAB BAR
         connnects the initial screens for the screens below.

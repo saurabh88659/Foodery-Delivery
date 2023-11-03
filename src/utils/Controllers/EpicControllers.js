@@ -14,6 +14,20 @@ export const _postphone = async data => {
   }
 };
 
+export const _postOtp = async data => {
+  try {
+    const result = await Instance(
+      'POST',
+      BASE_URL + '/verifyOTPDeliveryApp',
+      null,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
 export const _getProfile = async () => {
   const header = await headerConfig();
   console.log('header--DG->>', header);
@@ -223,6 +237,36 @@ export const _putcoordinates = async data => {
     const result = await Instance(
       'PUT',
       BASE_URL + '/updateCoordinates',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _getNotifications = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getAllNotifications',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _getWallet = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getwalletData',
       header,
       data,
     );

@@ -6,14 +6,27 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {CustomStatusBar} from '../utils/Const';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
+import {_getWallet} from '../utils/Controllers/EpicControllers';
 
 export default function WalletScreen({navigation}) {
+  useEffect(() => {
+    _getwallet();
+  }, []);
+
+  const _getwallet = async () => {
+    const result = await _getWallet();
+    if (result?.data) {
+      console.log('get waalte response:', result?.data);
+    } else {
+      console.log('catch wallte data:', result?.response?.data?.message);
+    }
+  };
   return (
     <SafeAreaView style={Styles.Contenenr}>
       <CustomStatusBar />

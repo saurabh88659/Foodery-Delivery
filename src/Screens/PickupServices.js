@@ -57,7 +57,7 @@ export default function PickupServices() {
           }
           data={details}
           renderItem={({item, index}) => (
-            <View style={Styles.MAINBOX}>
+            <View key={index} style={Styles.MAINBOX}>
               <View style={Styles.QBOX}>
                 <Text style={Styles.TEXTONE}>Pickup Details</Text>
                 <Text style={Styles.TEXTONE}>#893798729827</Text>

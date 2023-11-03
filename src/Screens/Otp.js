@@ -19,13 +19,16 @@ import {
 } from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import Button from '../Components/Button';
-import {BASE_URL, SimpleToast, logowithlogin} from '../utils/Const';
+import {SimpleToast, logowithlogin} from '../utils/Const';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Routes from '../Navigation/Routes';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
-import {_getProfile, _postphone} from '../utils/Controllers/EpicControllers';
+import {
+  _getProfile,
+  _postOtp,
+  _postphone,
+} from '../utils/Controllers/EpicControllers';
 
 export default function Otp({navigation, route}) {
   const phoneNumber = route.params;
@@ -52,56 +55,48 @@ export default function Otp({navigation, route}) {
       otp: isOTP,
       deviceToken: fcmToken,
     };
-    axios
-      .post(BASE_URL + `/verifyOTPDeliveryApp`, otpdata, {})
-      .then(async response => {
-        setState({
-          ...state,
-          isLoading: false,
-        });
-        await AsyncStorage.setItem('token', response?.data?.token);
-        await AsyncStorage.setItem(
-          'refreshToken',
-          response?.data?.refreshToken,
-        );
-        await AsyncStorage.setItem(
-          'deliveryBoy_id',
-          response?.data?.deliveryBoy_id,
-        );
-        SimpleToast({title: response?.data?.message, isLong: true});
-        await AsyncStorage.setItem(
-          'isNew',
-          JSON.stringify(response?.data?.isNew),
-        );
-        const result = await _getProfile();
 
-        if (response?.data?.isNew) {
-          navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
-        } else {
-          if (result?.data) {
-            if (result?.data?.result?.status === 'pending') {
-              navigation.replace(Routes.LOGIN_ACCOUNT);
-            } else if (result?.data?.result?.status === 'accepted') {
-              navigation.replace(Routes.BOTTOM_TAB_BAR);
-            } else {
-              navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
-            }
-          } else {
-            console.log(
-              'profile catch error:',
-              result?.response?.data?.message,
-            );
-          }
-        }
-      })
-      .catch(error => {
-        SimpleToast({title: error?.response?.data?.message, isLong: true});
-        console.log('otp catch error--->>>', error?.response?.data?.message);
-        setState({
-          ...state,
-          isLoading: false,
-        });
+    const response = await _postOtp(otpdata);
+    if (response?.data) {
+      setState({
+        ...state,
+        isLoading: false,
       });
+      await AsyncStorage.setItem('token', response?.data?.token);
+      await AsyncStorage.setItem('refreshToken', response?.data?.refreshToken);
+      await AsyncStorage.setItem(
+        'deliveryBoy_id',
+        response?.data?.deliveryBoy_id,
+      );
+      SimpleToast({title: response?.data?.message, isLong: true});
+      await AsyncStorage.setItem(
+        'isNew',
+        JSON.stringify(response?.data?.isNew),
+      );
+      const result = await _getProfile();
+      if (response?.data?.isNew) {
+        navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
+      } else {
+        if (result?.data) {
+          if (result?.data?.result?.status === 'pending') {
+            navigation.replace(Routes.LOGIN_ACCOUNT);
+          } else if (result?.data?.result?.status === 'accepted') {
+            navigation.replace(Routes.BOTTOM_TAB_BAR);
+          } else {
+            navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
+          }
+        } else {
+          console.log('profile catch error:', result?.response?.data?.message);
+        }
+      }
+    } else {
+      console.log('hey');
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+      setState({
+        ...state,
+        isLoading: false,
+      });
+    }
   };
 
   const resendsend = async () => {
@@ -121,6 +116,7 @@ export default function Otp({navigation, route}) {
       console.log('Login Catch error', result?.response?.data);
     }
   };
+
   useEffect(() => {
     const timer =
       counter > 0 && setInterval(() => setCounter(counter - 1), 1000);

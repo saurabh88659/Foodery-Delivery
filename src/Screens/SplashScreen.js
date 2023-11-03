@@ -35,7 +35,7 @@ export default function SplashScreen({navigation}) {
   const [isloadData, setIsloadData] = useState(false);
 
   const Locations = useSelector(state => state.LocationReducer);
-  console.log('Locations:', Locations);
+  // console.log('Locations:', Locations);
 
   useEffect(() => {
     _Handle_Splash_SCREEN();
@@ -106,7 +106,6 @@ export default function SplashScreen({navigation}) {
                         setIsLoading(false);
                         setIsloadData(false);
                       });
-                    // update access token in storage
                   }
                 }
               });
