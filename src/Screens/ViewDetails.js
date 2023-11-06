@@ -39,8 +39,6 @@ export default function ViewDetails({navigation, route}) {
     }
   };
 
-  console.log('viewDetails====>>', viewDetails?.orderedProducts);
-
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
       <CustomStatusBar />
@@ -105,7 +103,9 @@ export default function ViewDetails({navigation, route}) {
                   paddingRight: widthPixel(10),
                   width: widthPixel(184),
                 }}>
-                {viewDetails?.vendorAcceptedDate}
+                {/* {viewDetails?.vendorAcceptedDate} */}
+                {new Date(viewDetails?.vendorAcceptedDate).toDateString()}{' '}
+                {new Date(viewDetails?.vendorAcceptedDate).toLocaleTimeString()}
               </Text>
             </View>
           </View>

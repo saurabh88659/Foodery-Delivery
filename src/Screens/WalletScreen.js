@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CustomStatusBar} from '../utils/Const';
 import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
@@ -15,6 +16,8 @@ import Routes from '../Navigation/Routes';
 import {_getWallet} from '../utils/Controllers/EpicControllers';
 
 export default function WalletScreen({navigation}) {
+  const [accountDetails, setAccountDetails] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     _getwallet();
   }, []);
@@ -23,90 +26,121 @@ export default function WalletScreen({navigation}) {
     const result = await _getWallet();
     if (result?.data) {
       console.log('get waalte response:', result?.data);
+      setAccountDetails(result?.data);
+      setLoading(false);
     } else {
       console.log('catch wallte data:', result?.response?.data?.message);
+      setLoading(false);
     }
   };
+
   return (
     <SafeAreaView style={Styles.Contenenr}>
       <CustomStatusBar />
       <MyHeader onPress={() => navigation.goBack()} title={'Wallet'} />
-      <View style={Styles.BoxMain}>
-        <View style={Styles.ProfileBox}>
-          <Image source={require('../Assets/Ravi.jpg')} style={Styles.image} />
+      {isLoading ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color={COLORS.PINK} />
         </View>
-        <Text style={Styles.TextTitle}>Ravi Rai</Text>
-      </View>
-      <View style={Styles.Paybox}>
-        <Text style={Styles.AmountTitle}>₹ 74,849</Text>
-        <Text style={Styles.EarningTitle}>Total Earning</Text>
-        <View style={{alignItems: 'center', marginTop: 40}}>
-          <Text style={Styles.SubTitleNot}>
-            Note: We do settlement on Monday Every week
-          </Text>
-        </View>
-      </View>
-      <View style={Styles.Paymentbox}>
-        <Text style={Styles.SubTitle1}>Payment History</Text>
-        <View style={Styles.box}>
-          <Text style={Styles.PayTitle}>Payment Recived</Text>
-
-          <View style={Styles.Row}>
-            <Text style={Styles.SubTitle2}>Account Number :</Text>
-            <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
-              ***********3939
+      ) : (
+        <View>
+          <View style={Styles.BoxMain}>
+            <View style={Styles.ProfileBox}>
+              {accountDetails?.profilePic ? (
+                <Image
+                  source={{uri: accountDetails?.profilePic}}
+                  style={Styles.image}
+                />
+              ) : (
+                <View style={{}}>
+                  <Text style={{color: COLORS.GRAYDARK, fontSize: 25}}>#</Text>
+                </View>
+              )}
+            </View>
+            <Text style={Styles.TextTitle}>
+              {accountDetails?.firstName + ' ' + accountDetails?.lastName}
             </Text>
           </View>
-          <View style={Styles.Row}>
-            <Text style={Styles.SubTitle2}>Branch Name :</Text>
-            <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
-              Kotak Mahindara
+          <View style={Styles.Paybox}>
+            <Text style={Styles.AmountTitle}>
+              ₹ {accountDetails?.deliveryBoyBalance}
             </Text>
-          </View>
-          <View
-            style={[
-              Styles.Row,
-              {
-                borderBottomWidth: 1,
-                borderColor: COLORS.GRAY,
-                paddingVertical: 10,
-                top: -10,
-              },
-            ]}>
-            <Text style={Styles.SubTitle2}>Service Days :</Text>
-            <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
-              17 April 2023 to 22 April 2023
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text style={{color: COLORS.BLACK, fontSize: 12}}>
-              Amount Credit: ₹2459{' '}
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(Routes.TRANSACTION_DETAILS)}
-              activeOpacity={0.5}
-              style={{
-                paddingVertical: 10,
-                borderWidth: 1,
-                width: widthPixel(100),
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 5,
-                borderColor: COLORS.GRAY,
-              }}>
-              <Text style={{color: COLORS.BLACK, fontSize: 12}}>
-                View Details
+            <Text style={Styles.EarningTitle}>Total Earning</Text>
+            <View style={{alignItems: 'center', marginTop: 40}}>
+              <Text style={Styles.SubTitleNot}>
+                Note: We do settlement on Monday Every week
               </Text>
-            </TouchableOpacity>
+            </View>
+          </View>
+          <View style={Styles.Paymentbox}>
+            <Text style={Styles.SubTitle1}>Payment History</Text>
+            <View style={Styles.box}>
+              <Text style={Styles.PayTitle}>Payment Recived</Text>
+
+              <View style={Styles.Row}>
+                <Text style={Styles.SubTitle2}>Account Number :</Text>
+                <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
+                  {/* {accountDetails?.bankDetails?.accountNumber?.split('', 4)} */}
+                  ************
+                  {accountDetails?.bankDetails?.accountNumber
+                    .toString()
+                    .split('', 4)}
+                </Text>
+              </View>
+              <View style={Styles.Row}>
+                <Text style={Styles.SubTitle2}>Branch Name :</Text>
+                <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
+                  {accountDetails?.bankDetails?.bankName}
+                </Text>
+              </View>
+              <View
+                style={[
+                  Styles.Row,
+                  {
+                    borderBottomWidth: 1,
+                    borderColor: COLORS.GRAY,
+                    paddingVertical: 10,
+                    top: -10,
+                  },
+                ]}>
+                <Text style={Styles.SubTitle2}>Service Days :</Text>
+                <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
+                  17 April 2023 to 22 April 2023
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: COLORS.BLACK, fontSize: 12}}>
+                  Amount Credit: ₹2459{' '}
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(Routes.TRANSACTION_DETAILS)
+                  }
+                  activeOpacity={0.5}
+                  style={{
+                    paddingVertical: 10,
+                    borderWidth: 1,
+                    width: widthPixel(100),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    borderColor: COLORS.GRAY,
+                  }}>
+                  <Text style={{color: COLORS.BLACK, fontSize: 12}}>
+                    View Details
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 }

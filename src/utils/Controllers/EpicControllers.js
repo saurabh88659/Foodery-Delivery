@@ -275,3 +275,33 @@ export const _getWallet = async data => {
     return e;
   }
 };
+
+export const _getTransitionDetails = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getTransitionDetails',
+      header,
+      // data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _getOrderNotifications = async _id => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getNotificationOrder/' + _id,
+      header,
+      // data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};

@@ -69,6 +69,7 @@ async function onDisplayNotification(data) {
     body: data?.data?.body,
     android: {
       channelId: channelId,
+      sound: 'hollow',
     },
   });
 }

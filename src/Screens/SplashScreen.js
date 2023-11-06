@@ -35,6 +35,7 @@ export default function SplashScreen({navigation}) {
   const [isloadData, setIsloadData] = useState(false);
 
   const Locations = useSelector(state => state.LocationReducer);
+
   // console.log('Locations:', Locations);
 
   useEffect(() => {
