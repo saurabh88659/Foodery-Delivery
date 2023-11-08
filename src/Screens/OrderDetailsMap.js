@@ -12,9 +12,7 @@ import {CustomStatusBar} from '../utils/Const';
 export default function OrderDetailsMap({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINER}>
-      {/* <StatusBar backgroundColor={COLORS.WHITE} barStyle="dark-content" /> */}
       <CustomStatusBar />
-
       <MyHeader onPress={() => navigation.goBack()} title={'Order Details'} />
       <View style={Styles.CARTSTY}>
         <View style={Styles.HEDTEXT}>

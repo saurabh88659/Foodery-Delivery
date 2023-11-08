@@ -29,6 +29,7 @@ import {
   _postOtp,
   _postphone,
 } from '../utils/Controllers/EpicControllers';
+import {StackActions} from '@react-navigation/native';
 
 export default function Otp({navigation, route}) {
   const phoneNumber = route.params;
@@ -81,7 +82,8 @@ export default function Otp({navigation, route}) {
           if (result?.data?.result?.status === 'pending') {
             navigation.replace(Routes.LOGIN_ACCOUNT);
           } else if (result?.data?.result?.status === 'accepted') {
-            navigation.replace(Routes.BOTTOM_TAB_BAR);
+            // navigation.replace(Routes.BOTTOM_TAB_BAR);
+            navigation.dispatch(StackActions.replace(Routes.BOTTOM_TAB_BAR));
           } else {
             navigation.navigate(Routes.REGISTRATION_SCREEN_ONE, phoneNumber);
           }

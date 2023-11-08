@@ -57,6 +57,7 @@ export default function VerificationSelfie({navigation}) {
           ? state.profileImg?.path
           : state.profileImg?.path?.replace('file://', ''),
     });
+    console.log('formData===>>', formData);
     const result = await _putVerifyselfie(formData);
     if (result?.data) {
       console.log('upload image=====>>>>', result?.data?.message);
@@ -65,7 +66,7 @@ export default function VerificationSelfie({navigation}) {
         navigation.navigate(Routes.VERIFICATION_THANKS);
       }, 3000);
     } else {
-      console.log('upload image catch error', result?.response?.data?.message);
+      console.log('upload image catch error', result?.response?.data);
       // SimpleToast({title: result?.response?.data?.message, isLong: true});
     }
   };

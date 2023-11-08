@@ -28,20 +28,50 @@ import {
   _putcoordinates,
 } from '../utils/Controllers/EpicControllers';
 import {useSelector} from 'react-redux';
+import {StackActions} from '@react-navigation/native';
+import Geolocation from 'react-native-geolocation-service';
 
 export default function SplashScreen({navigation}) {
   const [hasInternet, setHasInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isloadData, setIsloadData] = useState(false);
-
   const Locations = useSelector(state => state.LocationReducer);
-
-  // console.log('Locations:', Locations);
 
   useEffect(() => {
     _Handle_Splash_SCREEN();
-    // _coordinates();
+    _coordinates();
+    getCurrentPosition();
   }, []);
+
+  const getCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        _coordinates({Locations: position.coords});
+      },
+      error => console.log('error locations', error),
+    );
+  };
+
+  const _coordinates = async locations => {
+    const data = {
+      latitude: locations?.Locations?.latitude,
+      longitude: locations?.Locations?.longitude,
+    };
+    if (locations) {
+      const result = await _putcoordinates(data);
+      if (result?.data) {
+        console.log('coordinates update:', result?.data);
+      } else {
+        console.log(
+          'coordinates catch error:23',
+          result?.response?.data?.message,
+        );
+      }
+    } else {
+      // SimpleToast({title: 'Please enable location', isLong: true});
+      console.log('Locations:Error');
+    }
+  };
 
   const _Handle_Splash_SCREEN = async () => {
     setIsloadData(true);
@@ -64,7 +94,10 @@ export default function SplashScreen({navigation}) {
                 if (resp?.data?.result?.status === 'pending') {
                   navigation.replace(Routes.LOGIN_ACCOUNT);
                 } else if (resp?.data?.result?.status === 'accepted') {
-                  navigation.replace(Routes.BOTTOM_TAB_BAR);
+                  // navigation.replace(Routes.BOTTOM_TAB_BAR);
+                  navigation.dispatch(
+                    StackActions.replace(Routes.BOTTOM_TAB_BAR),
+                  );
                 } else {
                   navigation.navigate(Routes.LOG_IN_SCREEN);
                 }
@@ -95,7 +128,10 @@ export default function SplashScreen({navigation}) {
                           res.data.refreshToken,
                         );
                         if (res?.data?.token) {
-                          navigation.replace(Routes.BOTTOM_TAB_BAR);
+                          // navigation.replace(Routes.BOTTOM_TAB_BAR);
+                          navigation.dispatch(
+                            StackActions.replace(Routes.BOTTOM_TAB_BAR),
+                          );
                         }
                       })
                       .catch(error => {
@@ -103,7 +139,11 @@ export default function SplashScreen({navigation}) {
                           'errr--->>>',
                           error?.response?.data?.message,
                         );
-                        navigation.replace(Routes.BOTTOM_TAB_BAR);
+                        // navigation.replace(Routes.BOTTOM_TAB_BAR);
+                        navigation.dispatch(
+                          StackActions.replace(Routes.BOTTOM_TAB_BAR),
+                        );
+
                         setIsLoading(false);
                         setIsloadData(false);
                       });

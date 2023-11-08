@@ -863,7 +863,7 @@ export default function RegistrationScreen({navigation, route}) {
                 <View style={{width: widthPixel(170)}}>
                   <TextInput
                     placeholder="Last name"
-                    placeholderTextColor={COLORS.DARK_GRAY}
+                    placeholderTextColor={COLORS.GRAYDARK}
                     // style={Styles.INPUONE}
                     style={{
                       borderWidth: 1,

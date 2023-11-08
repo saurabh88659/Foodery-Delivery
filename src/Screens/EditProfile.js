@@ -37,7 +37,6 @@ import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
 
 export default function EditProfile({navigation}) {
-  // const [isUserData, setIsUserData] = useState({});
   const [visible, setVisible] = useState(false);
   const [isProfile, setIsProfile] = useState('');
   const [isName, setIsName] = useState('');
@@ -46,13 +45,12 @@ export default function EditProfile({navigation}) {
   const [iState, setIsState] = useState('');
   // const [isLoading, setIsLoading] = useState(false);
   const isFocused = useIsFocused();
-  // const [mobileNum, setMobileNum] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [isState, seIstState] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [state, setState] = useState({
-    isLoading: false,
     profileImg: null,
   });
 
@@ -135,10 +133,6 @@ export default function EditProfile({navigation}) {
   };
 
   const _ProfileData = async () => {
-    setState({
-      ...state,
-      isLoading: true,
-    });
     const result = await _getProfile();
     if (result?.data) {
       setAddress(result?.data?.result?.currentAddress.address);
@@ -147,18 +141,11 @@ export default function EditProfile({navigation}) {
       setIsName(result?.data?.result?.firstName);
       setIsProfile(result?.data?.result);
       setIsbirth(moment(result?.data?.result?.DOB).format('DD/MM/YYYY'));
-      // setIsLenmark();
       setIsState(result?.data?.result);
-      setState({
-        ...state,
-        isLoading: false,
-      });
+      setIsLoading(false);
     } else {
       console.log('Profile catch error', result?.data);
-      setState({
-        ...state,
-        isLoading: false,
-      });
+      setIsLoading(false);
     }
   };
 
@@ -168,7 +155,7 @@ export default function EditProfile({navigation}) {
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
-      {state.isLoading ? (
+      {isLoading ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator size="large" color={COLORS.PINK} />
         </View>

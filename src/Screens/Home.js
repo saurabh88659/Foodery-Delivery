@@ -38,23 +38,7 @@ export default function Home({navigation}) {
   useEffect(() => {
     _CountData();
     requestUserPermission();
-    _coordinates();
   }, []);
-
-  const _coordinates = async () => {
-    const data = {
-      latitude: Locations?.latitude,
-      longitude: Locations?.longitude,
-    };
-
-    console.log('data====>>>>', data);
-    const result = await _putcoordinates(data);
-    if (result?.data) {
-      console.log('coordinates update:', result?.data);
-    } else {
-      console.log('coordinates catch error:', result?.data);
-    }
-  };
 
   const _CountData = async () => {
     const result = await _countOrder();

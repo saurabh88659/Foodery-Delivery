@@ -12,7 +12,6 @@ export default function ThanksDelivering({navigation}) {
   return (
     <SafeAreaView style={Styles.CONTAINER}>
       <CustomStatusBar />
-
       <MyHeader onPress={() => navigation.goBack()} title={'Verification'} />
       <Lottie
         source={thankyoudelivering}

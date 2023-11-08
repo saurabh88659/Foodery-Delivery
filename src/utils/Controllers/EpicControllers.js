@@ -305,3 +305,32 @@ export const _getOrderNotifications = async _id => {
     return e;
   }
 };
+
+export const _putaccept = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'PUT',
+      BASE_URL + '/deliveryBoyAccepted',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _putReject = async _id => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'PUT',
+      BASE_URL + '/deliveryBoyRejected/' + _id,
+      header,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};

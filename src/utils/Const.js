@@ -128,7 +128,6 @@ const Instance = async (method, url, header, data) => {
       return e;
     }
   } else {
-    // SimpleToast.show('No Internet Connection!', SimpleToast.LONG);
     SimpleToast({title: 'No Internet Connection!', isLong: true});
   }
 };

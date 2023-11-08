@@ -15,10 +15,11 @@ import Button from '../Components/Button';
 // import Routes from '../Navigation/Routes';
 import {CustomStatusBar} from '../utils/Const';
 import {_postOrderHistorbyid} from '../utils/Controllers/EpicControllers';
+import Routes from '../Navigation/Routes';
 
 export default function ViewDetails({navigation, route}) {
   const preitem = route.params;
-  console.log('preitem=====', preitem?.orderId);
+  // console.log('preitem=====', preitem?.orderId);
   const [viewDetails, setViewDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -178,7 +179,7 @@ export default function ViewDetails({navigation, route}) {
           <View style={{marginVertical: 20}}>
             <Button
               title={'Submit'}
-              // onPress={() => navigation.navigate(Routes.VERIFICATION_THANKS)}
+              onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
             />
           </View>
         </ScrollView>
