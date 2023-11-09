@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  RefreshControl,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
@@ -69,56 +68,55 @@ export default function TransactionDetails({navigation}) {
                 scrollEnabled={false}
                 data={item?.item}
                 renderItem={({item, index}) => (
-                  console.log('item---', item),
-                  (
+                  <View
+                    key={index}
+                    style={{
+                      borderBottomWidth: 1,
+                      paddingVertical: 10,
+                      borderColor: COLORS.GRAY,
+                      marginHorizontal: 10,
+                    }}>
                     <View
-                      key={index}
                       style={{
-                        borderBottomWidth: 1,
-                        paddingVertical: 10,
-                        borderColor: COLORS.GRAY,
-                        marginHorizontal: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                       }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                        }}>
-                        <Text
-                          style={{
-                            color: COLORS.BLACK,
-                            fontSize: 16,
-                            fontWeight: '500',
-                          }}>
-                          {item?.delieveryAddress?.completeAddress}
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.BLACK,
-                            fontSize: 14,
-                            fontWeight: '500',
-                          }}>
-                          &#10011;{item?.commission}
-                        </Text>
-                      </View>
                       <Text
+                        numberOfLines={1}
                         style={{
-                          color: COLORS.GRAY,
-                          fontSize: 11,
-                          top: 2,
+                          color: COLORS.BLACK,
+                          fontSize: 16,
+                          fontWeight: '500',
+                          width: 280,
                         }}>
-                        {item?.time}
+                        {item?.delieveryAddress?.completeAddress}
                       </Text>
                       <Text
                         style={{
-                          color: COLORS.GRAY,
-                          fontSize: 11,
-                          top: 2,
+                          color: COLORS.BLACK,
+                          fontSize: 14,
+                          fontWeight: '500',
                         }}>
-                        Range: {item?.range}
+                        &#10011;{item?.commission}
                       </Text>
                     </View>
-                  )
+                    <Text
+                      style={{
+                        color: COLORS.GRAY,
+                        fontSize: 11,
+                        top: 2,
+                      }}>
+                      {item?.time}
+                    </Text>
+                    <Text
+                      style={{
+                        color: COLORS.GRAY,
+                        fontSize: 11,
+                        top: 2,
+                      }}>
+                      Range: {item?.range}
+                    </Text>
+                  </View>
                 )}
               />
             </View>

@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MyHeader from '../Components/MyHeader';
@@ -16,16 +17,28 @@ import Button from '../Components/Button';
 import {CustomStatusBar} from '../utils/Const';
 import {_postOrderHistorbyid} from '../utils/Controllers/EpicControllers';
 import Routes from '../Navigation/Routes';
+import {useDispatch, useSelector} from 'react-redux';
+import {ViewDetailsActions} from '../Redux/Action/ViewDetailsActions';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function ViewDetails({navigation, route}) {
   const preitem = route.params;
-  // console.log('preitem=====', preitem?.orderId);
   const [viewDetails, setViewDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [refresh, setRfresh] = useState(false);
+  const IsFocused = useIsFocused();
 
   useEffect(() => {
-    _OrderHistorbyid();
-  }, []);
+    if (IsFocused) {
+      _OrderHistorbyid();
+    }
+  }, [IsFocused]);
+
+  /**
+   * The function `_OrderHistorbyid` retrieves order history data based on a given order ID and updates
+   * the state accordingly.
+   */
 
   const _OrderHistorbyid = async () => {
     setIsLoading(true);
@@ -33,12 +46,17 @@ export default function ViewDetails({navigation, route}) {
     if (result?.data) {
       console.log('response data:', result?.data?.result);
       setViewDetails(result?.data?.result);
+      dispatch(ViewDetailsActions(result?.data?.result));
       setIsLoading(false);
     } else {
       console.log('catch error:order History', result?.response?.data?.message);
       setIsLoading(false);
     }
   };
+
+  setTimeout(() => {
+    setRfresh(false);
+  }, 5000);
 
   return (
     <SafeAreaView style={Styles.CONTAINERMAIN}>
@@ -49,7 +67,16 @@ export default function ViewDetails({navigation, route}) {
           <ActivityIndicator size="large" color={COLORS.PINK} />
         </View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={_OrderHistorbyid}
+              tintColor={COLORS.GREEN}
+              colors={[COLORS.PINK]}
+            />
+          }
+          showsVerticalScrollIndicator={false}>
           <View style={Styles.STORECARD}>
             <View style={Styles.STOREROW}>
               <Text style={Styles.STORETEXT}>Store Details</Text>
@@ -104,7 +131,6 @@ export default function ViewDetails({navigation, route}) {
                   paddingRight: widthPixel(10),
                   width: widthPixel(184),
                 }}>
-                {/* {viewDetails?.vendorAcceptedDate} */}
                 {new Date(viewDetails?.vendorAcceptedDate).toDateString()}{' '}
                 {new Date(viewDetails?.vendorAcceptedDate).toLocaleTimeString()}
               </Text>
@@ -113,7 +139,7 @@ export default function ViewDetails({navigation, route}) {
           <View style={Styles.ROWSTYL}>
             <Text style={Styles.ROWNAMETEXT}>Order Details</Text>
             <Text style={[Styles.ROWNAMETEXT, {color: COLORS.GREEN}]}>
-              Active
+              {viewDetails?.orderActiveStatus}
             </Text>
           </View>
           <Text
@@ -134,7 +160,8 @@ export default function ViewDetails({navigation, route}) {
               renderItem={({item, index}) => (
                 <View key={index} style={[Styles.ROWONET, {marginVertical: 8}]}>
                   <Text style={[Styles.ROWNAMETEXT, {fontWeight: '400'}]}>
-                    Bread *{item?.productId?.productPrice}
+                    {item?.productId?.productName} *
+                    {item?.productId?.productPrice}
                   </Text>
                   <Text style={Styles.ROWNAMETEXT}>
                     ₹
@@ -154,11 +181,13 @@ export default function ViewDetails({navigation, route}) {
             </View>
             <View style={[Styles.LETBOXROW, {marginVertical: 8}]}>
               <Text style={{color: COLORS.GRAYDARK}}>Delivery fee</Text>
-              <Text style={{color: COLORS.GRAYDARK}}>₹ 195</Text>
+              <Text style={{color: COLORS.GRAYDARK}}>
+                ₹ {viewDetails?.deliveryFee}
+              </Text>
             </View>
             <View style={[Styles.LETBOXROW, {marginVertical: 5}]}>
               <Text style={{color: COLORS.GRAYDARK}}>GST</Text>
-              <Text style={{color: COLORS.GRAYDARK}}>₹ 35</Text>
+              <Text style={{color: COLORS.GRAYDARK}}>₹ {viewDetails?.gst}</Text>
             </View>
             <Text
               numberOfLines={1}
@@ -176,12 +205,14 @@ export default function ViewDetails({navigation, route}) {
             <Text style={Styles.ROWNAMETEXT}>Paid By</Text>
             <Text style={Styles.ROWNAMETEXT}>{viewDetails?.payby}</Text>
           </View>
-          <View style={{marginVertical: 20}}>
-            <Button
-              title={'Submit'}
-              onPress={() => navigation.navigate(Routes.ORDER_DETAILS_MAP)}
-            />
-          </View>
+          {viewDetails?.orderStatus === 'Assigned Delivery Partner' && (
+            <View style={{marginVertical: 20}}>
+              <Button
+                title={'Submit'}
+                onPress={() => navigation.navigate(Routes.THANKS_DELIVERING)}
+              />
+            </View>
+          )}
         </ScrollView>
       )}
     </SafeAreaView>

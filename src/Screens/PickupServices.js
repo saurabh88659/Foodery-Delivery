@@ -12,15 +12,18 @@ import {COLORS} from '../utils/Colors';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {_getpickupdetails} from '../utils/Controllers/EpicControllers';
 import {SimpleToast} from '../utils/Const';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function PickupServices() {
   const [refresh, setRfresh] = useState(false);
   const [details, setDetails] = useState([]);
   const [datanotfound, setdatanotfound] = useState();
-
+  const isFocused = useIsFocused();
   useEffect(() => {
-    _getpickup();
-  }, []);
+    if (isFocused) {
+      _getpickup();
+    }
+  }, [isFocused]);
 
   setTimeout(() => {
     setRfresh(false);
@@ -31,7 +34,7 @@ export default function PickupServices() {
     if (result?.data) {
       setDetails(result?.data?.result);
     } else {
-      console.log('catch error:', result?.response?.data?.message);
+      console.log('catch error:', result?.response?.data?.vendorId);
       setdatanotfound(result?.response?.data?.message);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
     }
@@ -60,7 +63,9 @@ export default function PickupServices() {
             <View key={index} style={Styles.MAINBOX}>
               <View style={Styles.QBOX}>
                 <Text style={Styles.TEXTONE}>Pickup Details</Text>
-                <Text style={Styles.TEXTONE}>#893798729827</Text>
+                <Text style={Styles.TEXTONE}>
+                  Shop Id: {item?.vendorId?.shopsId}
+                </Text>
               </View>
 
               <View>
@@ -73,14 +78,14 @@ export default function PickupServices() {
                 </Text>
                 <View style={Styles.ROWSTYL}>
                   <Text style={[Styles.TEXTONE, {fontSize: 14}]}>
-                    User name:
+                    Shop Name:
                   </Text>
                   <Text
                     style={[
                       Styles.TEXTONE,
                       {fontSize: 13, paddingLeft: 10, fontWeight: 400},
                     ]}>
-                    json dev
+                    {item?.vendorId?.shopsDetails?.shopName}
                   </Text>
                 </View>
                 <View style={Styles.ROWSTYL}>
@@ -92,7 +97,7 @@ export default function PickupServices() {
                       Styles.TEXTONE,
                       {fontSize: 13, paddingLeft: 10, fontWeight: 400},
                     ]}>
-                    +91 88739382890
+                    +91 {item?.vendorId?.mobileNumber}
                   </Text>
                 </View>
                 <View style={Styles.ROWSTYL}>
@@ -109,8 +114,7 @@ export default function PickupServices() {
                         width: widthPixel(200),
                       },
                     ]}>
-                    Plot no. A, 40, Block A, Industrial Area, Sector 62, Noida,
-                    Uttar Pradesh 201301
+                    {item?.vendorId?.shopsDetails?.shopFullAddress}
                   </Text>
                 </View>
                 <View style={Styles.ROWSTYL}>
@@ -122,7 +126,7 @@ export default function PickupServices() {
                       Styles.TEXTONE,
                       {fontSize: 13, paddingLeft: 10, fontWeight: 400},
                     ]}>
-                    Prepaid
+                    {item?.payby}
                   </Text>
                 </View>
                 <Text

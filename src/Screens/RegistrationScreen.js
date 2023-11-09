@@ -288,6 +288,11 @@ export default function RegistrationScreen({navigation, route}) {
     }
   };
 
+  /**
+   * The function `_PersonnalDetails` is an asynchronous function that validates and saves personal
+   * details entered by a user.
+   * @returns nothing.
+   */
   const _PersonnalDetails = async () => {
     const isValidfirst = validateFirstNameChange(firstName);
     const isValidlast = validateLastNameChange(lastName);
@@ -461,6 +466,11 @@ export default function RegistrationScreen({navigation, route}) {
       });
   };
 
+  /**
+   * The function `_UploadImagesUsingFetch` is used to upload multiple images using the Fetch API in
+   * JavaScript.
+   * @returns The function does not explicitly return anything.
+   */
   const _UploadImagesUsingFetch = async () => {
     const formData = new FormData();
     if (
@@ -743,6 +753,11 @@ export default function RegistrationScreen({navigation, route}) {
     }
   };
 
+  /**
+   * The function `_BankDetailsHandle` validates and saves bank details, and displays a success message
+   * or an error message.
+   * @returns The function `_BankDetailsHandle` returns nothing.
+   */
   const _BankDetailsHandle = async () => {
     const isValidbankName = validateBankNameChange(onBankName);
     const isvalidbankNumber = validateBankNumberChange(onBankNumber);

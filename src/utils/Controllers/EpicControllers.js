@@ -1,5 +1,11 @@
 import {BASE_URL, Instance, headerConfig} from '../Const';
 
+/**
+ * The function `_postphone` is an asynchronous function that makes a POST request to a login endpoint
+ * with the provided data.
+ * @returns the result of the API call if it is successful, and returning the error object if there is
+ * an error.
+ */
 export const _postphone = async data => {
   try {
     const result = await Instance(
@@ -185,13 +191,14 @@ export const _viewDetailsByid = async id => {
 export const _putVerifyselfie = async data => {
   const header = await headerConfig();
   header['Content-type'] = 'multipart/form-data';
+  console.log('data', data?.formData?._parts);
 
   try {
     const result = await Instance(
       'PUT',
-      BASE_URL + '/updateDeliveryBoyImage',
+      BASE_URL + '/updateDeliveryBoyImage/' + data?.orderId,
       header,
-      data,
+      data?.formData,
     );
     return result;
   } catch (e) {
@@ -201,7 +208,6 @@ export const _putVerifyselfie = async data => {
 
 export const _getpickupdetails = async data => {
   const header = await headerConfig();
-
   try {
     const result = await Instance(
       'GET',

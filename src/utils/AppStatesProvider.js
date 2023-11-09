@@ -1,3 +1,11 @@
+/**
+ * The above code is a React context provider that manages the network availability, geolocation, and
+ * app state in a React Native application.
+ * @returns The code is returning the `AppStatesProvider` component, which is a context provider
+ * component. It wraps the `children` components and provides the context value to them. The context
+ * value includes `isNetworkAvailable`, `locationCoords`, and `appStateVisible` variables, which can be
+ * accessed using the `useAppStates` hook.
+ */
 import React, {
   createContext,
   useContext,

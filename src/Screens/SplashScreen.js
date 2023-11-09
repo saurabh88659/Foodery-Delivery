@@ -35,7 +35,7 @@ export default function SplashScreen({navigation}) {
   const [hasInternet, setHasInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isloadData, setIsloadData] = useState(false);
-  const Locations = useSelector(state => state.LocationReducer);
+  // const Locations = useSelector(state => state.LocationReducer);
 
   useEffect(() => {
     _Handle_Splash_SCREEN();
@@ -43,6 +43,10 @@ export default function SplashScreen({navigation}) {
     getCurrentPosition();
   }, []);
 
+  /**
+   * The function getCurrentPosition retrieves the current geographical coordinates of the user's
+   * device.
+   */
   const getCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -52,6 +56,12 @@ export default function SplashScreen({navigation}) {
     );
   };
 
+  /**
+   * The function `_coordinates` takes in a `locations` object, extracts the latitude and longitude
+   * properties, and calls the `_putcoordinates` function with the extracted data. If the result has a
+   * `data` property, it logs the coordinates update, otherwise it logs the error message. If the
+   * `locations` object is falsy, it logs an error message.
+   */
   const _coordinates = async locations => {
     const data = {
       latitude: locations?.Locations?.latitude,
@@ -72,6 +82,11 @@ export default function SplashScreen({navigation}) {
       console.log('Locations:Error');
     }
   };
+
+  /**
+   * The function `_Handle_Splash_SCREEN` checks for internet connection, retrieves token and isNew
+   * status from storage, and navigates to different screens based on the token and isNew status.
+   */
 
   const _Handle_Splash_SCREEN = async () => {
     setIsloadData(true);

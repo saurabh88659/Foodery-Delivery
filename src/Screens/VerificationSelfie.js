@@ -15,8 +15,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Routes from '../Navigation/Routes';
 import {CustomStatusBar, Ionicon, SimpleToast} from '../utils/Const';
 import {_putVerifyselfie} from '../utils/Controllers/EpicControllers';
+import {useSelector} from 'react-redux';
+import ProgressDialog from 'react-native-progress-dialog';
 
 export default function VerificationSelfie({navigation}) {
+  const ViewDetails = useSelector(state => state.ViewDetailsReduces.data);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [state, setState] = useState({
     profileImg: null,
     isLoading: false,
@@ -29,15 +34,10 @@ export default function VerificationSelfie({navigation}) {
       mediaType: 'any',
     })
       .then(image => {
-        if (image) {
-          _uploadimage(image);
-          setState({
-            ...state,
-            profileImg: image,
-          });
-        } else {
-          console.log('Please selected Image');
-        }
+        setState({
+          ...state,
+          profileImg: image,
+        });
       })
       .catch(err => {
         console.log('Img picker Error--->>>', err);
@@ -57,22 +57,25 @@ export default function VerificationSelfie({navigation}) {
           ? state.profileImg?.path
           : state.profileImg?.path?.replace('file://', ''),
     });
-    console.log('formData===>>', formData);
-    const result = await _putVerifyselfie(formData);
+    setIsLoading(true);
+    const result = await _putVerifyselfie({
+      formData: formData,
+      orderId: ViewDetails?.orderId,
+    });
     if (result?.data) {
-      console.log('upload image=====>>>>', result?.data?.message);
       SimpleToast({title: result?.data?.message, isLong: true});
-      setTimeout(() => {
-        navigation.navigate(Routes.VERIFICATION_THANKS);
-      }, 3000);
+      navigation.navigate(Routes.VERIFICATION_THANKS);
+      setIsLoading(false);
     } else {
-      console.log('upload image catch error', result?.response?.data);
-      // SimpleToast({title: result?.response?.data?.message, isLong: true});
+      console.log('upload image catch error', result?.response);
+      SimpleToast({title: 'Server Error:', isLong: true});
+      setIsLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={Styles.CONTAINER}>
+      <ProgressDialog loaderColor={COLORS.PINK} visible={isLoading} />
       <CustomStatusBar />
       <MyHeader onPress={() => navigation.goBack()} title={'Verification'} />
       <View style={{alignItems: 'center', marginTop: 15}}>
@@ -99,14 +102,20 @@ export default function VerificationSelfie({navigation}) {
         </TouchableOpacity>
       </View>
       <View style={{justifyContent: 'flex-end', flex: 1, marginBottom: 20}}>
-        {state.profileImg?.path ? null : (
+        {state.profileImg?.path ? (
           <Button
-            title={'Click your picture'}
+            title={'Picture Submit'}
             // onPress={() => navigation.navigate(Routes.VERIFICATION_THANKS)}
 
-            onPress={onGallary}
+            onPress={_uploadimage}
           />
-        )}
+        ) : null}
+        {/* <Button
+          title={'Click'}
+          // onPress={() => navigation.navigate(Routes.VERIFICATION_THANKS)}
+
+          onPress={_uploadimage}
+        /> */}
       </View>
     </SafeAreaView>
   );

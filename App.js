@@ -54,7 +54,6 @@ function App() {
   }
 
   notifee.onForegroundEvent(({type, detail}) => {
-    // console.log('notifications type:----', type, detail);
     if (type === EventType.PRESS) {
       const data = detail.notification.data;
       if (!!data?.notificationType && data?.notificationType == 'booking') {

@@ -22,6 +22,10 @@ export default function WalletScreen({navigation}) {
     _getwallet();
   }, []);
 
+  /**
+   * The function `_getwallet` retrieves wallet data and updates the account details if successful,
+   * otherwise it logs an error message.
+   */
   const _getwallet = async () => {
     const result = await _getWallet();
     if (result?.data) {
@@ -116,7 +120,7 @@ export default function WalletScreen({navigation}) {
                   alignItems: 'center',
                 }}>
                 <Text style={{color: COLORS.BLACK, fontSize: 12}}>
-                  Amount Credit: ₹2459{' '}
+                  Amount Credit: ₹ 0{' '}
                 </Text>
                 <TouchableOpacity
                   onPress={() =>

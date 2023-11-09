@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MyHeader from '../Components/MyHeader';
@@ -20,10 +21,19 @@ export default function Booking({navigation}) {
   const [isbookingdata, setIsbookingdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setmessage] = useState(null);
+  const [refresh, setRfresh] = useState(false);
 
   useEffect(() => {
     _AllBooking();
   }, []);
+
+  setTimeout(() => {
+    setRfresh(false);
+  }, 5000);
+
+  /**
+   * The function `_AllBooking` retrieves all booking data and updates the state variables accordingly.
+   */
 
   const _AllBooking = async () => {
     const result = await _getallBokking();
@@ -31,6 +41,7 @@ export default function Booking({navigation}) {
     if (result?.data) {
       setIsLoading(false);
       setIsbookingdata(result?.data?.result);
+      SimpleToast({title: result?.data?.message, isLong: true});
     } else {
       setIsLoading(false);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
@@ -65,6 +76,14 @@ export default function Booking({navigation}) {
           contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           data={isbookingdata}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={_AllBooking}
+              tintColor={COLORS.GREEN}
+              colors={[COLORS.PINK]}
+            />
+          }
           renderItem={({item, index}) => (
             <View key={index} style={Styles.BOXMAIN}>
               <View style={Styles.JUSTIBOXMAIN}>
@@ -92,9 +111,6 @@ export default function Booking({navigation}) {
                           Styles.QTEXTSTY,
                           {width: widthPixel(220), fontWeight: '400'},
                         ]}>
-                        {/* Plot no. A, 40, Block A, Industrial Area, Sector 62,
-                      Noida, Uttar Pradesh 201301 */}
-                        {/* {item?.currentAddress} */}
                         {item?.delieveryAddress?.completeAddress}
                       </Text>
                       <Text
@@ -126,9 +142,7 @@ export default function Booking({navigation}) {
                     </Text>
                     <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>
                     <Text style={Styles.QPAMENT}>Payment Status</Text>
-                    <Text style={Styles.GREYTEXT}>
-                      {item?.paymentInfo?.status}
-                    </Text>
+                    <Text style={Styles.GREYTEXT}>{item?.paymentStatus}</Text>
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate(Routes.VIEW_DETAILS, item)

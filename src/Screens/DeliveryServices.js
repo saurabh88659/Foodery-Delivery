@@ -16,19 +16,24 @@ import {_getStorage} from '../utils/Storage';
 import moment from 'moment';
 import {_getOrderHistory} from '../utils/Controllers/EpicControllers';
 import {SimpleToast, manlogo} from '../utils/Const';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function DeliveryServices({navigation}) {
   const [isServicesData, setIsServicesData] = useState([]);
   const [refresh, setRfresh] = useState(false);
   const [message, setmessage] = useState('');
 
+  const IsFocused = useIsFocused();
+
   setTimeout(() => {
     setRfresh(false);
   }, 5000);
 
   useEffect(() => {
-    _Services_Delivery();
-  }, []);
+    if (IsFocused) {
+      _Services_Delivery();
+    }
+  }, [IsFocused]);
 
   const _Services_Delivery = async () => {
     const result = await _getOrderHistory();

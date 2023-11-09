@@ -34,7 +34,6 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import {BottomSheet} from 'react-native-btr';
 import moment from 'moment';
-import {useIsFocused} from '@react-navigation/native';
 
 export default function EditProfile({navigation}) {
   const [visible, setVisible] = useState(false);
@@ -44,21 +43,18 @@ export default function EditProfile({navigation}) {
   // const [isLenmark, setIsLenmark] = useState('');
   const [iState, setIsState] = useState('');
   // const [isLoading, setIsLoading] = useState(false);
-  const isFocused = useIsFocused();
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [isState, seIstState] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [state, setState] = useState({
     profileImg: null,
   });
 
   useEffect(() => {
-    if (isFocused) {
-      _ProfileData();
-    }
-  }, [isFocused]);
+    _ProfileData();
+  }, []);
 
   const TakePhotoFromCamera = () => {
     ImagePicker.openCamera({
@@ -133,6 +129,7 @@ export default function EditProfile({navigation}) {
   };
 
   const _ProfileData = async () => {
+    setIsLoading(true);
     const result = await _getProfile();
     if (result?.data) {
       setAddress(result?.data?.result?.currentAddress.address);

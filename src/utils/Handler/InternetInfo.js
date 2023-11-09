@@ -1,3 +1,9 @@
+/**
+ * The function `checkInternetConnection` checks if the device has an internet connection using the
+ * `NetInfo` library in React Native.
+ * @returns The function `checkInternetConnection` returns a Promise that resolves to a boolean value
+ * indicating whether the device has an internet connection.
+ */
 import {Platform} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 

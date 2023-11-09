@@ -17,7 +17,6 @@ import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import {COLORS} from '../utils/Colors';
 import Button from '../Components/Button';
 import {
-  BASE_URL,
   CustomStatusBar,
   SimpleToast,
   facebook,
@@ -34,6 +33,9 @@ export default function Login({navigation}) {
     isLoading: false,
   });
 
+  /**
+   * The function `_validateMobileNumber` checks if a given mobile number is valid or not.
+   */
   const _validateMobileNumber = mobileNo => {
     console.log('mobileNo', mobileNo);
     var mobileNoRegex = /^[6-9]{1}[0-9]{9}$/;
@@ -46,6 +48,10 @@ export default function Login({navigation}) {
     }
   };
 
+  /**
+   * The function `_HandleSend` sends an OTP to a mobile number and navigates to the OTP screen if the
+   * OTP is sent successfully.
+   */
   const _HandleSend = async () => {
     setState({
       ...state,
@@ -70,6 +76,7 @@ export default function Login({navigation}) {
     }
   };
 
+  /* The code is rendering a login screen in a React Native application. */
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={Styles.CONTAINERMAIN}>
@@ -143,6 +150,10 @@ export default function Login({navigation}) {
     </TouchableWithoutFeedback>
   );
 }
+
+/* The `const Styles` object is defining a set of styles using the `StyleSheet.create` method from the
+`react-native` library. Each key-value pair in the object represents a style rule, where the key is
+the name of the style and the value is an object defining the style properties. */
 
 const Styles = StyleSheet.create({
   CONTAINERMAIN: {

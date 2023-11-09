@@ -5,6 +5,10 @@ import {Platform} from 'react-native';
 import Routes from '../../Navigation/Routes';
 import NavigationService from './NavigationService';
 
+/**
+ * The function `requestUserPermission` requests permission from the user to send push notifications
+ * and retrieves the FCM token if permission is granted.
+ */
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -16,6 +20,10 @@ export async function requestUserPermission() {
   }
 }
 
+/**
+ * The function `getFcmToken` retrieves the FCM token from AsyncStorage and generates a new token if it
+ * doesn't exist, storing it in AsyncStorage.
+ */
 const getFcmToken = async () => {
   let fcmToken = await AsyncStorage.getItem('fcmToken');
 
@@ -33,6 +41,10 @@ const getFcmToken = async () => {
   }
 };
 
+/**
+ * The function `pushNoti` sets up event listeners for handling notifications in the foreground,
+ * background, and quit states of the app.
+ */
 export const pushNoti = async () => {
   messaging().onNotificationOpenedApp(remoteMessage => {
     console.log(
@@ -55,6 +67,13 @@ export const pushNoti = async () => {
     });
 };
 
+/**
+ * The function `onDisplayNotification` displays a notification with a title and body, and creates a
+ * channel for the notification on Android devices.
+ * @param data - The `data` parameter is an object that contains the notification data. It is expected
+ * to have a `data` property, which is also an object containing the `title` and `body` properties.
+ * These properties represent the title and body text of the notification, respectively.
+ */
 async function onDisplayNotification(data) {
   if (Platform.OS == 'ios') {
     await notifee.requestPermission();
@@ -74,6 +93,11 @@ async function onDisplayNotification(data) {
   });
 }
 
+/**
+ * The function `notificationListeners` listens for incoming FCM messages, logs the message data,
+ * displays a notification, and navigates to a specific screen if the message is a booking
+ * notification.
+ */
 export async function notificationListeners() {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     console.log('A new FCM message arrived!', remoteMessage?.data);
@@ -109,6 +133,9 @@ export async function notificationListeners() {
     }
   });
 
+  /* The code `messaging().getInitialNotification().then(remoteMessage => { if (remoteMessage) {
+  console.log( 'Notification caused app to open from quit state:', remoteMessage.notification, ); }
+  });` is checking if the app was opened from a quit state due to a notification. */
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {

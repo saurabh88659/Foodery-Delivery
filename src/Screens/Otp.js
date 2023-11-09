@@ -44,6 +44,10 @@ export default function Otp({navigation, route}) {
     requestUserPermission();
   }, []);
 
+  /**
+   * The `_HandleOTP` function handles the process of sending an OTP (One-Time Password) and navigating
+   * to the appropriate screen based on the response.
+   */
   const _HandleOTP = async () => {
     const fcmToken = await AsyncStorage.getItem('fcmToken');
     setState({
@@ -101,6 +105,10 @@ export default function Otp({navigation, route}) {
     }
   };
 
+  /**
+   * The function `resendsend` sends a request to resend an OTP (One-Time Password) to a mobile number
+   * and handles the response accordingly.
+   */
   const resendsend = async () => {
     const dataPhone = {
       mobileNumber: phoneNumber,
@@ -119,12 +127,16 @@ export default function Otp({navigation, route}) {
     }
   };
 
+  /* The `useEffect` hook is used to perform side effects in a functional component. In this case, it is
+ used to create a timer that updates the `counter` state every second. */
+
   useEffect(() => {
     const timer =
       counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
     return () => clearInterval(timer);
   }, [counter]);
 
+  /* The code is rendering a React Native component that displays an OTP (One-Time Password) screen. */
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={Styles.CONTAINERMAIN}>

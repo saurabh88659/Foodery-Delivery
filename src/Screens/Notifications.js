@@ -21,20 +21,20 @@ export default function Notifications({navigation}) {
     _notifications();
   }, []);
 
+  /**
+   * The function `_notifications` retrieves notifications and handles the response and error messages.
+   */
   const _notifications = async () => {
     const result = await _getNotifications();
-    // setIsLoading(true);
     if (result?.data) {
       console.log('notifications response:', result?.data?.result);
       setNotifications(result?.data?.result);
-      // setIsLoading(true);
     } else {
       console.log(
         'catch error notifications:',
         result?.response?.data?.message,
       );
       setErrormess(result?.response?.data?.message);
-      // setIsLoading(false);
     }
   };
 

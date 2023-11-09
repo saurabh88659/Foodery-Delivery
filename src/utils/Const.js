@@ -27,16 +27,28 @@ const footertext = 'By signing up, you are agree with our';
 const accounttext = "We've sent an email and password to your";
 
 // const BASE_URL = 'http:/192.168.68.110:8000/api/deliveryApp'; //  Server URL  Localhost
+
+/* The `BASE_URL` constant is storing the URL of the server API. In this case, it is set to
+`'https://apigrocery.kickrtechnology.online/api/deliveryApp'`. This URL is used to make API requests
+to the server for fetching or sending data. */
 const BASE_URL = 'https://apigrocery.kickrtechnology.online/api/deliveryApp'; //  Server URL
 
 const {height, width} = Dimensions.get('window');
 
 // 👇👇👇 DATA for mapView 👇👇👇123
 
+/* The line `const ASPECT_RATIO = width / height;` is calculating the aspect ratio of the device's
+screen. The `width` and `height` variables are obtained using the `Dimensions.get('window')` method,
+which returns the width and height of the device's screen. The aspect ratio is calculated by
+dividing the width by the height. */
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+/**
+ * The Ionicon function is a JavaScript component that renders an Ionicon icon with customizable
+ * properties.
+ */
 const Ionicon = ({title, size, IconColor, IconStyle}) => (
   <Ionicons
     name={title}
@@ -98,10 +110,16 @@ const FontAwesome6s = ({title, size, IconColor, IconStyle}) => (
   />
 );
 
+/**
+ * The SimpleToast function displays a toast message with a given title and duration.
+ */
 const SimpleToast = ({title, isLong}) => {
   isLong ? Toast.show(title, Toast.LONG) : Toast.show(title, Toast.SHORT);
 };
 
+/**
+ * The above function creates a custom status bar component with a gradient background.
+ */
 const CustomStatusBar = () => (
   <LinearGradient
     colors={[COLORS.PURPLE, COLORS.PINK]}
@@ -112,6 +130,23 @@ const CustomStatusBar = () => (
   </LinearGradient>
 );
 
+/**
+ * The function `Instance` is an asynchronous function that makes an HTTP request using the provided
+ * method, URL, headers, and data, and returns the result or an error if there is no internet
+ * connection.
+ * @param method - The HTTP method to be used for the request (e.g., GET, POST, PUT, DELETE).
+ * @param url - The `url` parameter is the URL of the API endpoint that you want to make a request to.
+ * It should be a string representing the URL.
+ * @param header - The `header` parameter is an object that contains the headers to be included in the
+ * HTTP request. Headers are used to provide additional information about the request or the client
+ * making the request. Examples of headers include `Content-Type`, `Authorization`, etc.
+ * @param data - The `data` parameter is an object that contains the data to be sent in the request
+ * body. It can be used to send data such as JSON payloads, form data, or any other type of data that
+ * needs to be included in the request.
+ * @returns The function `Instance` returns either the result of the axios request if there is an
+ * internet connection and the request is successful, or an error object if there is an error during
+ * the request.
+ */
 const Instance = async (method, url, header, data) => {
   const isInternet = await checkInternetConnection();
   console.log('isInternet', isInternet);
@@ -132,6 +167,12 @@ const Instance = async (method, url, header, data) => {
   }
 };
 
+/**
+ * The function `headerConfig` returns an object with an Authorization header containing a token
+ * retrieved from AsyncStorage.
+ * @returns The function `headerConfig` returns an object `HEADER` with the `Authorization` property
+ * set to a string value that includes the token retrieved from AsyncStorage.
+ */
 const headerConfig = async () => {
   const token = await AsyncStorage.getItem('token');
   const HEADER = {
