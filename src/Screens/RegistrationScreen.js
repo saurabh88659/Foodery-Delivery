@@ -1106,7 +1106,6 @@ export default function RegistrationScreen({navigation, route}) {
                       color: COLORS.BLACK,
                     }}
                     value={cityOne}
-                    maxLength={6}
                     onChangeText={text => setCityOne(text)}
                   />
                   {cityOneError ? (
@@ -1556,6 +1555,7 @@ export default function RegistrationScreen({navigation, route}) {
             </View>
           </ProgressStep>
           {/* ==============================Bank Details======================== */}
+
           <ProgressStep
             onSubmit={_BankDetailsHandle}
             nextBtnStyle={Styles.btnstyles}
@@ -1584,7 +1584,7 @@ export default function RegistrationScreen({navigation, route}) {
                 placeholder="Bank Account Number"
                 placeholderTextColor={COLORS.GRAYDARK}
                 keyboardType="number-pad"
-                maxLength={12}
+                maxLength={18}
                 onChangeText={text => setOnBankNumber(text)}
                 value={onBankNumber}
               />
@@ -1633,9 +1633,9 @@ export default function RegistrationScreen({navigation, route}) {
                     onChangeText={text => setOnUpiId(text)}
                     value={onUpiId}
                   />
-                  <TouchableOpacity style={Styles.UPIVERIFYBTN}>
+                  {/* <TouchableOpacity style={Styles.UPIVERIFYBTN}>
                     <Text style={Styles.UPIBTNTEXT}>Verify</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
             </View>
