@@ -141,6 +141,36 @@ export const _getOrderHistory = async data => {
   }
 };
 
+export const _getOrderHistory1 = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getAllOrderHistory1',
+      header,
+    );
+    return result;
+  } catch (e) {
+    s;
+    return e;
+  }
+};
+
+export const _getOrderHistory2 = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/getAllOrderHistory2',
+      header,
+    );
+    return result;
+  } catch (e) {
+    s;
+    return e;
+  }
+};
+
 export const _getUploadProfilePic = async data => {
   const header = await headerConfig();
   header['Content-type'] = 'multipart/form-data';
@@ -282,6 +312,21 @@ export const _getWallet = async data => {
   }
 };
 
+export const _getTransactionapi = async data => {
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/transaction',
+      header,
+      data,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
 export const _getTransitionDetails = async data => {
   const header = await headerConfig();
   try {
@@ -333,6 +378,21 @@ export const _putReject = async _id => {
     const result = await Instance(
       'PUT',
       BASE_URL + '/deliveryBoyRejected/' + _id,
+      header,
+    );
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const _handlePickUp = async data => {
+  console.log('dat====', data);
+  const header = await headerConfig();
+  try {
+    const result = await Instance(
+      'GET',
+      BASE_URL + '/pickUpOrder/' + data,
       header,
     );
     return result;

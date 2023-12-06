@@ -26,6 +26,8 @@ import TermsConditions from '../Screens/TermsConditions';
 import RegistrationScreen from '../Screens/RegistrationScreen';
 import Notifications from '../Screens/Notifications';
 import OrderInviteScreen from '../Screens/OrderInviteScreen';
+import TransactionDetailsWalletReceiveScreen from '../Screens/TransactionDetailsWalletReceiveScreen';
+import TransactionDetailsAccountReceiveScreen from '../Screens/TransactionDetailsAccountReceiveScreen';
 
 const Stack = createNativeStackNavigator();
 function AuthStack() {
@@ -111,8 +113,17 @@ function AuthStack() {
         component={OrderInviteScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={Routes.TRANSACTIONDETAILSWALLETRECEIVESCREEN}
+        component={TransactionDetailsWalletReceiveScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Routes.TRANSACTIONDETAILSACCOUNTRECEIVESCREEN}
+        component={TransactionDetailsAccountReceiveScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }
-
 export default AuthStack;
