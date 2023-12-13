@@ -61,6 +61,7 @@ export default function PickupServices({navigation}) {
   useEffect(() => {
     if (IsFocused) {
       setmessage('');
+      setIsServicesData('');
       _Services_Delivery();
     }
   }, [IsFocused]);

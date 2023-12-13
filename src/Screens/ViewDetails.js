@@ -314,7 +314,8 @@ export default function ViewDetails({navigation, route}) {
             <View style={{marginVertical: 20}}>
               <Button
                 title={'Submit'}
-                onPress={() => navigation.navigate(Routes.THANKS_DELIVERING)}
+                onPress={() => navigation.navigate(Routes.VERIFICATION_SELFIE)}
+                // onPress={() => navigation.navigate(Routes.THANKS_DELIVERING)}
               />
             </View>
           )}

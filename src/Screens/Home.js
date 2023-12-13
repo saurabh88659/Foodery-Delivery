@@ -38,14 +38,20 @@ export default function Home({navigation}) {
   const isFocus = useIsFocused();
 
   useEffect(() => {
-    _CountData();
-    requestUserPermission();
+    if (isFocus) {
+      console.log(
+        '===========================RUN RUN RUN======================',
+      );
+      _CountData();
+      requestUserPermission();
+    }
   }, [isFocus]);
 
   const _CountData = async () => {
     const result = await _countOrder();
     if (result?.data) {
       setIsCount(result?.data);
+      console.log('@@@###############count order======>>>', result.data);
     } else {
       console.log('count catch error', result?.response?.data?.message);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
@@ -112,6 +118,7 @@ export default function Home({navigation}) {
           </TouchableOpacity>
         </View>
       </LinearGradient>
+
       <View style={{justifyContent: 'flex-start'}}>
         <Text style={Styles.CATSTYLTEXT}>Categories</Text>
         <View style={Styles.CARDSTYLES}>

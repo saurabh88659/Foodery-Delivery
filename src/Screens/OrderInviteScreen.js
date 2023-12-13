@@ -54,8 +54,8 @@ export default function OrderInviteScreen({route}) {
       console.log('result:', result?.data?.message);
       SimpleToast({title: result?.data?.message, isLong: true});
       // navigation.navigate(Routes.BOOKING_STACK);
-      navigation.navigate(Routes.HOME_SCREEN);
-
+      // navigation.navigate(Routes.HOME_SCREEN);
+      navigation.navigate(Routes.BOTTOM_TAB_BAR);
       _getNotifications();
       setIsLoading(false);
     } else {

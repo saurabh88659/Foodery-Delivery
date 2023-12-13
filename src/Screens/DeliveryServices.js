@@ -35,13 +35,17 @@ export default function DeliveryServices({navigation}) {
   useEffect(() => {
     if (IsFocused) {
       setmessage('');
+      setIsServicesData([]);
       _Services_Delivery();
     }
   }, [IsFocused]);
 
   const _Services_Delivery = async () => {
     const result = await _getOrderHistory();
-    console.log('===result===', JSON.stringify(result?.data?.result));
+    console.log(
+      '===result _Services_Delivery on delivery sevice===',
+      JSON.stringify(result?.data?.result),
+    );
     if (result?.data) {
       console.log('result', result?.data?.message);
       setIsServicesData(result?.data?.result);
@@ -138,7 +142,6 @@ export default function DeliveryServices({navigation}) {
                         </Text>
                       </View>
                     </View>
-
                     <View>
                       <Text style={[Styles.QTEXTSTY]}>Order No.</Text>
                       <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>

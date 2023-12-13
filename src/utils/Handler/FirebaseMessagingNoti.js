@@ -102,7 +102,6 @@ export async function notificationListeners() {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     console.log('A new FCM message arrived!', remoteMessage?.data);
     onDisplayNotification(remoteMessage);
-
     if (
       !!remoteMessage?.data?.notificationType &&
       remoteMessage?.data?.notificationType == 'booking'
@@ -120,7 +119,6 @@ export async function notificationListeners() {
       'Notification caused app to open from background state:',
       remoteMessage?.data,
     );
-
     if (
       !!remoteMessage?.data?.notificationType &&
       remoteMessage?.data?.notificationType == 'booking'
