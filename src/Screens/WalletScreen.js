@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CustomStatusBar} from '../utils/Const';
@@ -13,14 +15,23 @@ import MyHeader from '../Components/MyHeader';
 import {COLORS} from '../utils/Colors';
 import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
-import {_getWallet} from '../utils/Controllers/EpicControllers';
+import moment from 'moment';
+import {
+  _getTransactionapi,
+  _getWallet,
+} from '../utils/Controllers/EpicControllers';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function WalletScreen({navigation}) {
   const [accountDetails, setAccountDetails] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [transaction, setTransaction] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const IsFocused = useIsFocused();
+
   useEffect(() => {
     _getwallet();
-  }, []);
+  }, [IsFocused]);
 
   /**
    * The function `_getwallet` retrieves wallet data and updates the account details if successful,
@@ -31,10 +42,160 @@ export default function WalletScreen({navigation}) {
     if (result?.data) {
       console.log('get waalte response:', result?.data);
       setAccountDetails(result?.data);
-      setLoading(false);
+      // setLoading(false);
     } else {
       console.log('catch wallte data:', result?.response?.data?.message);
+      // setLoading(false);
+    }
+  };
+
+  const onrefresh = () => {
+    setRefreshing(true);
+    _getwallet();
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 400);
+  };
+
+  useEffect(() => {
+    _getTransaction();
+  }, []);
+
+  const _getTransaction = async () => {
+    setLoading(true);
+    const result = await _getTransactionapi();
+    if (result?.data) {
       setLoading(false);
+      console.log(
+        'get _getTransaction response:',
+        JSON.stringify(result?.data),
+      );
+      setTransaction(result?.data.result);
+      // setAccountDetails(result?.data.result);
+      setLoading(false);
+    } else {
+      setLoading(false);
+
+      console.log('catch wallte data:', result?.response?.data?.message);
+      setLoading(false);
+    }
+  };
+
+  const renderTransactionItem = (item, index) => {
+    console.log('item of render TransactionItem>>>>  >', JSON.stringify(item));
+    if (item.type === 'deducted') {
+      return (
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: 'grey',
+            // paddingVertical: 10,
+            // paddingHorizontal: 15,
+            marginHorizontal: 10,
+            paddingTop: 25,
+            paddingBottom: 10,
+          }}
+          key={index}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                Routes.TRANSACTIONDETAILSACCOUNTRECEIVESCREEN,
+                {
+                  data: item,
+                },
+              )
+            }>
+            <Text style={{color: '#000', marginBottom: 4, fontSize: 15}}>
+              Account Number: XXXXXXXXXXXX
+              {item.deliveryBoyId?.bankDetails?.accountNumber
+                .toString()
+                .slice(-4)}
+            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{color: '#000', marginBottom: 4, fontSize: 15}}>
+                Bank Name: {item?.deliveryBoyId?.bankDetails?.bankName}
+              </Text>
+              <Text style={{fontSize: 16, color: 'red'}}>-{item.amount}</Text>
+            </View>
+            <Text style={{color: 'grey', fontSize: 13}}>
+              {moment(item.createdAt).format('DD MMM, YYYY [at] hh:mm A')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (item.type === 'receive') {
+      return (
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: 'grey',
+            // paddingVertical: 10,
+            // paddingHorizontal: 15,
+            marginHorizontal: 10,
+            paddingTop: 20,
+            paddingBottom: 7,
+          }}
+          key={index}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                Routes.TRANSACTIONDETAILSWALLETRECEIVESCREEN,
+                {
+                  data: item,
+                },
+              )
+            }>
+            <Text
+              style={{
+                color: '#000',
+                marginBottom: 4,
+                fontSize: 15,
+                // backgroundColor: 'red',
+              }}>
+              Order ID : {item.orderId}
+            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={{
+                    color: '#000',
+                    marginBottom: 4,
+                    fontSize: 15,
+                    // backgroundColor: 'red',
+                  }}>
+                  Items :{/* {item.productName} */}
+                </Text>
+                {item.orderedProducts.map((item, index) => {
+                  return (
+                    <Text
+                      key={index}
+                      numberOfLines={1}
+                      style={{
+                        color: '#000',
+                        marginBottom: 4,
+                        fontSize: 15,
+                        left: 3,
+                        width: '78%',
+                      }}>
+                      {item.productId.productName}
+                    </Text>
+                  );
+                })}
+              </View>
+
+              <Text style={{color: 'green', marginBottom: 4, fontSize: 16}}>
+                +{item.deliveryFee}
+              </Text>
+            </View>
+            <Text style={{color: 'grey', fontSize: 13}}>
+              {moment(item.createdAt).format('DD MMM, YYYY [at] hh:mm A')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
   };
 
@@ -61,6 +222,7 @@ export default function WalletScreen({navigation}) {
                 </View>
               )}
             </View>
+
             <Text style={Styles.TextTitle}>
               {accountDetails?.firstName + ' ' + accountDetails?.lastName}
             </Text>
@@ -76,16 +238,14 @@ export default function WalletScreen({navigation}) {
               </Text>
             </View>
           </View>
-          <View style={Styles.Paymentbox}>
+
+          {/* <View style={Styles.Paymentbox}>
             <Text style={Styles.SubTitle1}>Payment History</Text>
             <View style={Styles.box}>
               <Text style={Styles.PayTitle}>Payment Recived</Text>
-
               <View style={Styles.Row}>
                 <Text style={Styles.SubTitle2}>Account Number :</Text>
                 <Text style={[Styles.SubTitle2, {paddingLeft: 10}]}>
-                  {/* {accountDetails?.bankDetails?.accountNumber?.split('', 4)} */}
-                  ************
                   {accountDetails?.bankDetails?.accountNumber
                     .toString()
                     .split('', 4)}
@@ -112,7 +272,6 @@ export default function WalletScreen({navigation}) {
                   17 April 2023 to 22 April 2023
                 </Text>
               </View>
-
               <View
                 style={{
                   flexDirection: 'row',
@@ -142,9 +301,40 @@ export default function WalletScreen({navigation}) {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </View> */}
+
+          {/* {====================================transaction=================================================} */}
+          {transaction.length > 0 ? (
+            <ScrollView
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onrefresh} />
+              }>
+              <View style={{marginBottom: '100%'}}>
+                {transaction.map((item, index) =>
+                  renderTransactionItem(item, index),
+                )}
+              </View>
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                height: '75%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: COLORS.DARK_GRAY,
+                  fontSize: 21,
+                  fontWeight: '600',
+                }}>
+                No transactions available
+              </Text>
+            </View>
+          )}
         </View>
       )}
+      {/* {====================================transaction=================================================} */}
     </SafeAreaView>
   );
 }

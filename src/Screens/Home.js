@@ -28,22 +28,30 @@ import {
 import Routes from '../Navigation/Routes';
 import {useDispatch, useSelector} from 'react-redux';
 import {requestUserPermission} from '../utils/Handler/FirebaseMessagingNoti';
+import {useIsFocused} from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Home({navigation}) {
   const [isCount, setIsCount] = useState({});
   const Locations = useSelector(state => state.LocationReducer);
+  const isFocus = useIsFocused();
 
   useEffect(() => {
-    _CountData();
-    requestUserPermission();
-  }, []);
+    if (isFocus) {
+      console.log(
+        '===========================RUN RUN RUN======================',
+      );
+      _CountData();
+      requestUserPermission();
+    }
+  }, [isFocus]);
 
   const _CountData = async () => {
     const result = await _countOrder();
     if (result?.data) {
       setIsCount(result?.data);
+      console.log('@@@###############count order======>>>', result.data);
     } else {
       console.log('count catch error', result?.response?.data?.message);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
@@ -74,7 +82,6 @@ export default function Home({navigation}) {
           return true;
         },
       );
-
       return true;
     }
   };
@@ -111,13 +118,14 @@ export default function Home({navigation}) {
           </TouchableOpacity>
         </View>
       </LinearGradient>
+
       <View style={{justifyContent: 'flex-start'}}>
         <Text style={Styles.CATSTYLTEXT}>Categories</Text>
         <View style={Styles.CARDSTYLES}>
           <View style={Styles.JUSTISTYLES}>
             <Image source={manlogo} style={Styles.JUSTISTYLES} />
           </View>
-          <Text style={Styles.TEXTJUSTISTYL}>Total assignned Delivered</Text>
+          <Text style={Styles.TEXTJUSTISTYL}>Total Assignned Order</Text>
           <Text style={[Styles.TEXTJUSTISTYL, {color: COLORS.PINK}]}>
             {isCount?.totalAssigned_Delivery}
           </Text>
@@ -143,8 +151,8 @@ export default function Home({navigation}) {
       </View>
       <View style={{flex: 1}}>
         <Tab.Navigator screenOptions={Styles.Tobscreen}>
-          <Tab.Screen name="Delivery Services" component={DeliveryServices} />
           <Tab.Screen name="Pickup Services" component={PickupServices} />
+          <Tab.Screen name="Delivery Services" component={DeliveryServices} />
         </Tab.Navigator>
       </View>
     </SafeAreaView>

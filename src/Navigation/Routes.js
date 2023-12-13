@@ -37,4 +37,8 @@ export default {
   PRIVACY_POLICY: 'PrivacyPolicy',
   TERMS_CONDITIONS: 'TermsConditions',
   BOOKING: 'Booking',
+  TRANSACTIONDETAILSWALLETRECEIVESCREEN:
+    'TransactionDetailsWalletReceiveScreen',
+  TRANSACTIONDETAILSACCOUNTRECEIVESCREEN:
+    'TransactionDetailsAccountReceiveScreen',
 };

@@ -385,7 +385,6 @@ export default function RegistrationScreen({navigation, route}) {
   {
     /* ==============================Verification======================== */
   }
-
   const [isUploadFrontImage, setIsUploadFrontImage] = useState(null);
   const [isUploadBacktImage, setIsUploadBacktImage] = useState(null);
   const [isUploadPanCardImage, setIsUploadPanCardImage] = useState(null);
@@ -406,7 +405,6 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
-
   const pickUploadBacktImage = () => {
     ImagePicker.openPicker({
       width: responsiveWidth(40),
@@ -420,7 +418,6 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
-
   const pickUploadPanCartImage = () => {
     ImagePicker.openPicker({
       width: responsiveWidth(40),
@@ -435,7 +432,6 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
-
   const pickSelfieOne = () => {
     ImagePicker.openCamera({
       width: responsiveWidth(40),
@@ -450,7 +446,6 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error selecting image: ', error);
       });
   };
-
   const pickSelfieTwo = () => {
     ImagePicker.openCamera({
       width: responsiveWidth(40),
@@ -465,7 +460,6 @@ export default function RegistrationScreen({navigation, route}) {
         console.log('Error taking image: ', error);
       });
   };
-
   /**
    * The function `_UploadImagesUsingFetch` is used to upload multiple images using the Fetch API in
    * JavaScript.
@@ -710,7 +704,9 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateBankNumberChange = () => {
-    const namePattern = /^\d{12}$/;
+    // const namePattern = /^\d{12}$/;
+    const namePattern = /^[0-9]+$/;
+
     if (!namePattern.test(onBankNumber)) {
       setOnBankNumberError('Please enter a valid Bank Account No');
       return false;
@@ -732,7 +728,8 @@ export default function RegistrationScreen({navigation, route}) {
   };
 
   const validateIFSCCodeChange = () => {
-    const namePattern = /[a-zA-Z0-9]+/;
+    // const namePattern = /[a-zA-Z0-9]+/;
+    const namePattern = /^[A-Za-z]{4}[0-9]{7}$/;
     if (!namePattern.test(onIfscCode)) {
       setOnIfscCodeError('Please enter a valid IFSC Code');
       return false;
@@ -800,7 +797,7 @@ export default function RegistrationScreen({navigation, route}) {
         banckLoad: false,
       });
     } else {
-      console.log('back catch error:', result?.data);
+      console.log('back catch error:', result?.response.data);
       SimpleToast({title: result?.response?.data?.message, isLong: true});
       setIsLoading({
         ...isLoading,
@@ -927,11 +924,11 @@ export default function RegistrationScreen({navigation, route}) {
                   maximumDate={new Date()}
                 />
               </View>
+
               <View style={{marginHorizontal: 20, marginTop: 15}}>
                 <Text style={{color: COLORS.BLACK, fontWeight: 'bold'}}>
                   Gender
                 </Text>
-
                 <View
                   style={{
                     flexDirection: 'row',
@@ -1555,7 +1552,6 @@ export default function RegistrationScreen({navigation, route}) {
             </View>
           </ProgressStep>
           {/* ==============================Bank Details======================== */}
-
           <ProgressStep
             onSubmit={_BankDetailsHandle}
             nextBtnStyle={Styles.btnstyles}
@@ -1567,6 +1563,7 @@ export default function RegistrationScreen({navigation, route}) {
             <View style={{marginHorizontal: 5}}>
               <Text style={Styles.BANKTEXT}>Name of Bank</Text>
               <TextInput
+                maxLength={25}
                 placeholder="Bank Name"
                 placeholderTextColor={COLORS.GRAYDARK}
                 style={Styles.BANKINPUT}
@@ -1607,13 +1604,16 @@ export default function RegistrationScreen({navigation, route}) {
                 </Text>
               ) : null}
               <Text style={Styles.BANKTEXT}>IFSC Code</Text>
+
               <TextInput
-                placeholder="FSC Code"
+                maxLength={11}
+                placeholder="IFSC Code"
                 placeholderTextColor={COLORS.GRAYDARK}
                 style={Styles.BANKINPUT}
                 onChangeText={text => setOnIfscCode(text)}
                 value={onIfscCode}
               />
+
               {onIfscCodeError ? (
                 <Text style={[Styles.ERRORTEXT, {paddingLeft: 10}]}>
                   {onIfscCodeError}

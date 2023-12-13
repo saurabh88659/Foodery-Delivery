@@ -14,7 +14,10 @@ import {fontPixel, heightPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
 import {_getStorage} from '../utils/Storage';
 import moment from 'moment';
-import {_getOrderHistory} from '../utils/Controllers/EpicControllers';
+import {
+  _getOrderHistory,
+  _getOrderHistory1,
+} from '../utils/Controllers/EpicControllers';
 import {SimpleToast, manlogo} from '../utils/Const';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -31,12 +34,18 @@ export default function DeliveryServices({navigation}) {
 
   useEffect(() => {
     if (IsFocused) {
+      setmessage('');
+      setIsServicesData([]);
       _Services_Delivery();
     }
   }, [IsFocused]);
 
   const _Services_Delivery = async () => {
     const result = await _getOrderHistory();
+    console.log(
+      '===result _Services_Delivery on delivery sevice===',
+      JSON.stringify(result?.data?.result),
+    );
     if (result?.data) {
       console.log('result', result?.data?.message);
       setIsServicesData(result?.data?.result);
@@ -44,6 +53,10 @@ export default function DeliveryServices({navigation}) {
     } else {
       SimpleToast({title: result?.response?.data?.message, isLong: true});
       setmessage(result?.response?.data?.message);
+      console.log(
+        'result?.response?.data?.message ',
+        result?.response?.data?.message,
+      );
     }
   };
 
@@ -67,86 +80,87 @@ export default function DeliveryServices({navigation}) {
           }
           data={isServicesData}
           renderItem={({item, index}) => (
-            <View key={index} style={Styles.BOXMAIN}>
-              <View style={Styles.JUSTIBOXMAIN}>
-                <View style={Styles.MAINBOX}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                    }}>
+            console.log('item====>>>>>', item),
+            (
+              <View key={index} style={Styles.BOXMAIN}>
+                <View style={Styles.JUSTIBOXMAIN}>
+                  <View style={Styles.MAINBOX}>
                     <View
                       style={{
-                        height: heightPixel(60),
-                        width: widthPixel(50),
-                        borderRadius: 50,
+                        flexDirection: 'row',
                       }}>
-                      {item?.user?.profilePic ? (
-                        <Image
-                          source={{uri: item?.user?.profilePic}}
-                          style={Styles.JUSTISTYLES}
-                        />
-                      ) : (
-                        <Image source={manlogo} style={Styles.JUSTISTYLES} />
-                      )}
+                      <View
+                        style={{
+                          height: heightPixel(60),
+                          width: widthPixel(50),
+                          borderRadius: 50,
+                        }}>
+                        {item?.user?.profilePic ? (
+                          <Image
+                            source={{uri: item?.user?.profilePic}}
+                            style={Styles.JUSTISTYLES}
+                          />
+                        ) : (
+                          <Image source={manlogo} style={Styles.JUSTISTYLES} />
+                        )}
+                      </View>
+                      <View>
+                        <Text style={Styles.QTEXTSTY}>{item?.user?.name}</Text>
+                        <Text style={[Styles.QTEXTSTY, {marginVertical: 6}]}>
+                          +91 {item?.user?.phone}
+                        </Text>
+                        <Text
+                          numberOfLines={3}
+                          style={[
+                            Styles.QTEXTSTY,
+                            {
+                              width: widthPixel(220),
+                              fontWeight: '400',
+                              color: COLORS.BLACK,
+                            },
+                          ]}>
+                          {/* Plot no. A, 40, Block A, Industrial Area, Sector 62,
+                          Noida, Uttar Pradesh 201301 */}
+                          {item?.delieveryAddress?.completeAddress}
+                        </Text>
+                        <Text
+                          style={[
+                            Styles.QTEXTSTY,
+                            {marginTop: 5, fontWeight: '400'},
+                          ]}>
+                          Delivered Date:
+                          {moment(item?.delieveredAt).format('DD/MM/YYYY')}
+                        </Text>
+
+                        <Text
+                          style={[
+                            Styles.QTEXTSTY,
+                            {marginTop: 5, fontWeight: '400'},
+                          ]}>
+                          Delivered Time:{' '}
+                          {moment(item?.delieveredAt).format('h:mm:ss a')}
+                        </Text>
+                      </View>
                     </View>
                     <View>
-                      <Text style={Styles.QTEXTSTY}>{item?.user?.name}</Text>
-                      <Text style={[Styles.QTEXTSTY, {marginVertical: 6}]}>
-                        +91 {item?.user?.phone}
+                      <Text style={[Styles.QTEXTSTY]}>Order No.</Text>
+                      <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>
+                      <Text style={Styles.QPAMENT}>Payment Status</Text>
+                      <Text style={Styles.GREYTEXT}>
+                        {item?.paymentInfo?.status}
                       </Text>
-                      <Text
-                        numberOfLines={3}
-                        style={[
-                          Styles.QTEXTSTY,
-                          {
-                            width: widthPixel(220),
-                            fontWeight: '400',
-                            color: COLORS.BLACK,
-                          },
-                        ]}>
-                        {/* Plot no. A, 40, Block A, Industrial Area, Sector 62,
-                          Noida, Uttar Pradesh 201301 */}
-                        {item?.delieveryAddress?.completeAddress}
-                      </Text>
-                      <Text
-                        style={[
-                          Styles.QTEXTSTY,
-                          {marginTop: 5, fontWeight: '400'},
-                        ]}>
-                        Delivered Date:
-                        {moment(item?.delieveredAt).format('DD/MM/YYYY')}
-                      </Text>
-                      <Text
-                        style={[
-                          Styles.QTEXTSTY,
-                          {marginTop: 5, fontWeight: '400'},
-                        ]}>
-                        Delivered Time:{' '}
-                        {moment(item?.delieveredAt).format('h:mm:ss a')}
-                      </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate(Routes.VIEW_DETAILS, item)
+                        }
+                        style={Styles.VIEWBTN}>
+                        <Text style={Styles.VIEWTEXT}>View Details</Text>
+                      </TouchableOpacity>
                     </View>
-                  </View>
-
-                  <View>
-                    <Text style={[Styles.QTEXTSTY, {left: widthPixel(20)}]}>
-                      Order No.
-                    </Text>
-                    <Text style={Styles.ORDERIDTEXT}>{item?.orderId}</Text>
-                    <Text style={Styles.QPAMENT}>Payment Status</Text>
-                    <Text style={Styles.GREYTEXT}>
-                      {item?.paymentInfo?.status}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate(Routes.VIEW_DETAILS, item)
-                      }
-                      style={Styles.VIEWBTN}>
-                      <Text style={Styles.VIEWTEXT}>View Details</Text>
-                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            </View>
+            )
           )}
         />
       )}
@@ -206,7 +220,7 @@ const Styles = StyleSheet.create({
   ORDERIDTEXT: {
     color: COLORS.BLACK,
     fontSize: fontPixel(16),
-    left: widthPixel(20),
+    // left: widthPixel(20),
   },
   VIEWBTN: {
     backgroundColor: COLORS.PINK,

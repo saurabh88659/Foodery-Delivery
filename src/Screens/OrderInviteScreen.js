@@ -22,6 +22,9 @@ import {useNavigation} from '@react-navigation/native';
 export default function OrderInviteScreen({route}) {
   const [bookingDetails, setbookingDetails] = useState(null);
   const usevendoritem = route.params;
+  const numbersOnly = route.params.data.body.replace(/\D/g, '');
+  console.log('numbersOnly=====>', numbersOnly);
+  console.log('>>>>>route', route.params);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -30,9 +33,12 @@ export default function OrderInviteScreen({route}) {
   }, []);
 
   const _getNotifications = async () => {
-    const result = await _getOrderNotifications(usevendoritem?.data?.orderId);
+    const result = await _getOrderNotifications(numbersOnly);
     if (result?.data) {
-      console.log('response data:', result?.data?.result);
+      console.log(
+        '@@@@response data _getNotifications====>>>:',
+        result?.data?.result,
+      );
       setbookingDetails(result?.data?.result);
       setIsLoading(false);
     } else {
@@ -47,7 +53,9 @@ export default function OrderInviteScreen({route}) {
     if (result?.data) {
       console.log('result:', result?.data?.message);
       SimpleToast({title: result?.data?.message, isLong: true});
-      navigation.navigate(Routes.BOOKING_STACK);
+      // navigation.navigate(Routes.BOOKING_STACK);
+      // navigation.navigate(Routes.HOME_SCREEN);
+      navigation.navigate(Routes.BOTTOM_TAB_BAR);
       _getNotifications();
       setIsLoading(false);
     } else {

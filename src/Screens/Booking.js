@@ -15,16 +15,25 @@ import {COLORS} from '../utils/Colors';
 import {fontPixel, widthPixel} from '../Components/Dimensions';
 import Routes from '../Navigation/Routes';
 import {CustomStatusBar, SimpleToast, manlogo} from '../utils/Const';
-import {_getallBokking} from '../utils/Controllers/EpicControllers';
+import {
+  _getOrderHistory,
+  _getOrderHistory2,
+  _getallBokking,
+} from '../utils/Controllers/EpicControllers';
 import moment from 'moment';
+import {useIsFocused} from '@react-navigation/native';
+
 export default function Booking({navigation}) {
   const [isbookingdata, setIsbookingdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setmessage] = useState(null);
   const [refresh, setRfresh] = useState(false);
+  const [isServicesData, setIsServicesData] = useState([]);
+
+  const IsFocused = useIsFocused();
 
   useEffect(() => {
-    _AllBooking();
+    // _AllBooking();
   }, []);
 
   setTimeout(() => {
@@ -47,6 +56,33 @@ export default function Booking({navigation}) {
       SimpleToast({title: result?.response?.data?.message, isLong: true});
       console.log(result?.response?.data?.message);
       setmessage(result?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (IsFocused) {
+      setmessage('');
+      deliverd_Services();
+    }
+  }, [IsFocused]);
+
+  const deliverd_Services = async () => {
+    const result = await _getOrderHistory2();
+    console.log(
+      '===result of deliverd_Services ===',
+      JSON.stringify(result.data),
+    );
+    if (result?.data) {
+      console.log('result', result?.data?.message);
+      setIsServicesData(result?.data?.result);
+      SimpleToast({title: result?.data?.message, isLong: true});
+    } else {
+      SimpleToast({title: result?.response?.data?.message, isLong: true});
+      setmessage(result?.response?.data?.message);
+      console.log(
+        'result?.response?.data?.message',
+        result?.response?.data?.message,
+      );
     }
   };
 
@@ -75,11 +111,12 @@ export default function Booking({navigation}) {
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
-          data={isbookingdata}
+          // data={isbookingdata}
+          data={isServicesData}
           refreshControl={
             <RefreshControl
               refreshing={refresh}
-              onRefresh={_AllBooking}
+              onRefresh={deliverd_Services}
               tintColor={COLORS.GREEN}
               colors={[COLORS.PINK]}
             />

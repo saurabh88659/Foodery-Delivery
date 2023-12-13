@@ -74,6 +74,7 @@ export default function Bankdetails() {
         Account Holder Name
       </Text>
       <TextInput
+        maxLength={22}
         style={{
           backgroundColor: COLORS.WHITE,
           marginHorizontal: 10,

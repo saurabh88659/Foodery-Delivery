@@ -21,7 +21,6 @@ import ProgressDialog from 'react-native-progress-dialog';
 export default function VerificationSelfie({navigation}) {
   const ViewDetails = useSelector(state => state.ViewDetailsReduces.data);
   const [isLoading, setIsLoading] = useState(false);
-
   const [state, setState] = useState({
     profileImg: null,
     isLoading: false,
@@ -106,7 +105,6 @@ export default function VerificationSelfie({navigation}) {
           <Button
             title={'Picture Submit'}
             // onPress={() => navigation.navigate(Routes.VERIFICATION_THANKS)}
-
             onPress={_uploadimage}
           />
         ) : null}
