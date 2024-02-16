@@ -1,12 +1,3 @@
-/**
- * The AuthStack function creates a stack navigator for the authentication screens in a React Native
- * app.
- * @returns The `AuthStack` function returns a `Stack.Navigator` component from the
- * `@react-navigation/native-stack` library. The `Stack.Navigator` component is configured with
- * multiple `Stack.Screen` components, each representing a different screen in the app. The screens
- * include `SplashScreen`, `Login`, `Loginaccount`, `OrderDetailsMap`, `VerificationSelfie`,
- * `VerificationThanks`, `ThanksDel
- */
 import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../Screens/Login';

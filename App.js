@@ -16,6 +16,7 @@ import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 
 function App() {
+  console.log("hello")
   useEffect(() => {
     requestUserPermission();
     notificationListeners();

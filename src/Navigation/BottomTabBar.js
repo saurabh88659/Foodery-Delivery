@@ -38,6 +38,7 @@ function BottomTabBar() {
           fontSize: 11,
         },
       }}>
+
       <Tab.Screen
         name={Routes.HOME_SCREEN}
         component={Home}
@@ -73,6 +74,7 @@ function BottomTabBar() {
           ),
         }}
       />
+
 
       <Tab.Screen
         name={Routes.PROFILE_STACK}
